@@ -1,4 +1,5 @@
 import { Link } from 'react-router'
+import { Pannello } from '@/components/ui/Pannello'
 import { IconaCategoria } from '@/components/IconaCategoria'
 import type { Categoria } from '@/db/tipi'
 import type { RiepilogoBudget, VoceBudget } from '@/lib/calcoli'
@@ -24,15 +25,15 @@ export function Budget({ riepilogo, perId, mese }: Props) {
   const residuoTotale = budgetTotale - spesoTotale
 
   return (
-    <section className="border-b border-filetto py-4">
-      <h2 className="mb-1 flex items-baseline justify-between font-display text-base font-semibold">
-        Budget
+    <Pannello
+      titolo="Budget"
+      azione={
         <Link to="/categorie" className="font-testo text-sm font-medium text-cobalto">
-          Modifica ›
+          Modifica i budget
         </Link>
-      </h2>
-
-      <p className="num mb-3 text-sm text-inchiostro-2">
+      }
+    >
+      <p className="num mb-3.5 text-sm text-inchiostro-2">
         {residuoTotale >= 0 ? (
           <>
             <b className="font-medium text-inchiostro">{formatImporto(residuoTotale)}</b> ancora disponibili su{' '}
@@ -45,11 +46,11 @@ export function Budget({ riepilogo, perId, mese }: Props) {
           </>
         )}
         {sforate > 0 && (
-          <span> · {sforate === 1 ? 'una categoria ha sforato' : `${sforate} categorie hanno sforato`}</span>
+          <span>. {sforate === 1 ? 'Una categoria ha sforato.' : `${sforate} categorie hanno sforato.`}</span>
         )}
       </p>
 
-      <ul className="num grid gap-3 text-sm">
+      <ul className="num grid gap-4 text-sm">
         {voci.map((v) => (
           <li key={v.categoriaId}>
             <Riga voce={v} categoria={perId.get(v.categoriaId)} mese={mese} attesoOggi={attesoOggi} />
@@ -58,11 +59,11 @@ export function Budget({ riepilogo, perId, mese }: Props) {
       </ul>
 
       {attesoOggi !== null && (
-        <p className="mt-2.5 text-xs text-inchiostro-2">
+        <p className="mt-3 text-xs text-inchiostro-2">
           La tacca segna il {attesoOggi}% del mese trascorso: una barra che la supera sta correndo più del tempo.
         </p>
       )}
-    </section>
+    </Pannello>
   )
 }
 
@@ -89,7 +90,7 @@ function Riga({
       className="block rounded-ctrl py-0.5 active:bg-filetto-leggero"
       aria-label={`${categoria?.nome ?? 'Categoria'}: ${formatImporto(voce.speso)} di ${formatImporto(voce.budget)}, ${voce.percentuale}% del budget${sforato ? ', sforato' : ''}. Vedi movimenti`}
     >
-      <span className="flex items-baseline justify-between gap-2">
+      <span className="flex items-baseline justify-between gap-3">
         <span className="flex min-w-0 items-center gap-2">
           <IconaCategoria
             nome={categoria?.icona ?? 'circle-dashed'}
@@ -98,34 +99,33 @@ function Riga({
           />
           <span className="truncate font-testo">{categoria?.nome ?? 'Senza categoria'}</span>
         </span>
-        <span className={cn('shrink-0 text-xs', sforato ? 'font-medium text-rosso' : 'text-inchiostro-2')}>
-          {sforato
-            ? `${formatImporto(Math.abs(voce.residuo))} oltre`
-            : `restano ${formatImporto(voce.residuo, { simbolo: false })}`}
+        <span
+          className={cn(
+            'shrink-0 whitespace-nowrap',
+            sforato ? 'font-medium text-rosso' : inRitardo ? 'text-inchiostro' : 'text-inchiostro-2',
+          )}
+        >
+          {formatImporto(voce.speso, { simbolo: false })}
+          <span className="text-inchiostro-2"> / {formatImporto(voce.budget, { simbolo: false })}</span>
         </span>
       </span>
 
-      <span className="mt-1 flex items-center gap-2">
-        <span className="relative block h-2 flex-1 overflow-hidden rounded-full bg-filetto-leggero" aria-hidden="true">
-          <span
-            className="block h-full rounded-r-full"
-            style={{ width: `${Math.max(2, larghezza)}%`, background: sforato ? 'var(--rosso)' : colore }}
-          />
-          {attesoOggi !== null && (
-            <span
-              className="absolute top-0 h-full w-px bg-inchiostro-2 opacity-70"
-              style={{ left: `${attesoOggi}%` }}
-            />
-          )}
-        </span>
+      <span className="relative mt-1.5 block h-2 overflow-hidden rounded-full bg-filetto-leggero" aria-hidden="true">
         <span
-          className={cn(
-            'w-[5.5rem] shrink-0 text-right text-xs',
-            sforato ? 'text-rosso' : inRitardo ? 'text-inchiostro' : 'text-inchiostro-2',
-          )}
-        >
-          {formatImporto(voce.speso, { simbolo: false })} / {formatImporto(voce.budget, { simbolo: false })}
-        </span>
+          className="block h-full rounded-r-full"
+          style={{ width: `${Math.max(2, larghezza)}%`, background: sforato ? 'var(--rosso)' : colore }}
+        />
+        {attesoOggi !== null && (
+          <span className="absolute top-0 h-full w-px bg-inchiostro-2 opacity-70" style={{ left: `${attesoOggi}%` }} />
+        )}
+      </span>
+
+      <span
+        className={cn('mt-1 block text-xs', sforato ? 'font-medium text-rosso' : 'text-inchiostro-2')}
+      >
+        {sforato
+          ? `${formatImporto(Math.abs(voce.residuo))} oltre il tetto`
+          : `restano ${formatImporto(voce.residuo)}`}
       </span>
     </Link>
   )

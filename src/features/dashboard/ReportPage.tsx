@@ -23,6 +23,7 @@ import { useMeseSelezionato } from '@/lib/mese'
 import { useMovimenti } from '@/features/movimenti/useMovimenti'
 import { RigaMovimento } from '@/features/movimenti/RigaMovimento'
 import { Budget } from './Budget'
+import { Pannello } from '@/components/ui/Pannello'
 import { RipartizioneCategorie } from './RipartizioneCategorie'
 import { TracciatoMese } from './TracciatoMese'
 
@@ -78,55 +79,79 @@ export function ReportPage() {
         <StatoVuoto onAggiungi={() => apriNuovo()} />
       ) : (
         <>
-          {/* Hero: speso finora + tratto */}
-          <div className="md:grid md:grid-cols-[260px_1fr] md:items-end md:gap-8">
-            <div className="pt-3">
-              <p className="text-sm text-inchiostro-2">{eCorrente ? 'Speso finora' : 'Speso in totale'}</p>
-              <p className="num font-display-opsz mt-0.5 text-3xl font-medium tracking-tight">{formatImporto(dati.totali.uscite)}</p>
-              <FraseConfronto confronto={dati.confronto} mesePrec={mesePrec} eCorrente={eCorrente} giornoOggi={giornoOggi} />
+          {/*
+            Il totale e la curva sono un oggetto solo: il numero poggia sulla
+            superficie che si riempie giorno per giorno. È l'unica cosa forte
+            della pagina, tutto il resto sta a corpo piccolo.
+          */}
+          <section className="mt-1">
+            {/* Numero e conti stanno sulla stessa riga: senza, metà della testata restava vuota */}
+            <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+              <div className="min-w-0">
+                <p className="text-sm text-inchiostro-2">{eCorrente ? 'Speso finora' : 'Speso in totale'}</p>
+                <p className="totale-mese mt-1.5">
+                  <span className="segno-euro">€</span>
+                  {formatImporto(dati.totali.uscite, { simbolo: false })}
+                </p>
+                <div className="mt-2.5">
+                  <FraseConfronto
+                    confronto={dati.confronto}
+                    mesePrec={mesePrec}
+                    eCorrente={eCorrente}
+                    giornoOggi={giornoOggi}
+                  />
+                </div>
+              </div>
+              <Totali entrate={dati.totali.entrate} uscite={dati.totali.uscite} saldo={dati.totali.saldo} />
             </div>
-            <div className="mt-4 md:mt-0">
+
+            {/* La curva parte subito sotto il numero: è la stessa cosa, vista nel tempo */}
+            <div className="mt-4">
               <TracciatoMese
                 corrente={dati.cumCorrente}
                 precedente={dati.cumPrecedente}
                 mese={mese}
                 mesePrecedente={mesePrec}
-                altezza={132}
+                altezza={172}
               />
             </div>
-          </div>
+          </section>
 
-          {/* Totali */}
-          <Totali entrate={dati.totali.entrate} uscite={dati.totali.uscite} saldo={dati.totali.saldo} />
-
-          {/* Budget: c'è solo se almeno una categoria ha un tetto */}
-          <Budget riepilogo={dati.budget} perId={perId} mese={mese} />
-
-          <div className="md:grid md:grid-cols-2 md:gap-x-10">
-            {/* Ripartizione */}
-            <section className="border-b border-filetto py-4 md:border-r md:border-b-0 md:pr-10">
-              <h2 className="mb-2.5 font-display text-base font-semibold">Dove sono finiti i soldi</h2>
+          {/*
+            I blocchi di supporto stanno su foglio e si separano con lo spazio.
+            Su schermo largo ripartizione e budget stanno affiancati e i movimenti
+            prendono tutta la riga: senza questo la pagina finiva a metà altezza.
+          */}
+          <div className="mt-5 grid gap-4 lg:grid-cols-2 lg:items-start">
+            <Pannello titolo="Dove sono finiti i soldi">
               {dati.quote.length === 0 ? (
                 <p className="text-sm text-inchiostro-2">Nessuna uscita questo mese.</p>
               ) : (
                 <RipartizioneCategorie quote={dati.quote} perId={perId} mese={mese} medie={medie} mesiMedia={MESI_MEDIA} />
               )}
-            </section>
+            </Pannello>
 
-            {/* Ultimi movimenti */}
-            <section className="py-4">
-              <h2 className="mb-1 flex items-baseline justify-between font-display text-base font-semibold">
-                Ultimi movimenti
-                <Link to={eCorrente ? '/movimenti' : `/movimenti?mese=${mese}`} className="font-testo text-sm font-medium text-cobalto">
-                  Tutti ›
+            {/* Budget: c'è solo se almeno una categoria ha un tetto */}
+            <Budget riepilogo={dati.budget} perId={perId} mese={mese} />
+
+            <Pannello
+              className="lg:col-span-2"
+              titolo="Ultimi movimenti"
+              azione={
+                <Link
+                  to={eCorrente ? '/movimenti' : `/movimenti?mese=${mese}`}
+                  className="font-testo text-sm font-medium text-cobalto"
+                >
+                  Tutti i movimenti
                 </Link>
-              </h2>
-              <div>
+              }
+            >
+              <div className="lg:grid lg:grid-cols-2 lg:gap-x-10">
                 {movimenti.slice(0, ULTIMI).map((m: Movimento) => (
                   <RigaMovimento key={m.id} movimento={m} categoria={perId.get(m.categoriaId)} mostraData />
                 ))}
               </div>
-            </section>
+            </Pannello>
           </div>
         </>
       )}
@@ -186,22 +211,22 @@ function FraseConfronto({
 
 function Totali({ entrate, uscite, saldo }: { entrate: number; uscite: number; saldo: number }) {
   return (
-    <div className="num mt-4 grid grid-cols-3 gap-2 border-b border-filetto pb-4 text-xs text-inchiostro-2 md:mt-5 md:flex md:gap-10">
+    <dl className="num grid w-full shrink-0 grid-cols-3 gap-x-6 text-xs text-inchiostro-2 sm:w-auto sm:gap-x-9 sm:text-right">
       <div>
-        Entrate
-        <b className="mt-0.5 block text-base font-medium text-verde md:ml-2 md:inline">{formatImportoMovimento(entrate, 'entrata')}</b>
+        <dt>Entrate</dt>
+        <dd className="mt-1 text-lg font-medium text-verde">{formatImportoMovimento(entrate, 'entrata')}</dd>
       </div>
-      <div className="text-center">
-        Uscite
-        <b className="mt-0.5 block text-base font-medium text-inchiostro md:ml-2 md:inline">{formatImportoMovimento(uscite, 'uscita')}</b>
+      <div>
+        <dt>Uscite</dt>
+        <dd className="mt-1 text-lg font-medium text-inchiostro">{formatImportoMovimento(uscite, 'uscita')}</dd>
       </div>
-      <div className="text-right">
-        Saldo
-        <b className={cn('mt-0.5 block text-base font-medium md:ml-2 md:inline', saldo < 0 ? 'text-rosso' : 'text-inchiostro')}>
+      <div>
+        <dt>Saldo</dt>
+        <dd className={cn('mt-1 text-lg font-medium', saldo < 0 ? 'text-rosso' : 'text-inchiostro')}>
           {formatImporto(saldo)}
-        </b>
+        </dd>
       </div>
-    </div>
+    </dl>
   )
 }
 

@@ -4,10 +4,10 @@
 
 /* ---- Token del design system (vedi prompt-tracker-spese.md, Fase 0) ---- */
 :root {
-  --carta: #f3f4f0;
+  --carta: #f7f5f0;
   --foglio: #ffffff;
-  --inchiostro: #1b2130;
-  --inchiostro-2: #6b7280;
+  --inchiostro: #16181d;
+  --inchiostro-2: #71757e;
   --filetto: rgba(27, 33, 48, 0.15);
   --filetto-leggero: rgba(27, 33, 48, 0.07);
   --cobalto: #2f4fd8;
@@ -27,10 +27,10 @@
 }
 
 .dark {
-  --carta: #15181f;
-  --foglio: #1d2129;
-  --inchiostro: #eceee7;
-  --inchiostro-2: #9aa0ab;
+  --carta: #101216;
+  --foglio: #191c22;
+  --inchiostro: #f0efe9;
+  --inchiostro-2: #90949e;
   --filetto: rgba(236, 238, 231, 0.16);
   --filetto-leggero: rgba(236, 238, 231, 0.07);
   --cobalto: #8da2ff;
@@ -76,6 +76,8 @@
   --text-xl: 25px;
   --text-2xl: 31px;
   --text-3xl: 44px;
+  /* Il totale del mese sta fuori scala di proposito: e' l'unica cosa che si legge da lontano. */
+  --text-totale: clamp(3.4rem, 13vw, 5.75rem);
 }
 
 @layer base {
@@ -136,4 +138,26 @@
 @keyframes riga-entra {
   from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Il totale del mese: corpo fuori scala, crenatura stretta, cifre di larghezza fissa
+   così il numero non "balla" mentre si aggiungono movimenti. */
+@utility totale-mese {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 96;
+  font-size: var(--text-totale);
+  font-weight: 600;
+  line-height: 0.88;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Il simbolo dell'euro non compete con le cifre: più piccolo e allineato in alto. */
+@utility segno-euro {
+  font-size: 0.42em;
+  font-weight: 500;
+  letter-spacing: 0;
+  vertical-align: 0.62em;
+  margin-right: 0.12em;
+  color: var(--inchiostro-2);
 }
