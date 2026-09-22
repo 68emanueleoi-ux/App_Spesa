@@ -1,4 +1,5 @@
 import { db, nuovoId } from './db'
+import { normalizza } from '@/lib/testo'
 import type { Movimento } from './tipi'
 
 export type DatiMovimento = Pick<Movimento, 'tipo' | 'importo' | 'categoriaId' | 'data' | 'descrizione'>
@@ -38,4 +39,33 @@ export async function movimentiDelMese(mese: string): Promise<Movimento[]> {
 
 export function ordinaPerDataDesc(lista: Movimento[]): Movimento[] {
   return [...lista].sort((a, b) => (b.data + b.creatoIl).localeCompare(a.data + a.creatoIl))
+}
+
+/**
+ * Cerca in TUTTI i mesi, non solo in quello selezionato: ritrovare una spesa di
+ * qualche mese fa era il limite piu fastidioso dell'app.
+ *
+ * Scorre l'indice `data` dal piu recente e si ferma appena ha abbastanza
+ * risultati, cosi non carica in memoria l'intero archivio.
+ * `categorieCoincidenti` sono le categorie il cui nome corrisponde al testo
+ * cercato: un movimento senza descrizione si trova lo stesso, dalla categoria.
+ */
+export async function cercaMovimenti(
+  testo: string,
+  categorieCoincidenti: readonly string[] = [],
+  limite = 300,
+): Promise<Movimento[]> {
+  const cercato = normalizza(testo)
+  if (cercato === '') return []
+  const perCategoria = new Set(categorieCoincidenti)
+
+  const trovati: Movimento[] = []
+  await db.movimenti
+    .orderBy('data')
+    .reverse()
+    .until(() => trovati.length >= limite)
+    .each((m) => {
+      if (normalizza(m.descrizione ?? '').includes(cercato) || perCategoria.has(m.categoriaId)) trovati.push(m)
+    })
+  return ordinaPerDataDesc(trovati)
 }

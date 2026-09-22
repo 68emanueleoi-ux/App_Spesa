@@ -3,14 +3,14 @@ import { ArrowDownUp, Database, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { SelettoreMese } from '@/components/SelettoreMese'
 import { db } from '@/db/db'
-import { movimentiDelMese } from '@/db/movimenti'
+import { cercaMovimenti, movimentiDelMese } from '@/db/movimenti'
 import type { Categoria, Movimento } from '@/db/tipi'
 import { totali } from '@/lib/calcoli'
 import { cn } from '@/lib/cn'
 import { formatDataLunga, formatMese } from '@/lib/date'
 import { formatImporto } from '@/lib/importi'
 import { useMeseSelezionato } from '@/lib/mese'
-import { contiene } from '@/lib/testo'
+import { contiene, normalizza } from '@/lib/testo'
 import { useFiltriMovimenti } from './useFiltri'
 import { useMovimenti } from './useMovimenti'
 import { RigaMovimento } from './RigaMovimento'
@@ -26,19 +26,40 @@ export function MovimentiPage() {
   const [ricerca, setRicerca] = useState('')
   const [datiAperto, setDatiAperto] = useState(false)
 
-  const movimenti = useLiveQuery(() => movimentiDelMese(mese), [mese])
   const categorie = useLiveQuery(() => db.categorie.orderBy('ordine').toArray())
   const perId = useMemo(() => new Map((categorie ?? []).map((c) => [c.id, c])), [categorie])
+
+  // Da due caratteri in su la ricerca esce dal mese selezionato e guarda tutto
+  // l'archivio: ritrovare una spesa di qualche mese fa era il limite piu
+  // fastidioso dell'app.
+  const cercato = ricerca.trim()
+  const ricercaGlobale = cercato.length >= 2
+  const idCategorieCoincidenti = useMemo(
+    () =>
+      ricercaGlobale
+        ? (categorie ?? []).filter((c) => normalizza(c.nome).includes(normalizza(cercato))).map((c) => c.id)
+        : [],
+    [categorie, cercato, ricercaGlobale],
+  )
+
+  const delMese = useLiveQuery(() => (ricercaGlobale ? undefined : movimentiDelMese(mese)), [mese, ricercaGlobale])
+  const globali = useLiveQuery(
+    () => (ricercaGlobale ? cercaMovimenti(cercato, idCategorieCoincidenti) : undefined),
+    [cercato, ricercaGlobale, idCategorieCoincidenti],
+  )
+  const movimenti = ricercaGlobale ? globali : delMese
 
   const filtrati = useMemo(() => {
     if (!movimenti) return []
     let lista = movimenti
     if (tipo !== 'tutti') lista = lista.filter((m) => m.tipo === tipo)
     if (categoriaId) lista = lista.filter((m) => m.categoriaId === categoriaId)
-    if (ricerca.trim()) lista = lista.filter((m) => contiene(m.descrizione ?? '', ricerca) || contiene(perId.get(m.categoriaId)?.nome ?? '', ricerca))
+    // Nella ricerca globale il filtro per testo l'ha gia applicato il database.
+    if (!ricercaGlobale && cercato)
+      lista = lista.filter((m) => contiene(m.descrizione ?? '', cercato) || contiene(perId.get(m.categoriaId)?.nome ?? '', cercato))
     if (ordine === 'importo') lista = [...lista].sort((a, b) => b.importo - a.importo)
     return lista
-  }, [movimenti, tipo, categoriaId, ricerca, ordine, perId])
+  }, [movimenti, tipo, categoriaId, cercato, ricercaGlobale, ordine, perId])
 
   const categorieFiltro = (categorie ?? []).filter((c) => tipo === 'tutti' || c.tipo === tipo)
 
@@ -62,8 +83,8 @@ export function MovimentiPage() {
           type="search"
           value={ricerca}
           onChange={(e) => setRicerca(e.target.value)}
-          placeholder="Cerca nella descrizione"
-          aria-label="Cerca nella descrizione"
+          placeholder="Cerca in tutti i mesi"
+          aria-label="Cerca in tutti i mesi"
           className="w-full min-w-0 bg-transparent outline-none placeholder:text-inchiostro-2"
         />
       </label>
@@ -112,7 +133,28 @@ export function MovimentiPage() {
         </Chip>
       </div>
 
-      {movimenti === undefined ? null : movimenti.length === 0 ? (
+      {ricercaGlobale && filtrati.length > 0 && (
+        <p className="num mt-3 text-xs text-inchiostro-2">
+          {filtrati.length === 1 ? 'Un risultato' : `${filtrati.length} risultati`} in tutti i mesi ·{' '}
+          <button type="button" onClick={() => setRicerca('')} className="font-medium text-cobalto">
+            torna a {formatMese(mese)}
+          </button>
+        </p>
+      )}
+
+      {movimenti === undefined ? null : ricercaGlobale ? (
+        filtrati.length === 0 ? (
+          <p className="py-16 text-center text-sm text-inchiostro-2">
+            Nessun movimento contiene “{cercato}”, in nessun mese.
+          </p>
+        ) : (
+          <div className="mt-2">
+            {filtrati.map((m) => (
+              <RigaMovimento key={m.id} movimento={m} categoria={perId.get(m.categoriaId)} mostraData conAnno />
+            ))}
+          </div>
+        )
+      ) : movimenti.length === 0 ? (
         <p className="py-16 text-center text-sm text-inchiostro-2">
           Nessun movimento questo mese.{' '}
           <button type="button" onClick={() => apriNuovo()} className="font-medium text-cobalto">
@@ -137,10 +179,10 @@ export function MovimentiPage() {
         filtrati={filtrati}
         perId={perId}
         descrizioneFiltro={[
-          formatMese(mese),
+          ricercaGlobale ? 'tutti i mesi' : formatMese(mese),
           tipo === 'tutti' ? null : tipo === 'uscita' ? 'solo uscite' : 'solo entrate',
           categoriaId ? perId.get(categoriaId)?.nome : null,
-          ricerca.trim() ? `"${ricerca.trim()}"` : null,
+          cercato ? `"${cercato}"` : null,
         ]
           .filter(Boolean)
           .join(', ')}

@@ -44,6 +44,11 @@ export function formatDataBreve(dataIso: string): string {
   return format(parseISO(dataIso), 'd MMM', { locale: it }).replace('.', '')
 }
 
+/** "2026-09-22" → "22 set 2026": nei risultati che attraversano più mesi l'anno serve */
+export function formatDataBreveConAnno(dataIso: string): string {
+  return format(parseISO(dataIso), 'd MMM yyyy', { locale: it }).replace('.', '')
+}
+
 /** "2026-09-22" → "Martedì 22 settembre" */
 export function formatDataLunga(dataIso: string): string {
   const s = format(parseISO(dataIso), 'EEEE d MMMM', { locale: it })

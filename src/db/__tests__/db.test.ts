@@ -14,6 +14,7 @@ import {
 import {
   aggiungiMovimento,
   aggiornaMovimento,
+  cercaMovimenti,
   eliminaMovimento,
   movimentiDelMese,
   ripristinaMovimento,
@@ -114,6 +115,42 @@ describe('movimentiDelMese', () => {
 
     const lista = await movimentiDelMese('2026-09')
     expect(lista.map((m) => m.descrizione)).toEqual(['giorno dopo', 'secondo', 'primo'])
+  })
+})
+
+describe('cercaMovimenti', () => {
+  it('trova in tutti i mesi, non solo in quello corrente', async () => {
+    await aggiungiMovimento({ ...spesa, data: '2024-02-14', descrizione: 'Cena da Mario' })
+    await aggiungiMovimento({ ...spesa, data: '2026-09-10', descrizione: 'Spesa Conad' })
+    const trovati = await cercaMovimenti('mario')
+    expect(trovati.map((m) => m.data)).toEqual(['2024-02-14'])
+  })
+
+  it('ignora maiuscole e accenti', async () => {
+    await aggiungiMovimento({ ...spesa, descrizione: 'Caffe Centrale' })
+    expect(await cercaMovimenti('CAFFE')).toHaveLength(1)
+    expect(await cercaMovimenti('  centrale  ')).toHaveLength(1)
+  })
+
+  it('trova anche per nome di categoria, cosi un movimento senza descrizione non sparisce', async () => {
+    await aggiungiMovimento({ ...spesa, categoriaId: 'svago', descrizione: undefined })
+    expect(await cercaMovimenti('svago')).toHaveLength(0)
+    expect(await cercaMovimenti('svago', ['svago'])).toHaveLength(1)
+  })
+
+  it('con testo vuoto non restituisce nulla', async () => {
+    await aggiungiMovimento(spesa)
+    expect(await cercaMovimenti('')).toEqual([])
+    expect(await cercaMovimenti('   ')).toEqual([])
+  })
+
+  it('ordina dal piu recente e si ferma al limite', async () => {
+    for (const data of ['2025-01-05', '2026-03-20', '2024-11-11']) {
+      await aggiungiMovimento({ ...spesa, data, descrizione: 'bar' })
+    }
+    const tutti = await cercaMovimenti('bar')
+    expect(tutti.map((m) => m.data)).toEqual(['2026-03-20', '2025-01-05', '2024-11-11'])
+    expect(await cercaMovimenti('bar', [], 2)).toHaveLength(2)
   })
 })
 
