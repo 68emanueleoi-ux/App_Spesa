@@ -10,6 +10,7 @@ import { aggiungiRegola, esisteRegola } from '@/db/regole'
 import type { Categoria } from '@/db/tipi'
 import { applicaRegole, chiaveDuplicato } from '@/lib/calcoli'
 import { cn } from '@/lib/cn'
+import { conAvviso } from '@/lib/errori'
 import {
   analizzaCsv,
   firmaCsv,
@@ -54,7 +55,7 @@ export function ImportazionePage() {
   const categorie = useLiveQuery(() => db.categorie.orderBy('ordine').toArray())
   const regole = useLiveQuery(() => db.regole.toArray())
   const navigate = useNavigate()
-  const { mostra } = useToast()
+  const { mostra, errore: avvisaErrore } = useToast()
 
   const caricaFile = async (file: File) => {
     setErrore(null)
@@ -76,7 +77,15 @@ export function ImportazionePage() {
   const vaiAllAnteprima = async () => {
     if (passo.n !== 2 || !categorie || !regole) return
     const { valide, scartate } = interpretaRighe(passo.tabella.righe, passo.mappatura)
-    const esistenti = await chiaviEsistenti()
+    let esistenti: Set<string>
+    try {
+      esistenti = await chiaviEsistenti()
+    } catch (e) {
+      // Il passo 2 non ha un posto dove mostrare un errore: usa il toast.
+      console.error('Deduplica non riuscita', e)
+      avvisaErrore('Non riesco a leggere i movimenti già presenti: senza questo controllo rischi dei doppioni. Riprova.')
+      return
+    }
     const visteNelFile = new Set<string>()
     const righe: RigaAnteprima[] = valide.map((r) => {
       const chiave = chiaveDuplicato(r)
@@ -94,12 +103,23 @@ export function ImportazionePage() {
     if (passo.n !== 3) return
     const daImportare = passo.righe.filter((r) => r.includi)
     if (daImportare.length === 0) return
-    await importaMovimenti(daImportare)
-    for (const r of daImportare) {
-      const testo = testoPerRegola(r.descrizione)
-      if (r.creaRegola && testo && !(await esisteRegola(testo))) await aggiungiRegola(testo, r.categoriaId)
+    // I movimenti prima di tutto: se le regole o la mappatura non si salvano, l'import resta valido.
+    const fatto = await conAvviso(
+      () => importaMovimenti(daImportare),
+      'importare i movimenti',
+      avvisaErrore,
+    )
+    if (!fatto) return
+    try {
+      for (const r of daImportare) {
+        const testo = testoPerRegola(r.descrizione)
+        if (r.creaRegola && testo && !(await esisteRegola(testo))) await aggiungiRegola(testo, r.categoriaId)
+      }
+      await ricordaMappatura(passo.firma, passo.mappatura)
+    } catch (e) {
+      // Accessori: i movimenti sono già dentro, non vale la pena allarmare l'utente.
+      console.error('Regole o mappatura non salvate', e)
     }
-    await ricordaMappatura(passo.firma, passo.mappatura)
     const meseRecente = daImportare
       .map((r) => meseDi(r.data))
       .sort()

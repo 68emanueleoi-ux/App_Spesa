@@ -3,6 +3,7 @@ import { Sheet } from '@/components/ui/Sheet'
 import { useToast } from '@/components/useToast'
 import { aggiornaRegola, aggiungiRegola, eliminaRegola } from '@/db/regole'
 import type { Categoria, RegolaCategoria } from '@/db/tipi'
+import { conAvviso } from '@/lib/errori'
 
 interface Props {
   aperto: boolean
@@ -35,7 +36,7 @@ function Corpo({
   campo,
   onChiudi,
 }: Omit<Props, 'aperto'> & { campo: React.RefObject<HTMLInputElement | null> }) {
-  const { mostra } = useToast()
+  const { mostra, errore: avvisaErrore } = useToast()
   const [contiene, setContiene] = useState(regola?.contiene ?? proposta?.contiene ?? '')
   const [categoriaId, setCategoriaId] = useState(regola?.categoriaId ?? proposta?.categoriaId ?? '')
   const [errore, setErrore] = useState<string | null>(null)
@@ -51,8 +52,15 @@ function Corpo({
       setErrore('Scegli una categoria')
       return
     }
-    if (regola) await aggiornaRegola(regola.id, contiene, categoriaId)
-    else await aggiungiRegola(contiene, categoriaId)
+    const fatto = await conAvviso(
+      () =>
+        regola
+          ? aggiornaRegola(regola.id, contiene, categoriaId)
+          : aggiungiRegola(contiene, categoriaId),
+      regola ? 'salvare la regola' : 'creare la regola',
+      avvisaErrore,
+    )
+    if (!fatto) return
     mostra(regola ? 'Regola aggiornata' : 'Regola creata', undefined, 2500)
     onChiudi()
   }
@@ -127,7 +135,8 @@ function Corpo({
         <button
           type="button"
           onClick={async () => {
-            await eliminaRegola(regola.id)
+            const fatto = await conAvviso(() => eliminaRegola(regola.id), 'eliminare la regola', avvisaErrore)
+            if (!fatto) return
             mostra('Regola eliminata', undefined, 2500)
             onChiudi()
           }}

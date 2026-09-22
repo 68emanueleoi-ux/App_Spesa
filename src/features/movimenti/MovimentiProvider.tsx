@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { useToast } from '@/components/useToast'
+import { conAvviso } from '@/lib/errori'
 import { MovimentiContext } from './useMovimenti'
 import { eliminaMovimento, ripristinaMovimento } from '@/db/movimenti'
 import type { Movimento, TipoMovimento } from '@/db/tipi'
@@ -18,7 +19,7 @@ interface StatoForm {
  */
 export function MovimentiProvider({ children }: { children: ReactNode }) {
   const [form, setForm] = useState<StatoForm>({ aperto: false })
-  const { mostra } = useToast()
+  const { mostra, errore } = useToast()
 
   const apriNuovo = useCallback((tipo?: TipoMovimento) => setForm({ aperto: true, tipoIniziale: tipo }), [])
   const apriModifica = useCallback((m: Movimento) => setForm({ aperto: true, movimento: m }), [])
@@ -26,14 +27,24 @@ export function MovimentiProvider({ children }: { children: ReactNode }) {
 
   const elimina = useCallback(
     async (id: string) => {
-      const m = await eliminaMovimento(id)
-      if (!m) return
-      mostra(m.tipo === 'uscita' ? 'Spesa eliminata' : 'Entrata eliminata', {
+      let m: Movimento | undefined
+      const fatto = await conAvviso(
+        async () => {
+          m = await eliminaMovimento(id)
+        },
+        'eliminare il movimento',
+        errore,
+      )
+      if (!fatto || !m) return
+      const eliminato = m
+      mostra(eliminato.tipo === 'uscita' ? 'Spesa eliminata' : 'Entrata eliminata', {
         etichetta: 'Annulla',
-        esegui: () => void ripristinaMovimento(m),
+        esegui: () => {
+          void conAvviso(() => ripristinaMovimento(eliminato), 'ripristinare il movimento', errore)
+        },
       })
     },
-    [mostra],
+    [mostra, errore],
   )
 
   // Scorciatoia da tastiera: N apre il form (non mentre si scrive in un campo)

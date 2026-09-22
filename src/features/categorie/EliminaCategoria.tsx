@@ -7,6 +7,7 @@ import { contaMovimentiCategoria, eliminaCategoria, senzaCategoria } from '@/db/
 import type { Categoria } from '@/db/tipi'
 import { cn } from '@/lib/cn'
 import { coloreCss } from '@/lib/colori'
+import { conAvviso } from '@/lib/errori'
 
 interface Props {
   categoria: Categoria | null
@@ -28,13 +29,18 @@ export function EliminaCategoria({ categoria, categorie, onChiudi }: Props) {
 }
 
 function Corpo({ categoria, categorie, onChiudi }: { categoria: Categoria; categorie: Categoria[]; onChiudi: () => void }) {
-  const { mostra } = useToast()
+  const { mostra, errore: avvisaErrore } = useToast()
   const conteggio = useLiveQuery(() => contaMovimentiCategoria(categoria.id), [categoria.id])
   const [destinazione, setDestinazione] = useState(() => senzaCategoria(categoria.tipo))
   const alternative = categorie.filter((c) => c.tipo === categoria.tipo && c.id !== categoria.id)
 
   const conferma = async () => {
-    await eliminaCategoria(categoria.id, destinazione)
+    const fatto = await conAvviso(
+      () => eliminaCategoria(categoria.id, destinazione),
+      'eliminare la categoria',
+      avvisaErrore,
+    )
+    if (!fatto) return
     mostra(`Categoria "${categoria.nome}" eliminata`, undefined, 3000)
     onChiudi()
   }

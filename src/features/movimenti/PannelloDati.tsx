@@ -7,6 +7,7 @@ import { useToast } from '@/components/useToast'
 import { creaBackup, dataUltimoBackup, leggiBackup, ripristinaBackup, type Backup } from '@/db/backup'
 import type { Categoria, Movimento } from '@/db/tipi'
 import { formatDataLunga } from '@/lib/date'
+import { conAvviso } from '@/lib/errori'
 import { consegnaFile, movimentiInCsv, nomeFileConData } from '@/lib/esporta'
 
 interface Props {
@@ -19,7 +20,7 @@ interface Props {
 }
 
 export function PannelloDati({ aperto, onChiudi, filtrati, perId, descrizioneFiltro }: Props) {
-  const { mostra } = useToast()
+  const { mostra, errore: avvisaErrore } = useToast()
   const navigate = useNavigate()
   const inputBackup = useRef<HTMLInputElement>(null)
   const [daRipristinare, setDaRipristinare] = useState<Backup | null>(null)
@@ -27,13 +28,24 @@ export function PannelloDati({ aperto, onChiudi, filtrati, perId, descrizioneFil
   const ultimo = useLiveQuery(() => dataUltimoBackup(), [aperto])
 
   const esportaCsv = async () => {
-    await consegnaFile(nomeFileConData('movimenti', 'csv'), movimentiInCsv(filtrati, perId), 'text/csv')
-    onChiudi()
+    const fatto = await conAvviso(
+      () => consegnaFile(nomeFileConData('movimenti', 'csv'), movimentiInCsv(filtrati, perId), 'text/csv'),
+      'esportare i movimenti',
+      avvisaErrore,
+    )
+    if (fatto) onChiudi()
   }
 
   const esportaBackup = async () => {
-    const b = await creaBackup()
-    await consegnaFile(nomeFileConData('spese-backup', 'json'), JSON.stringify(b, null, 2), 'application/json')
+    const fatto = await conAvviso(
+      async () => {
+        const b = await creaBackup()
+        await consegnaFile(nomeFileConData('spese-backup', 'json'), JSON.stringify(b, null, 2), 'application/json')
+      },
+      'creare il backup',
+      avvisaErrore,
+    )
+    if (!fatto) return
     mostra('Backup creato', undefined, 2500)
     onChiudi()
   }
@@ -49,7 +61,8 @@ export function PannelloDati({ aperto, onChiudi, filtrati, perId, descrizioneFil
 
   const confermaRipristino = async () => {
     if (!daRipristinare) return
-    await ripristinaBackup(daRipristinare)
+    const fatto = await conAvviso(() => ripristinaBackup(daRipristinare), 'ripristinare il backup', avvisaErrore)
+    if (!fatto) return
     setDaRipristinare(null)
     mostra(`Ripristinati ${daRipristinare.movimenti.length} movimenti`, undefined, 3500)
     onChiudi()

@@ -12,6 +12,7 @@ import { aggiungiRegola, esisteRegola } from '@/db/regole'
 import type { Movimento, TipoMovimento } from '@/db/tipi'
 import { applicaRegole } from '@/lib/calcoli'
 import { cn } from '@/lib/cn'
+import { conAvviso } from '@/lib/errori'
 import { coloreCss } from '@/lib/colori'
 import { giorniNelMese, meseCorrente, oggiIso } from '@/lib/date'
 import { centesimiInInput, parseImporto } from '@/lib/importi'
@@ -50,7 +51,7 @@ interface Props {
 }
 
 export function FormMovimento({ aperto, movimento, tipoIniziale, onChiudi, onElimina }: Props) {
-  const { mostra } = useToast()
+  const { mostra, errore } = useToast()
   const modifica = movimento !== undefined
 
   const { control, register, handleSubmit, setValue, reset, formState } = useForm<Valori>({
@@ -83,20 +84,25 @@ export function FormMovimento({ aperto, movimento, tipoIniziale, onChiudi, onEli
       descrizione: v.descrizione,
     }
     if (modifica) {
-      await aggiornaMovimento(movimento.id, dati)
+      // Il pannello resta aperto se il salvataggio non riesce: i dati scritti non si perdono.
+      const fatto = await conAvviso(() => aggiornaMovimento(movimento.id, dati), 'salvare le modifiche', errore)
+      if (!fatto) return
       const testo = testoPerRegola(v.descrizione)
       // Categoria corretta su un movimento importato: proponi una regola per la prossima volta
-      if (movimento.origine === 'import' && movimento.categoriaId !== v.categoriaId && testo && !(await esisteRegola(testo))) {
+      if (movimento.origine === 'import' && movimento.categoriaId !== v.categoriaId && testo && !(await esisteRegola(testo).catch(() => true))) {
         const nomeCat = categorie?.find((c) => c.id === v.categoriaId)?.nome ?? 'questa categoria'
         mostra(`Assegnare sempre "${testo}" a ${nomeCat}?`, {
           etichetta: 'Crea regola',
-          esegui: () => void aggiungiRegola(testo, v.categoriaId),
+          esegui: () => {
+            void conAvviso(() => aggiungiRegola(testo, v.categoriaId), 'creare la regola', errore)
+          },
         }, 7000)
       } else {
         mostra('Modifiche salvate', undefined, 2500)
       }
     } else {
-      await aggiungiMovimento(dati)
+      const fatto = await conAvviso(() => aggiungiMovimento(dati), 'salvare il movimento', errore)
+      if (!fatto) return
       mostra(v.tipo === 'uscita' ? 'Spesa aggiunta' : 'Entrata aggiunta', undefined, 2500)
     }
     onChiudi()
@@ -105,9 +111,14 @@ export function FormMovimento({ aperto, movimento, tipoIniziale, onChiudi, onEli
   // Descrizione senza categoria scelta: prova le regole di categorizzazione
   const suggerisciCategoria = async (descrizione: string) => {
     if (categoriaId) return
-    const regole = await db.regole.toArray()
-    const id = applicaRegole(descrizione, regole)
-    if (id && categorie?.some((c) => c.id === id)) setValue('categoriaId', id)
+    try {
+      const regole = await db.regole.toArray()
+      const id = applicaRegole(descrizione, regole)
+      if (id && categorie?.some((c) => c.id === id)) setValue('categoriaId', id)
+    } catch (e) {
+      // Suggerimento facoltativo: se le regole non si leggono, l'utente sceglie a mano.
+      console.error('Regole non leggibili', e)
+    }
   }
 
   const titolo = modifica ? 'Modifica movimento' : tipo === 'uscita' ? 'Aggiungi spesa' : 'Aggiungi entrata'

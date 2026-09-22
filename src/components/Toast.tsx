@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { cn } from '@/lib/cn'
 import { ToastContext, type Toast, type ToastApi } from './useToast'
 
 const DURATA_DEFAULT = 5000
+const DURATA_ERRORE = 8000
 
 /** Un solo avviso alla volta, in basso, con eventuale azione ("Annulla"). */
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -19,16 +21,27 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     timer.current = window.setTimeout(() => setToast(null), durataMs)
   }, [])
 
+  const errore = useCallback<ToastApi['errore']>((testo) => {
+    window.clearTimeout(timer.current)
+    setToast({ id: Date.now(), testo, tono: 'errore' })
+    timer.current = window.setTimeout(() => setToast(null), DURATA_ERRORE)
+  }, [])
+
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
+  const api = useMemo(() => ({ mostra, errore }), [mostra, errore])
+
   return (
-    <ToastContext.Provider value={{ mostra }}>
+    <ToastContext.Provider value={api}>
       {children}
       {toast && (
         <div
-          role="status"
-          aria-live="polite"
-          className="fixed inset-x-4 bottom-[calc(80px+env(safe-area-inset-bottom))] z-30 mx-auto flex max-w-[420px] items-center gap-3 rounded-lg bg-inchiostro px-4 py-3 text-sm text-carta shadow-[0_8px_24px_rgba(0,0,0,0.25)] animate-[toast-entra_200ms_ease-out] md:bottom-6"
+          role={toast.tono === 'errore' ? 'alert' : 'status'}
+          aria-live={toast.tono === 'errore' ? 'assertive' : 'polite'}
+          className={cn(
+            'fixed inset-x-4 bottom-[calc(80px+env(safe-area-inset-bottom))] z-30 mx-auto flex max-w-[420px] items-center gap-3 rounded-lg px-4 py-3 text-sm shadow-[0_8px_24px_rgba(0,0,0,0.25)] animate-[toast-entra_200ms_ease-out] md:bottom-6',
+            toast.tono === 'errore' ? 'bg-rosso text-white' : 'bg-inchiostro text-carta',
+          )}
         >
           <span className="flex-1">{toast.testo}</span>
           {toast.azione && (
@@ -41,6 +54,16 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               className="rounded-ctrl px-2 py-1 font-bold text-carta underline-offset-2 hover:underline"
             >
               {toast.azione.etichetta}
+            </button>
+          )}
+          {toast.tono === 'errore' && (
+            <button
+              type="button"
+              onClick={chiudi}
+              aria-label="Chiudi avviso"
+              className="rounded-ctrl px-2 py-1 font-bold text-white underline-offset-2 hover:underline"
+            >
+              Ok
             </button>
           )}
         </div>

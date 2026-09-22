@@ -6,6 +6,7 @@ import { useToast } from '@/components/useToast'
 import { aggiornaCategoria, aggiungiCategoria } from '@/db/categorie'
 import type { Categoria, ColoreCategoria, TipoMovimento } from '@/db/tipi'
 import { cn } from '@/lib/cn'
+import { conAvviso } from '@/lib/errori'
 import { COLORI_TAVOLOZZA, coloreCss } from '@/lib/colori'
 
 interface Props {
@@ -46,7 +47,7 @@ function Corpo({
   campoNome: React.RefObject<HTMLInputElement | null>
   onChiudi: () => void
 }) {
-  const { mostra } = useToast()
+  const { mostra, errore: avvisaErrore } = useToast()
   const [nome, setNome] = useState(categoria?.nome ?? '')
   const [colore, setColore] = useState<ColoreCategoria>(categoria?.colore ?? (tipo === 'entrata' ? 'verde' : 'c1'))
   const [icona, setIcona] = useState(categoria?.icona ?? (tipo === 'entrata' ? 'hand-coins' : 'shopping-basket'))
@@ -61,10 +62,20 @@ function Corpo({
       return
     }
     if (modifica) {
-      await aggiornaCategoria(categoria.id, { nome, colore, icona })
+      const fatto = await conAvviso(
+        () => aggiornaCategoria(categoria.id, { nome, colore, icona }),
+        'salvare la categoria',
+        avvisaErrore,
+      )
+      if (!fatto) return
       mostra('Categoria aggiornata', undefined, 2500)
     } else {
-      await aggiungiCategoria({ nome, tipo, colore, icona })
+      const fatto = await conAvviso(
+        () => aggiungiCategoria({ nome, tipo, colore, icona }),
+        'creare la categoria',
+        avvisaErrore,
+      )
+      if (!fatto) return
       mostra('Categoria creata', undefined, 2500)
     }
     onChiudi()
