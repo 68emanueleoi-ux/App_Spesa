@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn'
 import { coloreCss } from '@/lib/colori'
 import { formatDataBreve } from '@/lib/date'
 import { formatImportoMovimento } from '@/lib/importi'
-import { useMovimenti } from './MovimentiProvider'
+import { useMovimenti } from './useMovimenti'
 
 interface Props {
   movimento: Movimento

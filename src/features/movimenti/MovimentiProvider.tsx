@@ -1,5 +1,6 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
-import { useToast } from '@/components/Toast'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { useToast } from '@/components/useToast'
+import { MovimentiContext } from './useMovimenti'
 import { eliminaMovimento, ripristinaMovimento } from '@/db/movimenti'
 import type { Movimento, TipoMovimento } from '@/db/tipi'
 import { FormMovimento } from './FormMovimento'
@@ -10,16 +11,6 @@ interface StatoForm {
   movimento?: Movimento
   tipoIniziale?: TipoMovimento
 }
-
-interface MovimentiApi {
-  apriNuovo: (tipo?: TipoMovimento) => void
-  apriModifica: (m: Movimento) => void
-  chiudi: () => void
-  /** elimina subito e offre "Annulla" per 5 secondi */
-  elimina: (id: string) => Promise<void>
-}
-
-const Ctx = createContext<MovimentiApi | null>(null)
 
 /**
  * Stato globale del form movimento (raggiungibile da +, da "Nuovo movimento", dal tasto N
@@ -60,7 +51,7 @@ export function MovimentiProvider({ children }: { children: ReactNode }) {
   }, [apriNuovo])
 
   return (
-    <Ctx.Provider value={{ apriNuovo, apriModifica, chiudi, elimina }}>
+    <MovimentiContext.Provider value={{ apriNuovo, apriModifica, chiudi, elimina }}>
       {children}
       <FormMovimento
         aperto={form.aperto}
@@ -69,12 +60,6 @@ export function MovimentiProvider({ children }: { children: ReactNode }) {
         onChiudi={chiudi}
         onElimina={elimina}
       />
-    </Ctx.Provider>
+    </MovimentiContext.Provider>
   )
-}
-
-export function useMovimenti(): MovimentiApi {
-  const ctx = useContext(Ctx)
-  if (!ctx) throw new Error('useMovimenti va usato dentro MovimentiProvider')
-  return ctx
 }

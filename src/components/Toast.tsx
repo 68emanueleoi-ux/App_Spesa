@@ -1,16 +1,5 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
-
-interface Toast {
-  id: number
-  testo: string
-  azione?: { etichetta: string; esegui: () => void }
-}
-
-interface ToastApi {
-  mostra: (testo: string, azione?: Toast['azione'], durataMs?: number) => void
-}
-
-const ToastContext = createContext<ToastApi | null>(null)
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { ToastContext, type Toast, type ToastApi } from './useToast'
 
 const DURATA_DEFAULT = 5000
 
@@ -58,10 +47,4 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       )}
     </ToastContext.Provider>
   )
-}
-
-export function useToast(): ToastApi {
-  const ctx = useContext(ToastContext)
-  if (!ctx) throw new Error('useToast va usato dentro ToastProvider')
-  return ctx
 }

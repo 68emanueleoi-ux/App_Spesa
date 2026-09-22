@@ -1,0 +1,88 @@
+import { useLiveQuery } from 'dexie-react-hooks'
+import { useState } from 'react'
+import { IconaCategoria } from '@/components/IconaCategoria'
+import { Sheet } from '@/components/ui/Sheet'
+import { useToast } from '@/components/useToast'
+import { contaMovimentiCategoria, eliminaCategoria, senzaCategoria } from '@/db/categorie'
+import type { Categoria } from '@/db/tipi'
+import { cn } from '@/lib/cn'
+import { coloreCss } from '@/lib/colori'
+
+interface Props {
+  categoria: Categoria | null
+  /** tutte le categorie, per proporre la destinazione */
+  categorie: Categoria[]
+  onChiudi: () => void
+}
+
+/**
+ * Eliminazione di una categoria. Se ha movimenti, non li cancella in silenzio:
+ * chiede dove spostarli (un'altra categoria dello stesso tipo o "Senza categoria").
+ */
+export function EliminaCategoria({ categoria, categorie, onChiudi }: Props) {
+  return (
+    <Sheet aperto={categoria !== null} onChiudi={onChiudi} titolo="Elimina categoria">
+      {categoria && <Corpo key={categoria.id} categoria={categoria} categorie={categorie} onChiudi={onChiudi} />}
+    </Sheet>
+  )
+}
+
+function Corpo({ categoria, categorie, onChiudi }: { categoria: Categoria; categorie: Categoria[]; onChiudi: () => void }) {
+  const { mostra } = useToast()
+  const conteggio = useLiveQuery(() => contaMovimentiCategoria(categoria.id), [categoria.id])
+  const [destinazione, setDestinazione] = useState(() => senzaCategoria(categoria.tipo))
+  const alternative = categorie.filter((c) => c.tipo === categoria.tipo && c.id !== categoria.id)
+
+  const conferma = async () => {
+    await eliminaCategoria(categoria.id, destinazione)
+    mostra(`Categoria "${categoria.nome}" eliminata`, undefined, 3000)
+    onChiudi()
+  }
+
+  return (
+    <>
+      <h2 className="font-display text-lg font-semibold">Elimina "{categoria.nome}"</h2>
+
+      {conteggio === undefined ? null : conteggio === 0 ? (
+        <p className="mt-2 text-sm text-inchiostro-2">Nessun movimento usa questa categoria.</p>
+      ) : (
+        <>
+          <p className="mt-2 text-sm">
+            {conteggio === 1 ? 'Un movimento usa' : `${conteggio} movimenti usano`} questa categoria. Dove li sposto?
+          </p>
+          <div role="radiogroup" aria-label="Categoria di destinazione" className="mt-3 grid max-h-[40dvh] gap-1.5 overflow-y-auto">
+            {alternative.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                role="radio"
+                aria-checked={destinazione === c.id}
+                onClick={() => setDestinazione(c.id)}
+                className={cn(
+                  'flex min-h-11 items-center gap-2.5 rounded-ctrl border border-filetto px-3 text-left text-sm font-medium',
+                  destinazione === c.id && 'border-cobalto ring-1 ring-cobalto ring-inset',
+                  c.diSistema && 'text-inchiostro-2',
+                )}
+              >
+                <IconaCategoria nome={c.icona} className="size-4 shrink-0" style={{ color: coloreCss(c.colore) }} />
+                {c.nome}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      <button
+        type="button"
+        onClick={conferma}
+        disabled={conteggio === undefined}
+        className="mt-5 h-12 w-full rounded-lg bg-rosso text-base font-bold text-white active:brightness-95 disabled:opacity-60"
+      >
+        {conteggio ? 'Sposta i movimenti ed elimina' : 'Elimina categoria'}
+      </button>
+      <button type="button" onClick={onChiudi} className="mt-2 h-11 w-full rounded-lg text-sm font-medium text-inchiostro-2 active:bg-carta">
+        Annulla
+      </button>
+    </>
+  )
+}

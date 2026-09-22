@@ -2,7 +2,7 @@ import { ChartNoAxesCombined, Layers, List, Moon, Plus, Sun } from 'lucide-react
 import { NavLink, Outlet } from 'react-router'
 import { cn } from '@/lib/cn'
 import { useTema } from '@/lib/tema'
-import { useMovimenti } from '@/features/movimenti/MovimentiProvider'
+import { useMovimenti } from '@/features/movimenti/useMovimenti'
 
 const VOCI = [
   { a: '/', testo: 'Report', Icona: ChartNoAxesCombined },

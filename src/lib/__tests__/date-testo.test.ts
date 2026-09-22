@@ -9,7 +9,7 @@ import {
   meseSuccessivo,
   parseData,
 } from '../date'
-import { contiene, normalizza } from '../testo'
+import { contiene, normalizza, testoPerRegola } from '../testo'
 
 describe('date', () => {
   it('naviga tra i mesi anche a cavallo dell\'anno', () => {
@@ -53,5 +53,14 @@ describe('testo', () => {
     expect(contiene('Caffè Centrale', 'CENTR')).toBe(true)
     expect(contiene('Caffè Centrale', 'bar')).toBe(false)
     expect(contiene('qualsiasi', '')).toBe(true)
+  })
+})
+
+describe('testoPerRegola', () => {
+  it('toglie i prefissi bancari e i numeri, tiene al massimo due parole', () => {
+    expect(testoPerRegola('PAGAMENTO POS CONAD SUPERSTORE ROMA')).toBe('conad superstore')
+    expect(testoPerRegola('Addebito diretto SDD TIM 12/09')).toBe('tim')
+    expect(testoPerRegola('Trenitalia')).toBe('trenitalia')
+    expect(testoPerRegola('PAGAMENTO POS 22/09/26 AMAZON EU')).toBe('amazon eu')
   })
 })

@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks'
-import { ArrowDownUp, Search } from 'lucide-react'
+import { ArrowDownUp, Database, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { SelettoreMese } from '@/components/SelettoreMese'
@@ -8,12 +8,13 @@ import { movimentiDelMese } from '@/db/movimenti'
 import type { Categoria, Movimento, TipoMovimento } from '@/db/tipi'
 import { totali } from '@/lib/calcoli'
 import { cn } from '@/lib/cn'
-import { formatDataLunga } from '@/lib/date'
+import { formatDataLunga, formatMese } from '@/lib/date'
 import { formatImporto } from '@/lib/importi'
 import { useMeseSelezionato } from '@/lib/mese'
 import { contiene } from '@/lib/testo'
-import { useMovimenti } from './MovimentiProvider'
+import { useMovimenti } from './useMovimenti'
 import { RigaMovimento } from './RigaMovimento'
+import { PannelloDati } from './PannelloDati'
 
 type FiltroTipo = 'tutti' | TipoMovimento
 type Ordine = 'data' | 'importo'
@@ -27,6 +28,7 @@ export function MovimentiPage() {
   const [categoriaId, setCategoriaId] = useState(() => params.get('cat') ?? '')
   const [ordine, setOrdine] = useState<Ordine>('data')
   const [ricerca, setRicerca] = useState('')
+  const [datiAperto, setDatiAperto] = useState(false)
 
   const movimenti = useLiveQuery(() => movimentiDelMese(mese), [mese])
   const categorie = useLiveQuery(() => db.categorie.orderBy('ordine').toArray())
@@ -48,6 +50,14 @@ export function MovimentiPage() {
     <>
       <div className="flex items-center justify-between py-2">
         <SelettoreMese />
+        <button
+          type="button"
+          onClick={() => setDatiAperto(true)}
+          aria-label="Dati: importa, esporta, backup"
+          className="grid size-9 place-items-center rounded-ctrl text-inchiostro-2 hover:bg-filetto-leggero active:bg-filetto"
+        >
+          <Database className="size-[18px]" />
+        </button>
       </div>
 
       <label className="mt-1 flex h-10 items-center gap-2 rounded-ctrl border border-filetto bg-foglio px-3 text-sm focus-within:border-cobalto">
@@ -80,11 +90,25 @@ export function MovimentiPage() {
           )}
         >
           <option value="">Tutte le categorie</option>
-          {categorieFiltro.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.nome}
-            </option>
-          ))}
+          {tipo === 'tutti' ? (
+            (['uscita', 'entrata'] as const).map((t) => (
+              <optgroup key={t} label={t === 'uscita' ? 'Uscite' : 'Entrate'}>
+                {categorieFiltro
+                  .filter((c) => c.tipo === t)
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.nome}
+                    </option>
+                  ))}
+              </optgroup>
+            ))
+          ) : (
+            categorieFiltro.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.nome}
+              </option>
+            ))
+          )}
         </select>
         <Chip attivo={ordine === 'importo'} onClick={() => setOrdine(ordine === 'data' ? 'importo' : 'data')}>
           <ArrowDownUp className="size-3.5" aria-hidden="true" />
@@ -110,6 +134,21 @@ export function MovimentiPage() {
           ))}
         </div>
       )}
+
+      <PannelloDati
+        aperto={datiAperto}
+        onChiudi={() => setDatiAperto(false)}
+        filtrati={filtrati}
+        perId={perId}
+        descrizioneFiltro={[
+          formatMese(mese),
+          tipo === 'tutti' ? null : tipo === 'uscita' ? 'solo uscite' : 'solo entrate',
+          categoriaId ? perId.get(categoriaId)?.nome : null,
+          ricerca.trim() ? `"${ricerca.trim()}"` : null,
+        ]
+          .filter(Boolean)
+          .join(', ')}
+      />
     </>
   )
 }

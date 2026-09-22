@@ -1,19 +1,21 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useEffect, useRef } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
-import { useToast } from '@/components/Toast'
+import { useToast } from '@/components/useToast'
 import { IconaCategoria } from '@/components/IconaCategoria'
 import { Sheet } from '@/components/ui/Sheet'
 import { db } from '@/db/db'
 import { aggiungiMovimento, aggiornaMovimento } from '@/db/movimenti'
+import { aggiungiRegola, esisteRegola } from '@/db/regole'
 import type { Movimento, TipoMovimento } from '@/db/tipi'
 import { applicaRegole } from '@/lib/calcoli'
 import { cn } from '@/lib/cn'
 import { coloreCss } from '@/lib/colori'
 import { giorniNelMese, meseCorrente, oggiIso } from '@/lib/date'
 import { centesimiInInput, parseImporto } from '@/lib/importi'
+import { testoPerRegola } from '@/lib/testo'
 
 function fineMeseCorrente(): string {
   const m = meseCorrente()
@@ -52,12 +54,12 @@ export function FormMovimento({ aperto, movimento, tipoIniziale, onChiudi, onEli
   const campoImporto = useRef<HTMLInputElement>(null)
   const modifica = movimento !== undefined
 
-  const { control, register, handleSubmit, watch, setValue, reset, formState } = useForm<Valori>({
+  const { control, register, handleSubmit, setValue, reset, formState } = useForm<Valori>({
     resolver: zodResolver(schema),
     defaultValues: valoriIniziali(movimento, tipoIniziale),
   })
-  const tipo = watch('tipo')
-  const categoriaId = watch('categoriaId')
+  const tipo = useWatch({ control, name: 'tipo' })
+  const categoriaId = useWatch({ control, name: 'categoriaId' })
 
   // Ogni apertura riparte dai valori giusti (nuovo → uscita/oggi, modifica → il movimento)
   useEffect(() => {
@@ -83,7 +85,17 @@ export function FormMovimento({ aperto, movimento, tipoIniziale, onChiudi, onEli
     }
     if (modifica) {
       await aggiornaMovimento(movimento.id, dati)
-      mostra('Modifiche salvate')
+      const testo = testoPerRegola(v.descrizione)
+      // Categoria corretta su un movimento importato: proponi una regola per la prossima volta
+      if (movimento.origine === 'import' && movimento.categoriaId !== v.categoriaId && testo && !(await esisteRegola(testo))) {
+        const nomeCat = categorie?.find((c) => c.id === v.categoriaId)?.nome ?? 'questa categoria'
+        mostra(`Assegnare sempre "${testo}" a ${nomeCat}?`, {
+          etichetta: 'Crea regola',
+          esegui: () => void aggiungiRegola(testo, v.categoriaId),
+        }, 7000)
+      } else {
+        mostra('Modifiche salvate', undefined, 2500)
+      }
     } else {
       await aggiungiMovimento(dati)
       mostra(v.tipo === 'uscita' ? 'Spesa aggiunta' : 'Entrata aggiunta', undefined, 2500)
