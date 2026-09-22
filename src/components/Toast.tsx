@@ -34,16 +34,30 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={api}>
       {children}
+
+      {/*
+        La regione resta sempre nel DOM, vuota: molti lettori di schermo non
+        annunciano una live region che compare gia piena, e l'avviso passava
+        inosservato. Cosi cambia solo il contenuto, ed e quello che viene letto.
+      */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {toast?.tono === 'errore' ? '' : (toast?.testo ?? '')}
+      </div>
+      <div role="alert" aria-live="assertive" className="sr-only">
+        {toast?.tono === 'errore' ? toast.testo : ''}
+      </div>
+
       {toast && (
         <div
-          role={toast.tono === 'errore' ? 'alert' : 'status'}
-          aria-live={toast.tono === 'errore' ? 'assertive' : 'polite'}
           className={cn(
             'fixed inset-x-4 bottom-[calc(80px+env(safe-area-inset-bottom))] z-30 mx-auto flex max-w-[420px] items-center gap-3 rounded-lg px-4 py-3 text-sm shadow-[0_8px_24px_rgba(0,0,0,0.25)] animate-[toast-entra_200ms_ease-out] md:bottom-6',
             toast.tono === 'errore' ? 'bg-rosso text-white' : 'bg-inchiostro text-carta',
           )}
         >
-          <span className="flex-1">{toast.testo}</span>
+          {/* Il testo e gia stato annunciato dalla live region qui sopra: non ripeterlo. */}
+          <span className="flex-1" aria-hidden="true">
+            {toast.testo}
+          </span>
           {toast.azione && (
             <button
               type="button"
