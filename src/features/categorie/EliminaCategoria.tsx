@@ -65,8 +65,8 @@ function Corpo({ categoria, categorie, onChiudi }: { categoria: Categoria; categ
                 aria-checked={destinazione === c.id}
                 onClick={() => setDestinazione(c.id)}
                 className={cn(
-                  'flex min-h-11 items-center gap-2.5 rounded-ctrl border border-filetto px-3 text-left text-sm font-medium',
-                  destinazione === c.id && 'border-cobalto ring-1 ring-cobalto ring-inset',
+                  'flex min-h-11 items-center gap-2.5 rounded-ctrl border px-3 text-left text-sm font-medium',
+                  destinazione === c.id ? 'border-cobalto ring-1 ring-cobalto ring-inset' : 'border-filetto',
                   c.diSistema && 'text-inchiostro-2',
                 )}
               >

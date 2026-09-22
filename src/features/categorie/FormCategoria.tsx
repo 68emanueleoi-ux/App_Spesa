@@ -163,8 +163,10 @@ function Corpo({
             aria-label={n}
             onClick={() => setIcona(n)}
             className={cn(
-              'grid aspect-square place-items-center rounded-ctrl border border-filetto text-inchiostro-2 active:bg-carta',
-              icona === n && 'border-cobalto text-inchiostro ring-1 ring-cobalto ring-inset',
+              'grid aspect-square place-items-center rounded-ctrl border active:bg-carta',
+              icona === n
+                ? 'border-cobalto text-inchiostro ring-1 ring-cobalto ring-inset'
+                : 'border-filetto text-inchiostro-2',
             )}
           >
             <IconaCategoria nome={n} className="size-[18px]" />

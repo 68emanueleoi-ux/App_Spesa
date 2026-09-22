@@ -211,8 +211,8 @@ function PassoFile({ onFile, errore }: { onFile: (f: File) => void; errore: stri
           if (f) onFile(f)
         }}
         className={cn(
-          'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-sheet border border-dashed border-filetto px-4 py-12 text-center',
-          trascinando && 'border-cobalto bg-filetto-leggero',
+          'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-sheet border border-dashed px-4 py-12 text-center',
+          trascinando ? 'border-cobalto bg-filetto-leggero' : 'border-filetto',
         )}
       >
         <FileUp className="size-7 text-inchiostro-2" aria-hidden="true" />
@@ -550,8 +550,8 @@ function PassoAnteprima({
                     onChange={(e) => aggiorna(r.indice, { categoriaId: e.target.value, creaRegola: !!r.descrizione })}
                     aria-label="Categoria"
                     className={cn(
-                      'ml-auto h-8 max-w-[11rem] truncate rounded-ctrl border border-filetto bg-foglio px-2 text-xs text-inchiostro',
-                      perId.get(r.categoriaId)?.diSistema && 'text-inchiostro-2',
+                      'ml-auto h-8 max-w-[11rem] truncate rounded-ctrl border border-filetto bg-foglio px-2 text-xs',
+                      perId.get(r.categoriaId)?.diSistema ? 'text-inchiostro-2' : 'text-inchiostro',
                     )}
                   >
                     {categorie

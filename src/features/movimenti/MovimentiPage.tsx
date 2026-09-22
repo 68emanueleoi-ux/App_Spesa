@@ -102,8 +102,8 @@ export function MovimentiPage() {
           onChange={(e) => impostaCategoria(e.target.value)}
           aria-label="Categoria"
           className={cn(
-            'h-9 shrink-0 appearance-none rounded-ctrl border border-filetto bg-foglio px-3 text-sm',
-            categoriaId && 'border-cobalto font-medium text-cobalto',
+            'h-9 shrink-0 appearance-none rounded-ctrl border bg-foglio px-3 text-sm',
+            categoriaId ? 'border-cobalto font-medium text-cobalto' : 'border-filetto',
           )}
         >
           <option value="">Tutte le categorie</option>
@@ -242,8 +242,8 @@ function Chip({
       aria-checked={ariaChecked}
       onClick={onClick}
       className={cn(
-        'flex h-9 shrink-0 items-center gap-1.5 rounded-ctrl border border-filetto bg-foglio px-3 text-sm whitespace-nowrap',
-        attivo && 'border-cobalto font-medium text-cobalto',
+        'flex h-9 shrink-0 items-center gap-1.5 rounded-ctrl border bg-foglio px-3 text-sm whitespace-nowrap',
+        attivo ? 'border-cobalto font-medium text-cobalto' : 'border-filetto',
       )}
     >
       {children}

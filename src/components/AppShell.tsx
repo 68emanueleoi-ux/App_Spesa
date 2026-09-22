@@ -32,8 +32,10 @@ export function AppShell() {
                 end={a === '/'}
                 className={({ isActive }) =>
                   cn(
-                    'pb-0.5 text-sm font-medium text-inchiostro-2 hover:text-inchiostro',
-                    isActive && 'text-inchiostro shadow-[0_2px_0_var(--inchiostro)]',
+                    'pb-0.5 text-sm font-medium',
+                    isActive
+                      ? 'text-inchiostro shadow-[0_2px_0_var(--inchiostro)]'
+                      : 'text-inchiostro-2 hover:text-inchiostro',
                   )
                 }
               >
@@ -81,8 +83,8 @@ export function AppShell() {
             end={a === '/'}
             className={({ isActive }) =>
               cn(
-                'flex flex-col items-center gap-0.5 py-1 text-[11px] font-medium text-inchiostro-2',
-                isActive && 'text-inchiostro',
+                'flex flex-col items-center gap-0.5 py-1 text-[11px] font-medium',
+                isActive ? 'text-inchiostro' : 'text-inchiostro-2',
               )
             }
           >

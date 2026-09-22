@@ -156,8 +156,10 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
             aria-checked={valori.tipo === t}
             onClick={() => cambiaTipo(t)}
             className={cn(
-              'rounded-ctrl py-2 text-inchiostro-2 transition-colors',
-              valori.tipo === t && 'bg-foglio text-inchiostro shadow-[0_1px_2px_rgba(0,0,0,0.12)]',
+              'rounded-ctrl py-2 transition-colors',
+              valori.tipo === t
+                ? 'bg-foglio text-inchiostro shadow-[0_1px_2px_rgba(0,0,0,0.12)]'
+                : 'text-inchiostro-2',
             )}
           >
             {t === 'uscita' ? 'Uscita' : 'Entrata'}
@@ -199,8 +201,8 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
               aria-checked={attiva}
               onClick={() => cambia('categoriaId', c.id)}
               className={cn(
-                'flex min-h-11 items-center gap-2 rounded-ctrl border border-filetto px-2.5 py-2 text-left text-sm font-medium active:bg-carta',
-                attiva && 'border-cobalto ring-1 ring-cobalto ring-inset',
+                'flex min-h-11 items-center gap-2 rounded-ctrl border px-2.5 py-2 text-left text-sm font-medium active:bg-carta',
+                attiva ? 'border-cobalto ring-1 ring-cobalto ring-inset' : 'border-filetto',
                 c.diSistema && 'text-inchiostro-2',
               )}
             >
