@@ -1,8 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useMemo } from 'react'
 import { Link, useOutletContext } from 'react-router'
-import { format, parseISO } from 'date-fns'
-import { it } from 'date-fns/locale'
 import { BottoneTema } from '@/components/AppShell'
 import { SelettoreMese } from '@/components/SelettoreMese'
 import { db } from '@/db/db'
@@ -19,7 +17,7 @@ import {
   type Confronto,
 } from '@/lib/calcoli'
 import { cn } from '@/lib/cn'
-import { giornoDi, mesePrecedente as calcolaMesePrecedente, oggiIso } from '@/lib/date'
+import { giornoDi, mesePrecedente as calcolaMesePrecedente, nomeMese, oggiIso } from '@/lib/date'
 import { formatImporto, formatImportoMovimento } from '@/lib/importi'
 import { useMeseSelezionato } from '@/lib/mese'
 import { useMovimenti } from '@/features/movimenti/useMovimenti'
@@ -147,7 +145,7 @@ function FraseConfronto({
   eCorrente: boolean
   giornoOggi?: number
 }) {
-  const nomeMesePrec = format(parseISO(`${mesePrec}-01`), 'LLLL', { locale: it })
+  const nomeMesePrec = nomeMese(mesePrec)
   if (!confronto) {
     return <p className="mt-1 text-sm text-inchiostro-2">Nessun movimento a {nomeMesePrec} con cui confrontare</p>
   }

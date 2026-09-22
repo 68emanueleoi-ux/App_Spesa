@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import { format, parseISO } from 'date-fns'
-import { it } from 'date-fns/locale'
-import { giorniNelMese } from '@/lib/date'
+import { giorniNelMese, nomeMese } from '@/lib/date'
 import { formatImporto } from '@/lib/importi'
 import { useLarghezza } from '@/lib/useLarghezza'
 
@@ -40,8 +38,8 @@ export function TracciatoMese({ corrente, precedente, mese, mesePrecedente, alte
   const dPrecedente = tracciato(precedente)
 
   const ultimo = corrente.length - 1
-  const nomeMese = format(parseISO(`${mese}-01`), 'LLLL', { locale: it })
-  const nomeMesePrec = format(parseISO(`${mesePrecedente}-01`), 'LLLL', { locale: it })
+  const nome = nomeMese(mese)
+  const nomeMesePrec = nomeMese(mesePrecedente)
 
   const suPuntatore = (e: React.PointerEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -132,7 +130,7 @@ export function TracciatoMese({ corrente, precedente, mese, mesePrecedente, alte
         >
           <div className="font-medium">Giorno {attivo + 1}</div>
           <div className="flex justify-between gap-3">
-            <span className="text-inchiostro-2">{nomeMese}</span>
+            <span className="text-inchiostro-2">{nome}</span>
             <span>{valCorr === null ? '—' : formatImporto(valCorr)}</span>
           </div>
           <div className="flex justify-between gap-3">
