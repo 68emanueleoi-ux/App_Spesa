@@ -41,6 +41,14 @@ describe('inizializzaDb', () => {
     expect(await db.categorie.count()).toBe(CATEGORIE_PREDEFINITE.length)
   })
 
+  it('due aperture in parallelo al primo avvio non seminano due volte', async () => {
+    await db.delete()
+    // Con il vecchio count()+bulkAdd tutte e tre vedevano il database vuoto:
+    // la prima seminava, le altre fallivano con un errore di vincolo.
+    await Promise.all([inizializzaDb(), inizializzaDb(), inizializzaDb()])
+    expect(await db.categorie.count()).toBe(CATEGORIE_PREDEFINITE.length)
+  })
+
   it('crea una "Senza categoria" per ogni tipo', async () => {
     expect(await db.categorie.get(SENZA_CATEGORIA_USCITA)).toBeDefined()
     expect(await db.categorie.get(SENZA_CATEGORIA_ENTRATA)).toBeDefined()

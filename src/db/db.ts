@@ -17,17 +17,22 @@ export class SpeseDb extends Dexie {
       regole: 'id, priorita, categoriaId',
       impostazioni: 'chiave',
     })
+
+    // Il seed gira dentro la transazione che crea il database: due schede aperte
+    // insieme al primo avvio non possono seminare due volte (prima era un
+    // count() seguito da bulkAdd, e la seconda scheda falliva con un errore di
+    // vincolo che finiva solo in console).
+    this.on('populate', (tx) => {
+      void tx.table<Categoria, string>('categorie').bulkAdd(CATEGORIE_PREDEFINITE)
+    })
   }
 }
 
 export const db = new SpeseDb()
 
-/** Seed delle categorie al primo avvio e richiesta di storage persistente (Safari può cancellare i dati dei siti non usati). */
+/** Apre il database (il seed avviene da sé alla creazione) e chiede lo storage persistente: Safari può cancellare i dati dei siti non usati. */
 export async function inizializzaDb(istanza: SpeseDb = db): Promise<void> {
-  const n = await istanza.categorie.count()
-  if (n === 0) {
-    await istanza.categorie.bulkAdd(CATEGORIE_PREDEFINITE)
-  }
+  await istanza.open()
   // Non si aspetta la risposta: su alcuni browser resta in sospeso finché l'utente non decide.
   if (typeof navigator !== 'undefined' && navigator.storage?.persist) {
     navigator.storage.persist().catch(() => undefined)
