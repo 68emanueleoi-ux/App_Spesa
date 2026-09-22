@@ -155,7 +155,10 @@ export function TracciatoMese({ corrente, precedente, mese, mesePrecedente, alte
           </>
         )}
 
-        {/* totale del mese precedente, appoggiato alla sua fine */}
+        {/*
+          Totale del mese precedente, appoggiato alla sua fine. Su schermo
+          stretto resta solo l'importo: il nome del mese finiva sopra "oggi".
+        */}
         {precedente.length > 1 && (
           <text
             x={W}
@@ -165,7 +168,8 @@ export function TracciatoMese({ corrente, precedente, mese, mesePrecedente, alte
             fill="var(--inchiostro-2)"
             className="num"
           >
-            {nomeMesePrec} {formatImporto(precedente.at(-1)!)}
+            {W > 420 ? `${nomeMesePrec} ` : ''}
+            {formatImporto(precedente.at(-1)!)}
           </text>
         )}
 

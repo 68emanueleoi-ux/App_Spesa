@@ -14,7 +14,7 @@ export function SelettoreMese() {
       >
         <ChevronLeft className="size-5" />
       </button>
-      <h1 className="min-w-[10ch] text-center font-display text-lg font-semibold">{formatMese(mese)}</h1>
+      <h1 className="min-w-[9ch] text-center font-display text-lg font-semibold whitespace-nowrap">{formatMese(mese)}</h1>
       <button
         type="button"
         onClick={successivo}

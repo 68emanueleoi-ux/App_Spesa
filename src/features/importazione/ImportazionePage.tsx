@@ -137,6 +137,7 @@ export function ImportazionePage() {
       <h1 className="py-3 font-display text-xl font-semibold">Importa CSV</h1>
       <Passi corrente={passo.n} />
 
+      <div className="rounded-[18px] bg-foglio p-5 md:p-6 dark:ring-1 dark:ring-filetto-leggero">
       {passo.n === 1 && <PassoFile onFile={caricaFile} errore={errore} />}
 
       {passo.n === 2 && (
@@ -160,6 +161,7 @@ export function ImportazionePage() {
           onImporta={importa}
         />
       )}
+      </div>
     </>
   )
 }
@@ -167,7 +169,7 @@ export function ImportazionePage() {
 function Passi({ corrente }: { corrente: 1 | 2 | 3 }) {
   const nomi = ['File', 'Colonne', 'Anteprima']
   return (
-    <ol className="mb-4 flex gap-4 text-xs" aria-label="Passaggi">
+    <ol className="mb-3.5 flex gap-4 text-xs" aria-label="Passaggi">
       {nomi.map((n, i) => (
         <li
           key={n}
@@ -211,8 +213,8 @@ function PassoFile({ onFile, errore }: { onFile: (f: File) => void; errore: stri
           if (f) onFile(f)
         }}
         className={cn(
-          'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-sheet border border-dashed px-4 py-12 text-center',
-          trascinando ? 'border-cobalto bg-filetto-leggero' : 'border-filetto',
+          'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-[14px] bg-carta px-4 py-14 text-center',
+          trascinando && 'ring-2 ring-cobalto ring-inset',
         )}
       >
         <FileUp className="size-7 text-inchiostro-2" aria-hidden="true" />
@@ -455,7 +457,7 @@ function PassoMappatura({
   )
 }
 
-const classeSelect = 'mt-1 h-11 w-full rounded-ctrl border border-filetto bg-foglio px-3 text-base text-inchiostro'
+const classeSelect = 'mt-1 h-11 w-full rounded-ctrl bg-carta px-3 text-base text-inchiostro'
 
 function Campo({ etichetta, children }: { etichetta: string; children: React.ReactNode }) {
   return (
@@ -580,7 +582,7 @@ function PassoAnteprima({
         ))}
       </ul>
 
-      <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] mt-4 flex gap-2 bg-carta py-2 md:bottom-4">
+      <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] -mx-5 mt-4 flex gap-2 bg-foglio px-5 py-3 md:-mx-6 md:bottom-0 md:px-6">
         <button
           type="button"
           onClick={onIndietro}

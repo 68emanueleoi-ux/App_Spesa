@@ -209,20 +209,35 @@ function FraseConfronto({
   )
 }
 
+/**
+ * Entrate, uscite e saldo su una riga sola.
+ * Gli importi non vanno mai a capo: su telefono tre numeri affiancati non ci
+ * stanno a corpo fisso, quindi il corpo segue la larghezza dello schermo e
+ * scende fino a 13px prima di arrivare al limite.
+ */
 function Totali({ entrate, uscite, saldo }: { entrate: number; uscite: number; saldo: number }) {
   return (
-    <dl className="num grid w-full shrink-0 grid-cols-3 gap-x-6 text-xs text-inchiostro-2 sm:w-auto sm:gap-x-9 sm:text-right">
-      <div>
+    <dl className="num grid w-full shrink-0 grid-cols-3 gap-x-3 text-xs text-inchiostro-2 sm:w-auto sm:gap-x-9 sm:text-right">
+      <div className="min-w-0">
         <dt>Entrate</dt>
-        <dd className="mt-1 text-lg font-medium text-verde">{formatImportoMovimento(entrate, 'entrata')}</dd>
+        <dd className="mt-1 text-[clamp(0.8125rem,3.4vw,1.125rem)] font-medium whitespace-nowrap text-verde">
+          {formatImportoMovimento(entrate, 'entrata')}
+        </dd>
       </div>
-      <div>
+      <div className="min-w-0">
         <dt>Uscite</dt>
-        <dd className="mt-1 text-lg font-medium text-inchiostro">{formatImportoMovimento(uscite, 'uscita')}</dd>
+        <dd className="mt-1 text-[clamp(0.8125rem,3.4vw,1.125rem)] font-medium whitespace-nowrap text-inchiostro">
+          {formatImportoMovimento(uscite, 'uscita')}
+        </dd>
       </div>
-      <div>
+      <div className="min-w-0">
         <dt>Saldo</dt>
-        <dd className={cn('mt-1 text-lg font-medium', saldo < 0 ? 'text-rosso' : 'text-inchiostro')}>
+        <dd
+          className={cn(
+            'mt-1 text-[clamp(0.8125rem,3.4vw,1.125rem)] font-medium whitespace-nowrap',
+            saldo < 0 ? 'text-rosso' : 'text-inchiostro',
+          )}
+        >
           {formatImporto(saldo)}
         </dd>
       </div>
