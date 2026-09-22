@@ -80,7 +80,9 @@ export function MovimentiPage() {
         </button>
       </div>
 
-      <label className="mt-1 flex h-10 items-center gap-2 rounded-ctrl border border-filetto bg-foglio px-3 text-sm focus-within:border-cobalto">
+      {/* Ricerca e filtri sono un cluster solo: prima galleggiavano sciolti sulla carta */}
+      <div className="mt-1 rounded-[18px] bg-foglio p-3 md:p-3.5 dark:ring-1 dark:ring-filetto-leggero">
+      <label className="flex h-11 items-center gap-2 rounded-ctrl bg-carta px-3 text-sm focus-within:ring-1 focus-within:ring-cobalto">
         <Search className="size-4 shrink-0 text-inchiostro-2" aria-hidden="true" />
         <input
           type="search"
@@ -92,7 +94,7 @@ export function MovimentiPage() {
         />
       </label>
 
-      <div className="-mx-5 mt-2.5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] md:mx-0 md:px-0">
+      <div className="-mx-3 mt-2.5 flex gap-2 overflow-x-auto px-3 pb-0.5 [scrollbar-width:none]">
         <div {...gruppoTipo.propsGruppo} role="radiogroup" aria-label="Tipo" className="flex gap-2">
           {TIPI.map((t, i) => (
             <Chip
@@ -142,9 +144,10 @@ export function MovimentiPage() {
           {ordine === 'data' ? 'Per data' : 'Per importo'}
         </Chip>
       </div>
+      </div>
 
       {ricercaGlobale && filtrati.length > 0 && (
-        <p className="num mt-3 text-xs text-inchiostro-2">
+        <p className="num mt-3.5 text-xs text-inchiostro-2">
           {filtrati.length === 1 ? 'Un risultato' : `${filtrati.length} risultati`} in tutti i mesi ·{' '}
           <button type="button" onClick={() => setRicerca('')} className="font-medium text-cobalto">
             torna a {formatMese(mese)}
@@ -154,33 +157,31 @@ export function MovimentiPage() {
 
       {movimenti === undefined ? null : ricercaGlobale ? (
         filtrati.length === 0 ? (
-          <p className="py-16 text-center text-sm text-inchiostro-2">
-            Nessun movimento contiene “{cercato}”, in nessun mese.
-          </p>
+          <Vuoto>Nessun movimento contiene “{cercato}”, in nessun mese.</Vuoto>
         ) : (
-          <div className="mt-2">
+          <Lista>
             {filtrati.map((m) => (
               <RigaMovimento key={m.id} movimento={m} categoria={perId.get(m.categoriaId)} mostraData conAnno />
             ))}
-          </div>
+          </Lista>
         )
       ) : movimenti.length === 0 ? (
-        <p className="py-16 text-center text-sm text-inchiostro-2">
+        <Vuoto>
           Nessun movimento questo mese.{' '}
           <button type="button" onClick={() => apriNuovo()} className="font-medium text-cobalto">
             Aggiungi il primo
           </button>
-        </p>
+        </Vuoto>
       ) : filtrati.length === 0 ? (
-        <p className="py-16 text-center text-sm text-inchiostro-2">Nessun movimento corrisponde ai filtri.</p>
+        <Vuoto>Nessun movimento corrisponde ai filtri.</Vuoto>
       ) : ordine === 'data' ? (
         <ListaPerGiorno movimenti={filtrati} perId={perId} />
       ) : (
-        <div className="mt-2">
+        <Lista>
           {filtrati.map((m) => (
             <RigaMovimento key={m.id} movimento={m} categoria={perId.get(m.categoriaId)} mostraData />
           ))}
-        </div>
+        </Lista>
       )}
 
       <PannelloDati
@@ -213,14 +214,16 @@ function ListaPerGiorno({ movimenti, perId }: { movimenti: Movimento[]; perId: M
   }, [movimenti])
 
   return (
-    <div>
-      {giorni.map(([data, lista]) => {
+    <Lista>
+      {giorni.map(([data, lista], i) => {
         const t = totali(lista)
         return (
-          <section key={data}>
-            <h2 className="num flex justify-between pt-4 pb-1 text-xs text-inchiostro-2">
+          <section key={data} className={i > 0 ? 'mt-5' : undefined}>
+            <h2 className="num flex items-baseline justify-between gap-3 pb-1.5 text-xs text-inchiostro-2">
               <span>{formatDataLunga(data)}</span>
-              <span className={cn(t.saldo > 0 && 'text-verde')}>{formatImporto(t.saldo, { segno: 'sempre' })}</span>
+              <span className={cn('font-medium', t.saldo > 0 && 'text-verde')}>
+                {formatImporto(t.saldo, { segno: 'sempre' })}
+              </span>
             </h2>
             {lista.map((m) => (
               <RigaMovimento key={m.id} movimento={m} categoria={perId.get(m.categoriaId)} />
@@ -228,7 +231,24 @@ function ListaPerGiorno({ movimenti, perId }: { movimenti: Movimento[]; perId: M
           </section>
         )
       })}
+    </Lista>
+  )
+}
+
+/** Il registro sta su foglio, come i blocchi del report. */
+function Lista({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mt-4 rounded-[18px] bg-foglio px-5 py-4 md:px-6 md:py-5 dark:ring-1 dark:ring-filetto-leggero">
+      {children}
     </div>
+  )
+}
+
+function Vuoto({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="mt-4 rounded-[18px] bg-foglio px-5 py-16 text-center text-sm text-inchiostro-2 dark:ring-1 dark:ring-filetto-leggero">
+      {children}
+    </p>
   )
 }
 
