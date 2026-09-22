@@ -5,7 +5,7 @@ Web app personale per tracciare entrate e uscite mensili. Pensata per iPhone (in
 - **Report del mese**: quanto hai speso finora, il tratto delle uscite cumulate confrontato con il mese precedente allo stesso giorno, ripartizione per categoria, ultimi movimenti.
 - **Movimenti**: inserimento in 4 tocchi, lista per giorno con filtri e ricerca, modifica, eliminazione con Annulla.
 - **Categorie** con colore e icona; eliminazione che sposta i movimenti invece di cancellarli.
-- **Importazione CSV** (Postepay, banca, fogli di calcolo) con riconoscimento delle colonne, anteprima, deduplica e regole di categorizzazione automatica.
+- **Importazione CSV o Excel** (Postepay, banca, fogli di calcolo) con riconoscimento delle colonne, anteprima, deduplica e regole di categorizzazione automatica.
 - **Backup e ripristino** in JSON, **esportazione CSV**.
 - Tema chiaro/scuro, offline, importi sempre in centesimi interi (mai float).
 
@@ -34,10 +34,14 @@ Poi, da Safari: **Condividi → Aggiungi alla schermata Home**. L'app si apre a 
 
 ## Importare da Postepay
 
-1. Dall'app Postepay o dall'area riservata esporta la lista movimenti (CSV o Excel → salva come CSV).
-2. Nell'app: Movimenti → icona database → **Importa CSV**, oppure "Importa CSV" dal report vuoto.
+L'app Postepay non esporta file: si usa il sito.
+
+1. Da Safari (anche sull'iPhone) entra su **poste.it → MyPoste**, apri la tua Postepay, scheda **Movimenti**, scorri fino a **"Scarica elenco su file"** e scegli **Excel**. Il file `.xlsx` finisce in *File → Download*.
+2. Nell'app: Movimenti → icona database → **Importa CSV** (accetta anche l'Excel così com'è), oppure "Importa CSV" dal report vuoto.
 3. Controlla le colonne (di solito sono riconosciute), guarda l'anteprima, correggi le categorie: ogni correzione propone una regola ("conad" → Spesa) che vale per gli import successivi e per i movimenti a mano.
 4. Reimportare lo stesso file non crea doppioni: un movimento con stessa data, importo e descrizione viene saltato.
+
+Il file non lascia mai il telefono: viene letto nel browser e i movimenti finiscono nel database locale.
 
 ## Struttura
 

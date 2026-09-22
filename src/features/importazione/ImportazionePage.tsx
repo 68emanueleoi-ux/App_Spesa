@@ -23,6 +23,7 @@ import {
   type TabellaCsv,
 } from '@/lib/csv'
 import { formatDataNumerica, meseDi } from '@/lib/date'
+import { eExcel, leggiFileExcel } from '@/lib/excel'
 import { formatImportoMovimento } from '@/lib/importi'
 import { testoPerRegola } from '@/lib/testo'
 
@@ -58,8 +59,7 @@ export function ImportazionePage() {
   const caricaFile = async (file: File) => {
     setErrore(null)
     try {
-      const testo = await leggiFileCsv(file)
-      const tabella = analizzaCsv(testo)
+      const tabella = eExcel(file) ? await leggiFileExcel(file) : analizzaCsv(await leggiFileCsv(file))
       if (tabella.righe.length === 0) {
         setErrore('Il file è vuoto o non contiene righe leggibili.')
         return
@@ -67,8 +67,9 @@ export function ImportazionePage() {
       const firma = firmaCsv(tabella.intestazioni)
       const mappatura = (await mappaturaRicordata(firma)) ?? proponiMappatura(tabella)
       setPasso({ n: 2, nomeFile: file.name, tabella, firma, mappatura })
-    } catch {
-      setErrore('Non riesco a leggere questo file. Deve essere un CSV (testo separato da ; o ,).')
+    } catch (e) {
+      console.error('Importazione: file non leggibile', e)
+      setErrore('Non riesco a leggere questo file. Deve essere un CSV o un Excel (.xlsx).')
     }
   }
 
@@ -195,13 +196,13 @@ function PassoFile({ onFile, errore }: { onFile: (f: File) => void; errore: stri
         )}
       >
         <FileUp className="size-7 text-inchiostro-2" aria-hidden="true" />
-        <span className="font-medium">Scegli un file CSV</span>
+        <span className="font-medium">Scegli un file CSV o Excel</span>
         <span className="text-xs text-inchiostro-2">
-          Dall'app Postepay, dalla banca o da un foglio di calcolo. Il formato lo riconosco io.
+          L'Excel scaricato da poste.it va bene così com'è. Il formato delle colonne lo riconosco io.
         </span>
         <input
           type="file"
-          accept=".csv,.txt,text/csv,text/plain"
+          accept=".csv,.txt,.xlsx,.xls,text/csv,text/plain,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
           className="sr-only"
           onChange={(e) => {
             const f = e.target.files?.[0]
@@ -266,8 +267,10 @@ function PassoMappatura({
   return (
     <div>
       <p className="text-sm text-inchiostro-2">
-        <b className="font-medium text-inchiostro">{nomeFile}</b> · {tabella.righe.length} righe · separatore "
-        {tabella.delimitatore === '\t' ? 'tab' : tabella.delimitatore}"
+        <b className="font-medium text-inchiostro">{nomeFile}</b> · {tabella.righe.length} righe ·{' '}
+        {tabella.delimitatore === 'xlsx'
+          ? 'foglio Excel'
+          : `separatore "${tabella.delimitatore === '\t' ? 'tab' : tabella.delimitatore}"`}
       </p>
 
       {/* anteprima grezza */}
