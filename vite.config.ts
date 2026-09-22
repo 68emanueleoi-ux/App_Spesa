@@ -4,8 +4,13 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { defineConfig } from 'vite'
 
+// Su GitHub Pages l'app vive in una sottocartella (https://<utente>.github.io/App_Spesa/):
+// il workflow imposta VITE_BASE=/App_Spesa/. In locale resta "/".
+const base = process.env.VITE_BASE ?? '/'
+
 // https://vite.dev/config/
 export default defineConfig({
+  base,
   plugins: [
     react(),
     tailwindcss(),
@@ -18,7 +23,8 @@ export default defineConfig({
         description: 'Entrate e uscite del mese, a colpo d\'occhio.',
         lang: 'it',
         display: 'standalone',
-        start_url: '/',
+        start_url: base,
+        scope: base,
         background_color: '#F3F4F0',
         theme_color: '#F3F4F0',
         icons: [
