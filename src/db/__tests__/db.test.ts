@@ -10,6 +10,7 @@ import {
   contaMovimentiCategoria,
   eliminaCategoria,
   senzaCategoria,
+  spostaCategoria,
 } from '../categorie'
 import {
   aggiungiMovimento,
@@ -177,6 +178,54 @@ describe('categorie', () => {
     await aggiungiMovimento(spesa)
     await aggiungiMovimento({ ...spesa, categoriaId: 'svago' })
     expect(await contaMovimentiCategoria('spesa')).toBe(1)
+  })
+})
+
+describe('spostaCategoria', () => {
+  const ordineUscite = async () =>
+    (await db.categorie.where('tipo').equals('uscita').sortBy('ordine')).filter((c) => !c.diSistema).map((c) => c.id)
+
+  it('sposta su scambiando con la precedente', async () => {
+    const prima = await ordineUscite()
+    await spostaCategoria(prima[3], 'su')
+    const dopo = await ordineUscite()
+    expect(dopo[2]).toBe(prima[3])
+    expect(dopo[3]).toBe(prima[2])
+    expect(dopo.slice(4)).toEqual(prima.slice(4))
+  })
+
+  it('sposta giu scambiando con la successiva', async () => {
+    const prima = await ordineUscite()
+    await spostaCategoria(prima[0], 'giu')
+    const dopo = await ordineUscite()
+    expect(dopo[0]).toBe(prima[1])
+    expect(dopo[1]).toBe(prima[0])
+  })
+
+  it('agli estremi non fa nulla e non lancia', async () => {
+    const prima = await ordineUscite()
+    await spostaCategoria(prima[0], 'su')
+    await spostaCategoria(prima[prima.length - 1], 'giu')
+    expect(await ordineUscite()).toEqual(prima)
+  })
+
+  it('non mischia i tipi: spostare un uscita non tocca le entrate', async () => {
+    const entratePrima = await db.categorie.where('tipo').equals('entrata').sortBy('ordine')
+    const uscite = await ordineUscite()
+    await spostaCategoria(uscite[1], 'su')
+    const entrateDopo = await db.categorie.where('tipo').equals('entrata').sortBy('ordine')
+    expect(entrateDopo.map((c) => c.id)).toEqual(entratePrima.map((c) => c.id))
+  })
+
+  it('rifiuta le categorie di sistema', async () => {
+    await expect(spostaCategoria(SENZA_CATEGORIA_USCITA, 'su')).rejects.toThrow()
+  })
+
+  it('lascia "Senza categoria" in fondo', async () => {
+    const uscite = await ordineUscite()
+    await spostaCategoria(uscite[uscite.length - 1], 'giu')
+    const tutte = await db.categorie.where('tipo').equals('uscita').sortBy('ordine')
+    expect(tutte[tutte.length - 1].id).toBe(SENZA_CATEGORIA_USCITA)
   })
 })
 

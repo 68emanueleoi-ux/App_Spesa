@@ -37,3 +37,31 @@ export async function eliminaCategoria(id: string, destinazioneId: string): Prom
     await db.categorie.delete(id)
   })
 }
+
+/**
+ * Sposta una categoria di un posto su o giù fra quelle dello stesso tipo.
+ * Il campo `ordine` esisteva dall'inizio ma era deciso dal seed e dalla data di
+ * creazione: non c'era modo di mettere in cima quelle che si usano ogni giorno.
+ *
+ * Scambia l'ordine con la vicina, in transazione. Le categorie di sistema
+ * ("Senza categoria", ordine 999) restano in fondo e non si spostano.
+ */
+export async function spostaCategoria(id: string, direzione: 'su' | 'giu'): Promise<void> {
+  await db.transaction('rw', db.categorie, async () => {
+    const c = await db.categorie.get(id)
+    if (!c || c.diSistema) throw new Error('Questa categoria non si può spostare')
+
+    const sorelle = (await db.categorie.where('tipo').equals(c.tipo).toArray())
+      .filter((x) => !x.diSistema)
+      .sort((a, b) => a.ordine - b.ordine)
+
+    const i = sorelle.findIndex((x) => x.id === id)
+    const j = direzione === 'su' ? i - 1 : i + 1
+    if (i === -1 || j < 0 || j >= sorelle.length) return // già agli estremi: non è un errore
+
+    const vicina = sorelle[j]
+    // Ordini duplicati o uguali renderebbero lo scambio invisibile: riassegna per posizione.
+    await db.categorie.update(c.id, { ordine: j + 1 })
+    await db.categorie.update(vicina.id, { ordine: i + 1 })
+  })
+}
