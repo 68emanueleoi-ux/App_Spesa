@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spese — mockup interfaccia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Token ---------- */
+  :root {
+    --carta: #F3F4F0;
+    --foglio: #FFFFFF;
+    --inchiostro: #1B2130;
+    --inchiostro-2: #6B7280;
+    --filetto: rgba(27, 33, 48, 0.15);
+    --filetto-leggero: rgba(27, 33, 48, 0.07);
+    --cobalto: #2F4FD8;
+    --cobalto-testo: #FFFFFF;
+    --verde: #1E7A57;
+    --rosso: #B42318;
+    --ghost: rgba(27, 33, 48, 0.28);
+    --c1: #3B63D8; --c2: #B87709; --c3: #1F9E8A; --c4: #8B3F9E;
+    --c5: #C2552A; --c6: #1A7FA8; --c7: #D24B84; --c8: #7A8A1E;
+    --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --testo: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+    --r-ctrl: 6px;
+    --r-sheet: 16px;
+  }
+  .scuro {
+    --carta: #15181F;
+    --foglio: #1D2129;
+    --inchiostro: #ECEEE7;
+    --inchiostro-2: #9AA0AB;
+    --filetto: rgba(236, 238, 231, 0.16);
+    --filetto-leggero: rgba(236, 238, 231, 0.07);
+    --cobalto: #8DA2FF;
+    --cobalto-testo: #15181F;
+    --verde: #4EC79A;
+    --rosso: #FF7B70;
+    --ghost: rgba(236, 238, 231, 0.30);
+    --c1: #5F7FE8; --c2: #BD8418; --c3: #2FA893; --c4: #A25CB8;
+    --c5: #D4633C; --c6: #2E93BE; --c7: #D95F92; --c8: #8E9C2A;
+  }
+
+  * { box-sizing: border-box; }
+  html { font-size: 16px; }
+  body {
+    margin: 0;
+    background: #DCDDD8;
+    color: #1B2130;
+    font-family: var(--testo);
+    padding: 24px 16px 64px;
+  }
+  .scuro-page { background: #0C0E13; color: #ECEEE7; }
+
+  /* ---------- Pagina del mockup ---------- */
+  .intro { max-width: 1100px; margin: 0 auto 28px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px; justify-content: space-between; }
+  .intro h1 { font-family: var(--display); font-weight: 600; font-size: 25px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .intro p { margin: 0; font-size: 14px; opacity: 0.7; max-width: 60ch; }
+  .toggle {
+    font: 500 14px var(--testo); padding: 8px 14px; border-radius: 6px; cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.25); background: rgba(255,255,255,0.6); color: inherit;
+  }
+  .scuro-page .toggle { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.08); }
+  .toggle:focus-visible { outline: 2px solid #2F4FD8; outline-offset: 2px; }
+
+  .schermate { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; }
+  .didascalia { font-size: 13px; opacity: 0.7; text-align: center; margin: 10px 0 0; }
+
+  /* ---------- Cornice telefono ---------- */
+  .telefono {
+    width: 390px; height: 800px; border-radius: 34px; overflow: hidden; position: relative;
+    background: var(--carta); color: var(--inchiostro);
+    border: 8px solid #1a1a1a; box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    display: flex; flex-direction: column;
+  }
+  .statusbar { height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 26px; font-size: 14px; font-weight: 500; flex: none; }
+  .schermo { flex: 1; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+  .contenuto { flex: 1; overflow: hidden; padding: 0 20px; }
+
+  /* ---------- Componenti app ---------- */
+  .num { font-variant-numeric: tabular-nums; }
+  .entrata { color: var(--verde); }
+  .negativo { color: var(--rosso); }
+
+  .testata-mese { display: flex; align-items: center; justify-content: space-between; padding: 8px 0 4px; }
+  .mese { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-size: 20px; font-weight: 600; }
+  .freccia { width: 32px; height: 32px; border-radius: 6px; display: grid; place-items: center; font-size: 18px; color: var(--inchiostro-2); }
+  .tema { width: 32px; height: 32px; border-radius: 6px; display: grid; place-items: center; color: var(--inchiostro-2); }
+  .tema svg { width: 18px; height: 18px; }
+
+  .hero { padding-top: 14px; }
+  .hero .etichetta { font-size: 14px; color: var(--inchiostro-2); }
+  .hero .speso { font-family: var(--display); font-size: 44px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.05; margin: 2px 0 4px; font-variation-settings: "opsz" 96; }
+  .hero .confronto { font-size: 14px; }
+  .hero .confronto strong { font-weight: 700; }
+
+  .tracciato { margin: 14px -4px 0; }
+  .tracciato svg { width: 100%; height: 132px; display: block; overflow: visible; }
+  .asse { display: flex; justify-content: space-between; font-size: 12px; color: var(--inchiostro-2); padding: 4px 2px 0; }
+
+  .totali { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 18px 0 16px; border-bottom: 1px solid var(--filetto); }
+  .totali div { font-size: 12px; color: var(--inchiostro-2); }
+  .totali div b { display: block; font-size: 16px; font-weight: 500; color: var(--inchiostro); margin-top: 2px; }
+  .totali div b.entrata { color: var(--verde); }
+  .totali div:last-child { text-align: right; }
+  .totali div:nth-child(2) { text-align: center; }
+
+  .sezione { padding: 16px 0 12px; border-bottom: 1px solid var(--filetto); }
+  .sezione:last-child { border-bottom: 0; }
+  .sezione h2 { font-family: var(--display); font-size: 16px; font-weight: 600; margin: 0 0 10px; display: flex; justify-content: space-between; align-items: baseline; }
+  .sezione h2 a { font-family: var(--testo); font-size: 13px; font-weight: 500; color: var(--cobalto); text-decoration: none; }
+
+  .barre { display: grid; gap: 9px; }
+  .barra { display: grid; grid-template-columns: 10px 84px 1fr 36px 56px; align-items: center; gap: 8px; font-size: 14px; }
+  .barra .pallino { width: 10px; height: 10px; border-radius: 50%; }
+  .barra .nome { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .barra .traccia { display: block; height: 8px; background: var(--filetto-leggero); border-radius: 4px; overflow: hidden; }
+  .barra .riemp { display: block; height: 100%; border-radius: 0 4px 4px 0; }
+  .barra .pct { color: var(--inchiostro-2); font-size: 13px; text-align: right; }
+  .barra .imp { text-align: right; }
+  .barra.altre .pallino { background: none; border: 1.5px solid var(--inchiostro-2); }
+  .barra.altre .nome { color: var(--inchiostro-2); }
+
+  .movimenti { display: grid; }
+  .mov { display: grid; grid-template-columns: 48px 1fr auto; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--filetto-leggero); font-size: 14px; }
+  .mov:last-child { border-bottom: 0; }
+  .mov .data { color: var(--inchiostro-2); font-size: 13px; }
+  .mov .desc { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .mov .desc span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mov .cat { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .mov .imp { text-align: right; font-weight: 500; }
+
+  .barra-schede { flex: none; display: grid; grid-template-columns: 1fr 1fr 1fr; border-top: 1px solid var(--filetto); background: var(--carta); padding: 8px 0 22px; }
+  .scheda { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; color: var(--inchiostro-2); font-weight: 500; }
+  .scheda svg { width: 22px; height: 22px; }
+  .scheda.attiva { color: var(--inchiostro); }
+
+  .fab {
+    position: absolute; right: 20px; bottom: 84px; width: 56px; height: 56px; border-radius: 50%;
+    background: var(--cobalto); color: var(--cobalto-testo); display: grid; place-items: center;
+    box-shadow: 0 6px 16px rgba(47,79,216,0.35);
+  }
+  .fab svg { width: 26px; height: 26px; }
+
+  /* Lista movimenti */
+  .titolo-pagina { font-family: var(--display); font-size: 25px; font-weight: 600; margin: 10px 0 12px; }
+  .cerca { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border: 1px solid var(--filetto); border-radius: var(--r-ctrl); background: var(--foglio); color: var(--inchiostro-2); font-size: 14px; }
+  .cerca svg { width: 16px; height: 16px; }
+  .filtri { display: flex; gap: 8px; padding: 10px 0 6px; overflow: hidden; }
+  .chip { font-size: 13px; padding: 6px 11px; border-radius: var(--r-ctrl); border: 1px solid var(--filetto); background: var(--foglio); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+  .chip.on { border-color: var(--cobalto); color: var(--cobalto); background: transparent; font-weight: 500; }
+  .giorno { display: flex; justify-content: space-between; font-size: 12px; color: var(--inchiostro-2); padding: 14px 0 4px; }
+  .mov.compatto { grid-template-columns: 1fr auto; }
+  .mov.compatto .desc small { display: block; color: var(--inchiostro-2); font-size: 12px; margin-top: 1px; }
+
+  /* Sheet form */
+  .velo { position: absolute; inset: 0; background: rgba(27,33,48,0.45); }
+  .scuro .velo { background: rgba(0,0,0,0.55); }
+  .sheet {
+    position: absolute; left: 0; right: 0; bottom: 0; background: var(--foglio);
+    border-radius: var(--r-sheet) var(--r-sheet) 0 0; padding: 10px 20px 30px;
+  }
+  .maniglia { width: 36px; height: 4px; border-radius: 2px; background: var(--filetto); margin: 0 auto 14px; }
+  .segmento { display: grid; grid-template-columns: 1fr 1fr; padding: 3px; border-radius: 8px; background: var(--carta); font-size: 14px; font-weight: 500; }
+  .segmento span { text-align: center; padding: 8px; border-radius: 6px; color: var(--inchiostro-2); }
+  .segmento span.on { background: var(--foglio); color: var(--inchiostro); box-shadow: 0 1px 2px rgba(0,0,0,0.12); }
+  .importo-campo { padding: 22px 0 18px; border-bottom: 1px solid var(--filetto); display: flex; align-items: baseline; gap: 6px; font-family: var(--display); font-size: 31px; font-weight: 500; letter-spacing: -0.01em; }
+  .importo-campo .euro { color: var(--inchiostro-2); font-size: 20px; }
+  .cursore { display: inline-block; width: 2px; height: 30px; background: var(--cobalto); vertical-align: -4px; margin-left: 2px; }
+  .griglia-cat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 16px 0 6px; }
+  .cat-chip { display: flex; align-items: center; gap: 8px; padding: 10px 10px; border: 1px solid var(--filetto); border-radius: var(--r-ctrl); font-size: 13px; font-weight: 500; }
+  .cat-chip .pallino { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .cat-chip.on { border-color: var(--cobalto); outline: 1.5px solid var(--cobalto); outline-offset: -1.5px; }
+  .secondari { display: grid; grid-template-columns: 1fr 1.4fr; gap: 8px; padding: 10px 0 16px; }
+  .campo { height: 40px; border: 1px solid var(--filetto); border-radius: var(--r-ctrl); padding: 0 12px; display: flex; align-items: center; font-size: 14px; }
+  .campo.vuoto { color: var(--inchiostro-2); }
+  .primario { height: 48px; border-radius: 8px; background: var(--cobalto); color: var(--cobalto-testo); display: grid; place-items: center; font-size: 16px; font-weight: 700; }
+
+  /* ---------- Cornice desktop ---------- */
+  .desktop-wrap { max-width: 1100px; margin: 40px auto 0; overflow-x: auto; }
+  .desktop {
+    width: 1100px; height: 700px; border-radius: 12px; overflow: hidden;
+    background: var(--carta); color: var(--inchiostro); border: 1px solid rgba(0,0,0,0.2);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  }
+  .d-nav { display: flex; align-items: center; gap: 28px; padding: 0 32px; height: 56px; border-bottom: 1px solid var(--filetto); }
+  .d-nav .logo { font-family: var(--display); font-weight: 600; font-size: 20px; margin-right: 8px; }
+  .d-nav a { font-size: 14px; color: var(--inchiostro-2); text-decoration: none; font-weight: 500; }
+  .d-nav a.on { color: var(--inchiostro); box-shadow: 0 2px 0 var(--inchiostro); padding-bottom: 2px; }
+  .d-nav .spazio { flex: 1; }
+  .d-nav .nuovo { background: var(--cobalto); color: var(--cobalto-testo); padding: 8px 14px; border-radius: 6px; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .d-nav .nuovo svg { width: 16px; height: 16px; }
+  .d-corpo { max-width: 1040px; padding: 20px 32px; }
+  .d-hero { display: grid; grid-template-columns: 260px 1fr; gap: 32px; align-items: end; padding: 12px 0 0; }
+  .d-hero .tracciato { margin: 0; }
+  .d-hero .tracciato svg { height: 150px; }
+  .d-totali { display: flex; gap: 40px; padding: 18px 0 16px; border-bottom: 1px solid var(--filetto); font-size: 14px; color: var(--inchiostro-2); }
+  .d-totali b { color: var(--inchiostro); font-weight: 500; font-size: 16px; margin-left: 8px; }
+  .d-totali b.entrata { color: var(--verde); }
+  .d-colonne { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; }
+  .d-colonne .sezione:first-child { border-right: 1px solid var(--filetto); padding-right: 40px; border-bottom: 0; }
+  .d-colonne .sezione { border-bottom: 0; }
+  .d-colonne .barra { grid-template-columns: 10px 100px 1fr 40px 70px; }
+
+  @media (max-width: 440px) {
+    .telefono { width: 100%; height: 760px; border-width: 5px; border-radius: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <div>
+    <h1>Spese — mockup dell'interfaccia</h1>
+    <p>Report mensile, inserimento rapido e lista movimenti su smartphone; sotto, il report su desktop. Dati di esempio per settembre 2026.</p>
+  </div>
+  <button class="toggle" id="toggle" type="button">Vedi tema scuro</button>
+</div>
+
+<div class="schermate">
+
+  <!-- ============ 1. REPORT ============ -->
+  <div>
+    <div class="telefono">
+      <div class="statusbar"><span>9:41</span><span>●●● ▲ ▮</span></div>
+      <div class="schermo">
+        <div class="contenuto">
+          <div class="testata-mese">
+            <div class="mese"><span class="freccia">‹</span>Settembre 2026<span class="freccia">›</span></div>
+            <span class="tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg></span>
+          </div>
+
+          <div class="hero">
+            <div class="etichetta">Speso finora</div>
+            <div class="speso num">€ 1.284,30</div>
+            <div class="confronto num"><strong>€ 96,10 in meno</strong> rispetto al 22 agosto</div>
+          </div>
+
+          <div class="tracciato">
+            <svg viewBox="0 0 350 132" data-tracciato aria-label="Uscite cumulate: settembre rispetto ad agosto"></svg>
+            <div class="asse"><span>1</span><span>10</span><span>20</span><span>30</span></div>
+          </div>
+
+          <div class="totali num">
+            <div>Entrate<b class="entrata">+€ 1.500,00</b></div>
+            <div>Uscite<b>−€ 1.284,30</b></div>
+            <div>Saldo<b>€ 215,70</b></div>
+          </div>
+
+          <div class="sezione">
+            <h2>Dove sono finiti i soldi</h2>
+            <div class="barre num">
+              <div class="barra"><span class="pallino" style="background:var(--c1)"></span><span class="nome">Spesa</span><span class="traccia"><span class="riemp" style="width:100%;background:var(--c1)"></span></span><span class="pct">32%</span><span class="imp">412,00</span></div>
+              <div class="barra"><span class="pallino" style="background:var(--c2)"></span><span class="nome">Affitto</span><span class="traccia"><span class="riemp" style="width:97%;background:var(--c2)"></span></span><span class="pct">31%</span><span class="imp">400,00</span></div>
+              <div class="barra"><span class="pallino" style="background:var(--c3)"></span><span class="nome">Trasporti</span><span class="traccia"><span class="riemp" style="width:44%;background:var(--c3)"></span></span><span class="pct">14%</span><span class="imp">180,00</span></div>
+              <div class="barra"><span class="pallino" style="background:var(--c4)"></span><span class="nome">Svago</span><span class="traccia"><span class="riemp" style="width:36%;background:var(--c4)"></span></span><span class="pct">12%</span><span class="imp">150,00</span></div>
+              <div class="barra altre"><span class="pallino"></span><span class="nome">Altre 3</span><span class="traccia"><span class="riemp" style="width:35%;background:var(--inchiostro-2)"></span></span><span class="pct">11%</span><span class="imp">142,30</span></div>
+            </div>
+          </div>
+
+          <div class="sezione">
+            <h2>Ultimi movimenti <a href="#">Tutti ›</a></h2>
+            <div class="movimenti num">
+              <div class="mov"><span class="data">22 set</span><span class="desc"><i class="cat" style="background:var(--c1)"></i><span>Conad</span></span><span class="imp">−€ 43,20</span></div>
+              <div class="mov"><span class="data">21 set</span><span class="desc"><i class="cat" style="background:var(--c3)"></i><span>Trenitalia</span></span><span class="imp">−€ 12,90</span></div>
+              <div class="mov"><span class="data">20 set</span><span class="desc"><i class="cat" style="background:var(--verde)"></i><span>Stipendio</span></span><span class="imp entrata">+€ 1.500,00</span></div>
+              <div class="mov"><span class="data">19 set</span><span class="desc"><i class="cat" style="background:var(--c4)"></i><span>Bar Centrale</span></span><span class="imp">−€ 2,40</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
+
+        <nav class="barra-schede">
+          <span class="scheda attiva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 18 10 11l4 4 6-8"/></svg>Report</span>
+          <span class="scheda"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 7h14M5 12h14M5 17h9"/></svg>Movimenti</span>
+          <span class="scheda"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8l8-4 8 4-8 4z"/><path d="M4 12l8 4 8-4M4 16l8 4 8-4"/></svg>Categorie</span>
+        </nav>
+      </div>
+    </div>
+    <p class="didascalia">1 · Report del mese (schermata iniziale)</p>
+  </div>
+
+  <!-- ============ 2. AGGIUNGI SPESA ============ -->
+  <div>
+    <div class="telefono">
+      <div class="statusbar"><span>9:41</span><span>●●● ▲ ▮</span></div>
+      <div class="schermo">
+        <div class="contenuto">
+          <div class="testata-mese">
+            <div class="mese"><span class="freccia">‹</span>Settembre 2026<span class="freccia">›</span></div>
+            <span class="tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg></span>
+          </div>
+          <div class="hero">
+            <div class="etichetta">Speso finora</div>
+            <div class="speso num">€ 1.284,30</div>
+            <div class="confronto num"><strong>€ 96,10 in meno</strong> rispetto al 22 agosto</div>
+          </div>
+          <div class="tracciato">
+            <svg viewBox="0 0 350 132" data-tracciato></svg>
+            <div class="asse"><span>1</span><span>10</span><span>20</span><span>30</span></div>
+          </div>
+        </div>
+
+        <div class="velo"></div>
+        <div class="sheet">
+          <div class="maniglia"></div>
+          <div class="segmento"><span class="on">Uscita</span><span>Entrata</span></div>
+          <div class="importo-campo num"><span class="euro">€</span><span>43,2<i class="cursore"></i></span></div>
+          <div class="griglia-cat">
+            <span class="cat-chip on"><i class="pallino" style="background:var(--c1)"></i>Spesa</span>
+            <span class="cat-chip"><i class="pallino" style="background:var(--c3)"></i>Trasporti</span>
+            <span class="cat-chip"><i class="pallino" style="background:var(--c4)"></i>Svago</span>
+            <span class="cat-chip"><i class="pallino" style="background:var(--c5)"></i>Bollette</span>
+            <span class="cat-chip"><i class="pallino" style="background:var(--c2)"></i>Affitto</span>
+            <span class="cat-chip"><i class="pallino" style="background:var(--c6)"></i>Salute</span>
+            <span class="cat-chip"><i class="pallino" style="background:var(--c8)"></i>Casa</span>
+            <span class="cat-chip"><i class="pallino" style="background:var(--c7)"></i>Regali</span>
+            <span class="cat-chip"><i class="pallino" style="background:var(--inchiostro-2)"></i>Altro</span>
+          </div>
+          <div class="secondari">
+            <div class="campo">Oggi, 22 set</div>
+            <div class="campo vuoto">Descrizione</div>
+          </div>
+          <div class="primario">Aggiungi spesa</div>
+        </div>
+      </div>
+    </div>
+    <p class="didascalia">2 · Aggiungi spesa: quattro tocchi</p>
+  </div>
+
+  <!-- ============ 3. MOVIMENTI ============ -->
+  <div>
+    <div class="telefono">
+      <div class="statusbar"><span>9:41</span><span>●●● ▲ ▮</span></div>
+      <div class="schermo">
+        <div class="contenuto">
+          <h1 class="titolo-pagina">Movimenti</h1>
+          <div class="cerca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Cerca nella descrizione</div>
+          <div class="filtri">
+            <span class="chip on">Settembre 2026</span>
+            <span class="chip">Tutti i tipi</span>
+            <span class="chip">Tutte le categorie</span>
+            <span class="chip">Data ↓</span>
+          </div>
+
+          <div class="giorno num"><span>Martedì 22 settembre</span><span>−€ 43,20</span></div>
+          <div class="movimenti num">
+            <div class="mov compatto"><span class="desc"><i class="cat" style="background:var(--c1)"></i><span>Conad<small>Spesa</small></span></span><span class="imp">−€ 43,20</span></div>
+          </div>
+          <div class="giorno num"><span>Lunedì 21 settembre</span><span>−€ 25,89</span></div>
+          <div class="movimenti num">
+            <div class="mov compatto"><span class="desc"><i class="cat" style="background:var(--c3)"></i><span>Trenitalia<small>Trasporti</small></span></span><span class="imp">−€ 12,90</span></div>
+            <div class="mov compatto"><span class="desc"><i class="cat" style="background:var(--c4)"></i><span>Netflix<small>Svago</small></span></span><span class="imp">−€ 12,99</span></div>
+          </div>
+          <div class="giorno num"><span>Domenica 20 settembre</span><span class="entrata">+€ 1.500,00</span></div>
+          <div class="movimenti num">
+            <div class="mov compatto"><span class="desc"><i class="cat" style="background:var(--verde)"></i><span>Stipendio<small>Stipendio</small></span></span><span class="imp entrata">+€ 1.500,00</span></div>
+          </div>
+          <div class="giorno num"><span>Sabato 19 settembre</span><span>−€ 66,40</span></div>
+          <div class="movimenti num">
+            <div class="mov compatto"><span class="desc"><i class="cat" style="background:var(--c4)"></i><span>Bar Centrale<small>Svago</small></span></span><span class="imp">−€ 2,40</span></div>
+            <div class="mov compatto"><span class="desc"><i class="cat" style="background:var(--c4)"></i><span>Pizzeria da Michele<small>Svago</small></span></span><span class="imp">−€ 34,00</span></div>
+            <div class="mov compatto"><span class="desc"><i class="cat" style="background:var(--c1)"></i><span>Lidl<small>Spesa</small></span></span><span class="imp">−€ 30,00</span></div>
+          </div>
+          <div class="giorno num"><span>Venerdì 18 settembre</span><span>−€ 58,50</span></div>
+          <div class="movimenti num">
+            <div class="mov compatto"><span class="desc"><i class="cat" style="background:var(--c5)"></i><span>Enel<small>Bollette</small></span></span><span class="imp">−€ 58,50</span></div>
+          </div>
+        </div>
+
+        <div class="fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
+
+        <nav class="barra-schede">
+          <span class="scheda"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 18 10 11l4 4 6-8"/></svg>Report</span>
+          <span class="scheda attiva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 7h14M5 12h14M5 17h9"/></svg>Movimenti</span>
+          <span class="scheda"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8l8-4 8 4-8 4z"/><path d="M4 12l8 4 8-4M4 16l8 4 8-4"/></svg>Categorie</span>
+        </nav>
+      </div>
+    </div>
+    <p class="didascalia">3 · Lista movimenti, raggruppata per giorno</p>
+  </div>
+</div>
+
+<!-- ============ 4. DESKTOP ============ -->
+<div class="desktop-wrap">
+  <div class="desktop">
+    <div class="d-nav">
+      <span class="logo">Spese</span>
+      <a class="on" href="#">Report</a><a href="#">Movimenti</a><a href="#">Categorie</a>
+      <span class="spazio"></span>
+      <span class="tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg></span>
+      <span class="nuovo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Nuovo movimento</span>
+    </div>
+    <div class="d-corpo">
+      <div class="testata-mese"><div class="mese"><span class="freccia">‹</span>Settembre 2026<span class="freccia">›</span></div></div>
+      <div class="d-hero">
+        <div class="hero">
+          <div class="etichetta">Speso finora</div>
+          <div class="speso num">€ 1.284,30</div>
+          <div class="confronto num"><strong>€ 96,10 in meno</strong><br>rispetto al 22 agosto</div>
+        </div>
+        <div class="tracciato">
+          <svg viewBox="0 0 700 150" data-tracciato data-w="700" data-h="150"></svg>
+          <div class="asse"><span>1</span><span>10</span><span>20</span><span>30</span></div>
+        </div>
+      </div>
+      <div class="d-totali num">
+        <span>Entrate<b class="entrata">+€ 1.500,00</b></span>
+        <span>Uscite<b>−€ 1.284,30</b></span>
+        <span>Saldo<b>€ 215,70</b></span>
+      </div>
+      <div class="d-colonne">
+        <div class="sezione">
+          <h2>Dove sono finiti i soldi</h2>
+          <div class="barre num">
+            <div class="barra"><span class="pallino" style="background:var(--c1)"></span><span class="nome">Spesa</span><span class="traccia"><span class="riemp" style="width:100%;background:var(--c1)"></span></span><span class="pct">32%</span><span class="imp">€ 412,00</span></div>
+            <div class="barra"><span class="pallino" style="background:var(--c2)"></span><span class="nome">Affitto</span><span class="traccia"><span class="riemp" style="width:97%;background:var(--c2)"></span></span><span class="pct">31%</span><span class="imp">€ 400,00</span></div>
+            <div class="barra"><span class="pallino" style="background:var(--c3)"></span><span class="nome">Trasporti</span><span class="traccia"><span class="riemp" style="width:44%;background:var(--c3)"></span></span><span class="pct">14%</span><span class="imp">€ 180,00</span></div>
+            <div class="barra"><span class="pallino" style="background:var(--c4)"></span><span class="nome">Svago</span><span class="traccia"><span class="riemp" style="width:36%;background:var(--c4)"></span></span><span class="pct">12%</span><span class="imp">€ 150,00</span></div>
+            <div class="barra"><span class="pallino" style="background:var(--c5)"></span><span class="nome">Bollette</span><span class="traccia"><span class="riemp" style="width:14%;background:var(--c5)"></span></span><span class="pct">5%</span><span class="imp">€ 58,50</span></div>
+            <div class="barra"><span class="pallino" style="background:var(--c6)"></span><span class="nome">Salute</span><span class="traccia"><span class="riemp" style="width:12%;background:var(--c6)"></span></span><span class="pct">4%</span><span class="imp">€ 48,80</span></div>
+            <div class="barra"><span class="pallino" style="background:var(--c8)"></span><span class="nome">Casa</span><span class="traccia"><span class="riemp" style="width:8%;background:var(--c8)"></span></span><span class="pct">3%</span><span class="imp">€ 35,00</span></div>
+          </div>
+        </div>
+        <div class="sezione">
+          <h2>Ultimi movimenti <a href="#">Tutti ›</a></h2>
+          <div class="movimenti num">
+            <div class="mov"><span class="data">22 set</span><span class="desc"><i class="cat" style="background:var(--c1)"></i><span>Conad</span></span><span class="imp">−€ 43,20</span></div>
+            <div class="mov"><span class="data">21 set</span><span class="desc"><i class="cat" style="background:var(--c3)"></i><span>Trenitalia</span></span><span class="imp">−€ 12,90</span></div>
+            <div class="mov"><span class="data">21 set</span><span class="desc"><i class="cat" style="background:var(--c4)"></i><span>Netflix</span></span><span class="imp">−€ 12,99</span></div>
+            <div class="mov"><span class="data">20 set</span><span class="desc"><i class="cat" style="background:var(--verde)"></i><span>Stipendio</span></span><span class="imp entrata">+€ 1.500,00</span></div>
+            <div class="mov"><span class="data">19 set</span><span class="desc"><i class="cat" style="background:var(--c4)"></i><span>Pizzeria da Michele</span></span><span class="imp">−€ 34,00</span></div>
+            <div class="mov"><span class="data">19 set</span><span class="desc"><i class="cat" style="background:var(--c1)"></i><span>Lidl</span></span><span class="imp">−€ 30,00</span></div>
+            <div class="mov"><span class="data">18 set</span><span class="desc"><i class="cat" style="background:var(--c5)"></i><span>Enel</span></span><span class="imp">−€ 58,50</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="didascalia">4 · Report su desktop: navigazione in alto, due colonne sotto i totali</p>
+</div>
+
+<script>
+  // ---- Tracciato del mese: uscite cumulate, settembre (inchiostro) vs agosto (sbiadito) ----
+  const settembre = [0, 18.4, 0, 412, 9.9, 131.2, 0, 44.6, 12.9, 0, 127.5, 0, 163.2, 8.8, 0, 113.01, 48.8, 58.5, 66.4, 0, 25.89, 43.2];
+  const agosto    = [0, 30, 20, 400, 35, 0, 105, 18, 0, 125, 25, 60, 0, 160, 30, 0, 45, 70, 22, 0, 65, 170.4, 40, 0, 85, 25, 50, 0, 70, 30, 45];
+  const cumula = arr => arr.reduce((acc, v) => (acc.push((acc.at(-1) ?? 0) + v), acc), []);
+  const sett = cumula(settembre), ago = cumula(agosto);
+  const max = Math.max(ago.at(-1), sett.at(-1)) * 1.05;
+
+  function disegna(svg) {
+    const W = +svg.dataset.w || 350, H = +svg.dataset.h || 132, pad = 8;
+    const x = i => (i / 29) * (W - 2 * pad) + pad;
+    const y = v => H - pad - (v / max) * (H - 2 * pad);
+    const path = pts => pts.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    const ultimo = sett.length - 1;
+    svg.innerHTML = `
+      <line x1="${pad}" x2="${W - pad}" y1="${H - pad}" y2="${H - pad}" stroke="var(--filetto)" stroke-width="1"/>
+      <path d="${path(ago)}" fill="none" stroke="var(--ghost)" stroke-width="2" stroke-dasharray="3 4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="${path(sett)}" fill="none" stroke="var(--inchiostro)" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="${x(ultimo)}" cy="${y(sett[ultimo])}" r="4.5" fill="var(--inchiostro)" stroke="var(--carta)" stroke-width="2"/>
+      <text x="${x(ultimo) + 9}" y="${y(sett[ultimo]) + 4}" font-size="11" fill="var(--inchiostro-2)" font-family="var(--testo)">oggi</text>
+      <text x="${W - pad}" y="${y(ago.at(-1)) - 6}" text-anchor="end" font-size="11" fill="var(--inchiostro-2)" font-family="var(--testo)">agosto € ${ago.at(-1).toLocaleString('it-IT', {minimumFractionDigits: 2})}</text>`;
+  }
+  document.querySelectorAll('[data-tracciato]').forEach(disegna);
+
+  // ---- Tema ----
+  const btn = document.getElementById('toggle');
+  const applica = scuro => {
+    document.querySelectorAll('.telefono, .desktop').forEach(el => el.classList.toggle('scuro', scuro));
+    document.body.classList.toggle('scuro-page', scuro);
+    btn.textContent = scuro ? 'Vedi tema chiaro' : 'Vedi tema scuro';
+  };
+  const param = new URLSearchParams(location.search).get('tema');
+  let scuro = param ? param === 'scuro' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applica(scuro);
+  btn.addEventListener('click', () => applica(scuro = !scuro));
+</script>
+</body>
+</html>
