@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useToast } from '@/components/useToast'
 import { IconaCategoria } from '@/components/IconaCategoria'
 import { Sheet } from '@/components/ui/Sheet'
+import { useGruppoRadio } from '@/components/ui/useGruppoRadio'
 import { db } from '@/db/db'
 import { aggiungiMovimento, aggiornaMovimento } from '@/db/movimenti'
 import { aggiungiRegola, esisteRegola } from '@/db/regole'
@@ -140,19 +141,29 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
 
   const titolo = modifica ? 'Modifica movimento' : valori.tipo === 'uscita' ? 'Aggiungi spesa' : 'Aggiungi entrata'
 
+  const TIPI = ['uscita', 'entrata'] as const
+  const elenco = categorie ?? []
+  const gruppoTipo = useGruppoRadio(TIPI.indexOf(valori.tipo), (i) => cambiaTipo(TIPI[i]))
+  const gruppoCategoria = useGruppoRadio(
+    elenco.findIndex((c) => c.id === categoriaId),
+    (i) => cambia('categoriaId', elenco[i].id),
+  )
+
   return (
     <form onSubmit={salva} noValidate className="flex flex-col">
       {/* Tipo */}
       <div
+        {...gruppoTipo.propsGruppo}
         role="radiogroup"
         aria-label="Tipo"
         className="grid grid-cols-2 rounded-lg bg-carta p-[3px] text-sm font-medium"
       >
-        {(['uscita', 'entrata'] as const).map((t) => (
+        {TIPI.map((t, i) => (
           <button
             key={t}
             type="button"
             role="radio"
+            tabIndex={gruppoTipo.tabIndex(i)}
             aria-checked={valori.tipo === t}
             onClick={() => cambiaTipo(t)}
             className={cn(
@@ -187,17 +198,19 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
 
       {/* Categoria */}
       <div
+        {...gruppoCategoria.propsGruppo}
         role="radiogroup"
         aria-label="Categoria"
         className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] gap-2"
       >
-        {(categorie ?? []).map((c) => {
+        {elenco.map((c, i) => {
           const attiva = categoriaId === c.id
           return (
             <button
               key={c.id}
               type="button"
               role="radio"
+              tabIndex={gruppoCategoria.tabIndex(i)}
               aria-checked={attiva}
               onClick={() => cambia('categoriaId', c.id)}
               className={cn(

@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { IconaCategoria } from '@/components/IconaCategoria'
 import { ICONE_CATEGORIA } from '@/components/icone'
 import { Sheet } from '@/components/ui/Sheet'
+import { useGruppoRadio } from '@/components/ui/useGruppoRadio'
 import { useToast } from '@/components/useToast'
 import { aggiornaCategoria, aggiungiCategoria } from '@/db/categorie'
 import type { Categoria, ColoreCategoria, TipoMovimento } from '@/db/tipi'
@@ -95,6 +96,8 @@ function Corpo({
   }
 
   const colori: ColoreCategoria[] = tipo === 'entrata' ? ['verde', ...COLORI_TAVOLOZZA] : COLORI_TAVOLOZZA
+  const gruppoColore = useGruppoRadio(colori.indexOf(colore), (i) => setColore(colori[i]))
+  const gruppoIcona = useGruppoRadio(NOMI_ICONE.indexOf(icona), (i) => setIcona(NOMI_ICONE[i]))
 
   return (
     <form onSubmit={salva} noValidate className="flex flex-col">
@@ -133,12 +136,13 @@ function Corpo({
 
       {/* Colore */}
       <p className="mt-5 text-xs text-inchiostro-2">Colore</p>
-      <div role="radiogroup" aria-label="Colore" className="mt-2 flex flex-wrap gap-2.5">
-        {colori.map((c) => (
+      <div {...gruppoColore.propsGruppo} role="radiogroup" aria-label="Colore" className="mt-2 flex flex-wrap gap-2.5">
+        {colori.map((c, i) => (
           <button
             key={c}
             type="button"
             role="radio"
+            tabIndex={gruppoColore.tabIndex(i)}
             aria-checked={colore === c}
             aria-label={`Colore ${c}`}
             onClick={() => setColore(c)}
@@ -153,12 +157,18 @@ function Corpo({
 
       {/* Icona */}
       <p className="mt-5 text-xs text-inchiostro-2">Icona</p>
-      <div role="radiogroup" aria-label="Icona" className="mt-2 grid grid-cols-6 gap-1.5 md:grid-cols-8">
-        {NOMI_ICONE.map((n) => (
+      <div
+        {...gruppoIcona.propsGruppo}
+        role="radiogroup"
+        aria-label="Icona"
+        className="mt-2 grid grid-cols-6 gap-1.5 md:grid-cols-8"
+      >
+        {NOMI_ICONE.map((n, i) => (
           <button
             key={n}
             type="button"
             role="radio"
+            tabIndex={gruppoIcona.tabIndex(i)}
             aria-checked={icona === n}
             aria-label={n}
             onClick={() => setIcona(n)}

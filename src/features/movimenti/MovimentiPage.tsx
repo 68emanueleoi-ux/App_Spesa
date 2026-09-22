@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { ArrowDownUp, Database, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { SelettoreMese } from '@/components/SelettoreMese'
+import { useGruppoRadio } from '@/components/ui/useGruppoRadio'
 import { db } from '@/db/db'
 import { cercaMovimenti, movimentiDelMese } from '@/db/movimenti'
 import type { Categoria, Movimento } from '@/db/tipi'
@@ -62,6 +63,8 @@ export function MovimentiPage() {
   }, [movimenti, tipo, categoriaId, cercato, ricercaGlobale, ordine, perId])
 
   const categorieFiltro = (categorie ?? []).filter((c) => tipo === 'tutti' || c.tipo === tipo)
+  const TIPI = ['tutti', 'uscita', 'entrata'] as const
+  const gruppoTipo = useGruppoRadio(TIPI.indexOf(tipo), (i) => impostaTipo(TIPI[i]))
 
   return (
     <>
@@ -90,9 +93,16 @@ export function MovimentiPage() {
       </label>
 
       <div className="-mx-5 mt-2.5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] md:mx-0 md:px-0">
-        <div role="radiogroup" aria-label="Tipo" className="flex gap-2">
-          {(['tutti', 'uscita', 'entrata'] as const).map((t) => (
-            <Chip key={t} attivo={tipo === t} onClick={() => impostaTipo(t)} role="radio" ariaChecked={tipo === t}>
+        <div {...gruppoTipo.propsGruppo} role="radiogroup" aria-label="Tipo" className="flex gap-2">
+          {TIPI.map((t, i) => (
+            <Chip
+              key={t}
+              attivo={tipo === t}
+              onClick={() => impostaTipo(t)}
+              role="radio"
+              ariaChecked={tipo === t}
+              tabIndex={gruppoTipo.tabIndex(i)}
+            >
               {t === 'tutti' ? 'Tutti' : t === 'uscita' ? 'Uscite' : 'Entrate'}
             </Chip>
           ))}
@@ -228,18 +238,21 @@ function Chip({
   children,
   role,
   ariaChecked,
+  tabIndex,
 }: {
   attivo: boolean
   onClick: () => void
   children: React.ReactNode
   role?: string
   ariaChecked?: boolean
+  tabIndex?: number
 }) {
   return (
     <button
       type="button"
       role={role}
       aria-checked={ariaChecked}
+      tabIndex={tabIndex}
       onClick={onClick}
       className={cn(
         'flex h-9 shrink-0 items-center gap-1.5 rounded-ctrl border bg-foglio px-3 text-sm whitespace-nowrap',

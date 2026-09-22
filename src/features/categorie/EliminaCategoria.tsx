@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useState } from 'react'
 import { IconaCategoria } from '@/components/IconaCategoria'
 import { Sheet } from '@/components/ui/Sheet'
+import { useGruppoRadio } from '@/components/ui/useGruppoRadio'
 import { useToast } from '@/components/useToast'
 import { contaMovimentiCategoria, eliminaCategoria, senzaCategoria } from '@/db/categorie'
 import type { Categoria } from '@/db/tipi'
@@ -33,6 +34,10 @@ function Corpo({ categoria, categorie, onChiudi }: { categoria: Categoria; categ
   const conteggio = useLiveQuery(() => contaMovimentiCategoria(categoria.id), [categoria.id])
   const [destinazione, setDestinazione] = useState(() => senzaCategoria(categoria.tipo))
   const alternative = categorie.filter((c) => c.tipo === categoria.tipo && c.id !== categoria.id)
+  const gruppo = useGruppoRadio(
+    alternative.findIndex((c) => c.id === destinazione),
+    (i) => setDestinazione(alternative[i].id),
+  )
 
   const conferma = async () => {
     const fatto = await conAvviso(
@@ -56,12 +61,18 @@ function Corpo({ categoria, categorie, onChiudi }: { categoria: Categoria; categ
           <p className="mt-2 text-sm">
             {conteggio === 1 ? 'Un movimento usa' : `${conteggio} movimenti usano`} questa categoria. Dove li sposto?
           </p>
-          <div role="radiogroup" aria-label="Categoria di destinazione" className="mt-3 grid max-h-[40dvh] gap-1.5 overflow-y-auto">
-            {alternative.map((c) => (
+          <div
+            {...gruppo.propsGruppo}
+            role="radiogroup"
+            aria-label="Categoria di destinazione"
+            className="mt-3 grid max-h-[40dvh] gap-1.5 overflow-y-auto"
+          >
+            {alternative.map((c, i) => (
               <button
                 key={c.id}
                 type="button"
                 role="radio"
+                tabIndex={gruppo.tabIndex(i)}
                 aria-checked={destinazione === c.id}
                 onClick={() => setDestinazione(c.id)}
                 className={cn(
