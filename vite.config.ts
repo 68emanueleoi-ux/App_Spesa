@@ -15,7 +15,11 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // 'prompt' invece di 'autoUpdate': la nuova versione non si installa alle
+      // spalle dell'utente mentre sta scrivendo un movimento, ma si annuncia con
+      // un avviso e si applica quando lui dice di sì. Vedi lib/aggiornamento.ts.
+      registerType: 'prompt',
+      injectRegister: null,
       includeAssets: ['apple-touch-icon.png', 'favicon.svg'],
       manifest: {
         name: 'Spese',

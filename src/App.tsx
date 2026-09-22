@@ -1,8 +1,10 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes } from 'react-router'
 import { AppShell } from './components/AppShell'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { ToastProvider } from './components/Toast'
+import { useToast } from './components/useToast'
+import { useAggiornamentoApp } from './lib/aggiornamento'
 import { MovimentiProvider } from './features/movimenti/MovimentiProvider'
 import { CategoriePage } from './features/categorie/CategoriePage'
 import { ReportPage } from './features/dashboard/ReportPage'
@@ -18,6 +20,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <ToastProvider>
+        <AvvisoAggiornamento />
         <MovimentiProvider>
           <Routes>
             <Route element={<AppShell />}>
@@ -39,4 +42,21 @@ export default function App() {
       </ToastProvider>
     </ErrorBoundary>
   )
+}
+
+/**
+ * Quando c'è una versione nuova lo dice, con il tasto per applicarla.
+ * L'avviso resta finché non lo si tocca: 5 secondi sarebbero pochi per una
+ * cosa che si può fare una volta sola.
+ */
+function AvvisoAggiornamento() {
+  const applica = useAggiornamentoApp()
+  const { mostra } = useToast()
+
+  useEffect(() => {
+    if (!applica) return
+    mostra("C'è una versione nuova dell'app", { etichetta: 'Aggiorna', esegui: applica }, 60_000)
+  }, [applica, mostra])
+
+  return null
 }
