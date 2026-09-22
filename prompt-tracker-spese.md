@@ -121,10 +121,16 @@ Gli importi sono **interi in centesimi** ovunque nel codice (DB, stato, calcoli)
 
 ---
 
-## PWA
+## PWA — il telefono di riferimento è un iPhone 15 (Safari iOS)
 - **`vite-plugin-pwa`**: manifest (nome, icone, colore tema, `display: standalone`) e service worker.
-- L'app deve essere **installabile sulla home dello smartphone**, aprirsi a schermo intero senza barra del browser e **funzionare offline** (i dati sono già locali).
-- Gestisci il **safe area** su iPhone (notch, barra home) e l'apertura del form sopra la tastiera virtuale.
+- L'app deve essere **installabile sulla home** ("Condividi → Aggiungi alla schermata Home"), aprirsi a schermo intero senza barra del browser e **funzionare offline** (i dati sono già locali).
+- Su iOS il manifest da solo non basta: servono `<meta name="apple-mobile-web-app-capable">`, `apple-mobile-web-app-status-bar-style`, `apple-touch-icon` 180×180 e `theme-color` per entrambi i temi.
+- **Safe area**: `viewport-fit=cover` e `env(safe-area-inset-top/bottom)` per Dynamic Island e barra home; la barra schede e il pulsante + devono stare sopra l'indicatore home.
+- Altezze con `100dvh`, mai `100vh` (con la tastiera aperta sbaglia). Il form deve restare visibile sopra la tastiera.
+- **Tutti i campi di input a 16px o più**, altrimenti Safari zooma al focus. `inputmode="decimal"` per l'importo.
+- **Font auto-ospitati** (pacchetti `@fontsource`), non caricati da Google Fonts: offline non arriverebbero.
+- Chiedere `navigator.storage.persist()` al primo avvio. Ricordare all'utente il backup JSON: Safari può cancellare i dati dei siti non usati per 7 giorni (le app installate sulla home ne sono esenti, ma il backup resta la rete di sicurezza).
+- Niente `-webkit-tap-highlight` grigio sui tocchi; feedback di tocco esplicito sui pulsanti.
 
 ---
 

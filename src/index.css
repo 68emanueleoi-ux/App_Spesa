@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---- Token del design system (vedi prompt-tracker-spese.md, Fase 0) ---- */
+:root {
+  --carta: #f3f4f0;
+  --foglio: #ffffff;
+  --inchiostro: #1b2130;
+  --inchiostro-2: #6b7280;
+  --filetto: rgba(27, 33, 48, 0.15);
+  --filetto-leggero: rgba(27, 33, 48, 0.07);
+  --cobalto: #2f4fd8;
+  --cobalto-testo: #ffffff;
+  --verde: #1e7a57;
+  --rosso: #b42318;
+  --ghost: rgba(27, 33, 48, 0.28);
+  --cat-1: #3b63d8;
+  --cat-2: #b87709;
+  --cat-3: #1f9e8a;
+  --cat-4: #8b3f9e;
+  --cat-5: #c2552a;
+  --cat-6: #1a7fa8;
+  --cat-7: #d24b84;
+  --cat-8: #7a8a1e;
+  color-scheme: light;
+}
+
+.dark {
+  --carta: #15181f;
+  --foglio: #1d2129;
+  --inchiostro: #eceee7;
+  --inchiostro-2: #9aa0ab;
+  --filetto: rgba(236, 238, 231, 0.16);
+  --filetto-leggero: rgba(236, 238, 231, 0.07);
+  --cobalto: #8da2ff;
+  --cobalto-testo: #15181f;
+  --verde: #4ec79a;
+  --rosso: #ff7b70;
+  --ghost: rgba(236, 238, 231, 0.3);
+  --cat-1: #5f7fe8;
+  --cat-2: #bd8418;
+  --cat-3: #2fa893;
+  --cat-4: #a25cb8;
+  --cat-5: #d4633c;
+  --cat-6: #2e93be;
+  --cat-7: #d95f92;
+  --cat-8: #8e9c2a;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-carta: var(--carta);
+  --color-foglio: var(--foglio);
+  --color-inchiostro: var(--inchiostro);
+  --color-inchiostro-2: var(--inchiostro-2);
+  --color-filetto: var(--filetto);
+  --color-filetto-leggero: var(--filetto-leggero);
+  --color-cobalto: var(--cobalto);
+  --color-cobalto-testo: var(--cobalto-testo);
+  --color-verde: var(--verde);
+  --color-rosso: var(--rosso);
+  --color-ghost: var(--ghost);
+
+  --font-display: "Bricolage Grotesque Variable", "Helvetica Neue", Arial, sans-serif;
+  --font-testo: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+
+  --radius-ctrl: 6px;
+  --radius-sheet: 16px;
+
+  /* Scala tipografica: base 16, rapporto ~1,25 */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 25px;
+  --text-2xl: 31px;
+  --text-3xl: 44px;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-testo);
+    background: var(--carta);
+    color: var(--inchiostro);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+  }
+  /* Safari zooma sui campi sotto i 16px */
+  input, select, textarea, button {
+    font: inherit;
+    font-size: max(16px, 1em);
+  }
+  :focus-visible {
+    outline: 2px solid var(--cobalto);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility num {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility font-display-opsz {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 96;
+}
