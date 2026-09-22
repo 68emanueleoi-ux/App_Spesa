@@ -237,7 +237,7 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
             max={fineMeseCorrente()}
             aria-label="Data"
             aria-invalid={!!errori.data}
-            className="h-11 w-full min-w-0 rounded-ctrl border border-filetto bg-foglio px-3 text-sm"
+            className="h-11 w-full min-w-0 rounded-ctrl border border-filetto bg-foglio px-3 text-base"
           />
           <Errore messaggio={errori.data} />
         </div>
@@ -252,7 +252,7 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
             autoComplete="off"
             enterKeyHint="done"
             maxLength={100}
-            className="h-11 w-full rounded-ctrl border border-filetto bg-foglio px-3 text-sm placeholder:text-inchiostro-2"
+            className="h-11 w-full rounded-ctrl border border-filetto bg-foglio px-3 text-base placeholder:text-inchiostro-2"
           />
           <Errore messaggio={errori.descrizione} />
         </div>

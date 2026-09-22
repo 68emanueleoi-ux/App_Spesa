@@ -92,10 +92,26 @@
     margin: 0;
     min-height: 100dvh;
   }
-  /* Safari zooma sui campi sotto i 16px */
   input, select, textarea, button {
     font: inherit;
+    /* Rete di sicurezza per i controlli che non fissano un corpo proprio. */
     font-size: max(16px, 1em);
+  }
+  /*
+    Su iPhone, toccare un campo con testo sotto i 16px fa ingrandire la pagina
+    a Safari, che poi ci resta: si apre la lista movimenti, si tocca il menu
+    delle categorie e da lì in poi tutto è zoomato.
+
+    La stessa regola c'era già senza !important e non serviva a niente: sta in
+    @layer base e perdeva contro le utility (un `text-sm` sul select). Un
+    !important qui vince perché le dichiarazioni importanti ribaltano l'ordine
+    dei layer. Vale solo dove si tocca, così su desktop i controlli restano
+    compatti come sono disegnati.
+  */
+  @media (pointer: coarse) {
+    input, select, textarea {
+      font-size: max(16px, 1em) !important;
+    }
   }
   :focus-visible {
     outline: 2px solid var(--cobalto);

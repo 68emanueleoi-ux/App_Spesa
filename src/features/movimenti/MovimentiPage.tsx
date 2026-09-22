@@ -114,7 +114,8 @@ export function MovimentiPage() {
           onChange={(e) => impostaCategoria(e.target.value)}
           aria-label="Categoria"
           className={cn(
-            'h-9 shrink-0 appearance-none rounded-ctrl border bg-foglio px-3 text-sm',
+            // 16px: sotto i 16 iPhone ingrandisce la pagina al tocco e ci resta
+            'h-9 shrink-0 appearance-none rounded-ctrl border bg-foglio px-3 text-base',
             categoriaId ? 'border-cobalto font-medium text-cobalto' : 'border-filetto',
           )}
         >

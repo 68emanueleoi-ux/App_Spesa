@@ -552,7 +552,7 @@ function PassoAnteprima({
                     onChange={(e) => aggiorna(r.indice, { categoriaId: e.target.value, creaRegola: !!r.descrizione })}
                     aria-label="Categoria"
                     className={cn(
-                      'ml-auto h-8 max-w-[11rem] truncate rounded-ctrl border border-filetto bg-foglio px-2 text-xs',
+                      'ml-auto h-9 max-w-[11rem] truncate rounded-ctrl border border-filetto bg-foglio px-2 text-base',
                       perId.get(r.categoriaId)?.diSistema ? 'text-inchiostro-2' : 'text-inchiostro',
                     )}
                   >
