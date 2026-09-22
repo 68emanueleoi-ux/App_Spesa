@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks'
-import { iconaCategoria } from '@/components/icone'
+import { IconaCategoria } from '@/components/IconaCategoria'
 import { db } from '@/db/db'
 import type { Categoria, TipoMovimento } from '@/db/tipi'
 import { coloreCss } from '@/lib/colori'
@@ -24,14 +24,13 @@ function Gruppo({ titolo, tipo, categorie }: { titolo: string; tipo: TipoMovimen
         {categorie
           .filter((c) => c.tipo === tipo)
           .map((c) => {
-            const Icona = iconaCategoria(c.icona)
             return (
               <li key={c.id} className="flex items-center gap-3 border-b border-filetto-leggero py-2.5 text-sm last:border-b-0">
                 <span
                   className="grid size-8 place-items-center rounded-ctrl"
                   style={{ color: coloreCss(c.colore), background: 'color-mix(in srgb, currentColor 14%, transparent)' }}
                 >
-                  <Icona className="size-4" />
+                  <IconaCategoria nome={c.icona} className="size-4" />
                 </span>
                 <span className={c.diSistema ? 'text-inchiostro-2' : ''}>{c.nome}</span>
               </li>

@@ -115,3 +115,25 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 96;
 }
+
+/* Animazioni: rispondono solo ad azioni (apertura pannello, toast). Con prefers-reduced-motion durano 0. */
+@keyframes velo {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes sale {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes appare {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.97); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes toast-entra {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes riga-entra {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

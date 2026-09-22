@@ -2,6 +2,7 @@ import { ChartNoAxesCombined, Layers, List, Moon, Plus, Sun } from 'lucide-react
 import { NavLink, Outlet } from 'react-router'
 import { cn } from '@/lib/cn'
 import { useTema } from '@/lib/tema'
+import { useMovimenti } from '@/features/movimenti/MovimentiProvider'
 
 const VOCI = [
   { a: '/', testo: 'Report', Icona: ChartNoAxesCombined },
@@ -15,6 +16,7 @@ const VOCI = [
  */
 export function AppShell() {
   const { scuro, alterna } = useTema()
+  const { apriNuovo } = useMovimenti()
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -43,6 +45,7 @@ export function AppShell() {
           <BottoneTema scuro={scuro} alterna={alterna} />
           <button
             type="button"
+            onClick={() => apriNuovo()}
             className="flex items-center gap-1.5 rounded-ctrl bg-cobalto px-3.5 py-2 text-sm font-bold text-cobalto-testo hover:brightness-110 active:brightness-95"
           >
             <Plus className="size-4" strokeWidth={2.6} />
@@ -60,6 +63,7 @@ export function AppShell() {
       <button
         type="button"
         aria-label="Aggiungi movimento"
+        onClick={() => apriNuovo()}
         className="fixed right-5 bottom-[calc(76px+env(safe-area-inset-bottom))] z-20 grid size-14 place-items-center rounded-full bg-cobalto text-cobalto-testo shadow-[0_6px_16px_rgba(47,79,216,0.35)] active:scale-95 md:hidden"
       >
         <Plus className="size-7" strokeWidth={2.4} />
