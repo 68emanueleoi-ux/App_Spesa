@@ -10,13 +10,15 @@ interface SheetProps {
   className?: string
   /** elemento da mettere a fuoco all'apertura (default: il primo focalizzabile) */
   focusIniziale?: RefObject<HTMLElement | null>
+  /** true: nessun campo a fuoco all'apertura (su iPhone evita che si apra subito la tastiera) */
+  senzaFocus?: boolean
 }
 
 /**
  * Pannello modale accessibile (focus intrappolato, Esc, scroll bloccato) costruito su Radix Dialog.
  * Su smartphone sale dal basso; su desktop è una finestra centrata.
  */
-export function Sheet({ aperto, onChiudi, titolo, children, className, focusIniziale }: SheetProps) {
+export function Sheet({ aperto, onChiudi, titolo, children, className, focusIniziale, senzaFocus }: SheetProps) {
   return (
     <Dialog.Root open={aperto} onOpenChange={(o) => !o && onChiudi()}>
       <Dialog.Portal>
@@ -24,6 +26,12 @@ export function Sheet({ aperto, onChiudi, titolo, children, className, focusIniz
         <Dialog.Content
           aria-describedby={undefined}
           onOpenAutoFocus={(e) => {
+            if (senzaFocus) {
+              // fuoco sul pannello stesso (un div, tabIndex -1): nessuna tastiera, ma Esc e Tab restano dentro
+              e.preventDefault()
+              ;(e.currentTarget as HTMLElement).focus()
+              return
+            }
             if (focusIniziale?.current) {
               e.preventDefault()
               focusIniziale.current.focus()

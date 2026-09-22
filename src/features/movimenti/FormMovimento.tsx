@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
 import { useToast } from '@/components/useToast'
@@ -51,7 +51,6 @@ interface Props {
 
 export function FormMovimento({ aperto, movimento, tipoIniziale, onChiudi, onElimina }: Props) {
   const { mostra } = useToast()
-  const campoImporto = useRef<HTMLInputElement>(null)
   const modifica = movimento !== undefined
 
   const { control, register, handleSubmit, setValue, reset, formState } = useForm<Valori>({
@@ -116,7 +115,7 @@ export function FormMovimento({ aperto, movimento, tipoIniziale, onChiudi, onEli
   const importoReg = register('importo')
 
   return (
-    <Sheet aperto={aperto} onChiudi={onChiudi} titolo={titolo} focusIniziale={campoImporto}>
+    <Sheet aperto={aperto} onChiudi={onChiudi} titolo={titolo} senzaFocus>
       <form onSubmit={salva} noValidate className="flex flex-col">
         {/* Tipo */}
         <Controller
@@ -148,10 +147,6 @@ export function FormMovimento({ aperto, movimento, tipoIniziale, onChiudi, onEli
           <span className="font-display text-lg text-inchiostro-2">€</span>
           <input
             {...importoReg}
-            ref={(el) => {
-              importoReg.ref(el)
-              campoImporto.current = el
-            }}
             type="text"
             inputMode="decimal"
             autoComplete="off"

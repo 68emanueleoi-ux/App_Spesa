@@ -45,12 +45,12 @@ Regole operative:
 - Lista completa filtrabile per **mese, tipo e categoria**, ordinabile per data o importo, con ricerca testuale sulla descrizione. La ricerca ignora maiuscole e accenti ("cafe" trova "Caffè").
 - L'inserimento deve essere **rapido**, pensato per il telefono:
   - Pulsante **"+" fisso in basso a destra**, raggiungibile col pollice, sempre visibile.
-  - Tipo predefinito **"uscita"** (è il caso più frequente), data predefinita oggi, **focus automatico sul campo importo** all'apertura.
+  - Tipo predefinito **"uscita"** (è il caso più frequente), data predefinita oggi. **Nessun campo a fuoco all'apertura**: su iPhone la tastiera non deve comparire finché non tocco l'importo.
   - Campo importo con `inputmode="decimal"`; accetta sia `12,50` che `12.50`.
   - Categorie selezionabili come griglia di chip con icona, non da un menu a tendina.
   - Scorciatoia da tastiera **`N`** per aprire il form su desktop, **`Esc`** per chiuderlo.
   - Validazione: importo > 0, categoria obbligatoria. Messaggi di errore inline, in italiano.
-  - Obiettivo: registrare una spesa in **massimo 4 tocchi** (apri, cifra, categoria, salva).
+  - Obiettivo: registrare una spesa in **massimo 5 tocchi** (apri, tocca l'importo, cifra, categoria, salva).
 
 ### 3. Categorie
 - Categorie **separate per tipo**: categorie di entrata (es. Stipendio, Borsa di studio, Regali) e categorie di uscita (es. Spesa, Affitto, Trasporti, Svago, Bollette).
