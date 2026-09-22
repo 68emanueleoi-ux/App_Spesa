@@ -1,31 +1,27 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { ArrowDownUp, Database, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router'
 import { SelettoreMese } from '@/components/SelettoreMese'
 import { db } from '@/db/db'
 import { movimentiDelMese } from '@/db/movimenti'
-import type { Categoria, Movimento, TipoMovimento } from '@/db/tipi'
+import type { Categoria, Movimento } from '@/db/tipi'
 import { totali } from '@/lib/calcoli'
 import { cn } from '@/lib/cn'
 import { formatDataLunga, formatMese } from '@/lib/date'
 import { formatImporto } from '@/lib/importi'
 import { useMeseSelezionato } from '@/lib/mese'
 import { contiene } from '@/lib/testo'
+import { useFiltriMovimenti } from './useFiltri'
 import { useMovimenti } from './useMovimenti'
 import { RigaMovimento } from './RigaMovimento'
 import { PannelloDati } from './PannelloDati'
 
-type FiltroTipo = 'tutti' | TipoMovimento
 type Ordine = 'data' | 'importo'
 
 export function MovimentiPage() {
   const { mese } = useMeseSelezionato()
   const { apriNuovo } = useMovimenti()
-  const [params] = useSearchParams()
-  const [tipo, setTipo] = useState<FiltroTipo>('tutti')
-  // ?cat=... arriva dal report (tocco su una barra); poi il filtro vive nello stato locale
-  const [categoriaId, setCategoriaId] = useState(() => params.get('cat') ?? '')
+  const { tipo, categoriaId, impostaTipo, impostaCategoria } = useFiltriMovimenti()
   const [ordine, setOrdine] = useState<Ordine>('data')
   const [ricerca, setRicerca] = useState('')
   const [datiAperto, setDatiAperto] = useState(false)
@@ -75,14 +71,14 @@ export function MovimentiPage() {
       <div className="-mx-5 mt-2.5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] md:mx-0 md:px-0">
         <div role="radiogroup" aria-label="Tipo" className="flex gap-2">
           {(['tutti', 'uscita', 'entrata'] as const).map((t) => (
-            <Chip key={t} attivo={tipo === t} onClick={() => { setTipo(t); setCategoriaId('') }} role="radio" ariaChecked={tipo === t}>
+            <Chip key={t} attivo={tipo === t} onClick={() => impostaTipo(t)} role="radio" ariaChecked={tipo === t}>
               {t === 'tutti' ? 'Tutti' : t === 'uscita' ? 'Uscite' : 'Entrate'}
             </Chip>
           ))}
         </div>
         <select
           value={categoriaId}
-          onChange={(e) => setCategoriaId(e.target.value)}
+          onChange={(e) => impostaCategoria(e.target.value)}
           aria-label="Categoria"
           className={cn(
             'h-9 shrink-0 appearance-none rounded-ctrl border border-filetto bg-foglio px-3 text-sm',
