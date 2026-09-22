@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { IconaCategoria } from '@/components/IconaCategoria'
+import { Pannello } from '@/components/ui/Pannello'
 import { spostaCategoria } from '@/db/categorie'
 import { db } from '@/db/db'
 import type { Categoria, RegolaCategoria, TipoMovimento } from '@/db/tipi'
@@ -35,6 +36,7 @@ export function CategoriePage() {
     <>
       <h1 className="py-3 font-display text-xl font-semibold">Categorie</h1>
 
+      <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
       <Gruppo
         titolo="Uscite"
         tipo="uscita"
@@ -55,26 +57,28 @@ export function CategoriePage() {
       />
 
       {/* Regole */}
-      <section className="py-4">
-        <div className="mb-1 flex items-baseline justify-between">
-          <h2 className="font-display text-base font-semibold">Regole di categorizzazione</h2>
+      <Pannello
+        className="lg:col-span-2"
+        titolo="Regole di categorizzazione"
+        azione={
           <button
             type="button"
             onClick={() => setFormRegola({ aperto: true })}
             className="flex items-center gap-1 text-sm font-medium text-cobalto"
           >
             <Plus className="size-4" aria-hidden="true" />
-            Nuova
+            Nuova regola
           </button>
-        </div>
-        <p className="mb-2 text-xs text-inchiostro-2">
+        }
+      >
+        <p className="-mt-2 mb-2.5 text-xs text-inchiostro-2">
           Assegnano la categoria da sole in base alla descrizione, sia nell'importazione CSV sia nei movimenti inseriti
           a mano.
         </p>
         {regole.length === 0 ? (
           <p className="py-4 text-sm text-inchiostro-2">Nessuna regola. Esempio: "conad" → Spesa.</p>
         ) : (
-          <ul>
+          <ul className="md:grid md:grid-cols-2 md:gap-x-10">
             {regole.map((r) => {
               const c = perId.get(r.categoriaId)
               return (
@@ -88,7 +92,6 @@ export function CategoriePage() {
                       contiene <b className="font-medium">"{r.contiene}"</b>
                     </span>
                     <span className="flex shrink-0 items-center gap-1.5 text-inchiostro-2">
-                      →{' '}
                       {c && (
                         <IconaCategoria nome={c.icona} className="size-3.5" style={{ color: coloreCss(c.colore) }} />
                       )}
@@ -100,7 +103,8 @@ export function CategoriePage() {
             })}
           </ul>
         )}
-      </section>
+      </Pannello>
+      </div>
 
       <FormCategoria
         aperto={form.aperto}
@@ -138,15 +142,16 @@ function Gruppo({
 }) {
   const ordinabili = categorie.filter((c) => c.tipo === tipo && !c.diSistema)
   return (
-    <section className="border-b border-filetto py-4">
-      <div className="mb-1 flex items-baseline justify-between">
-        <h2 className="font-display text-base font-semibold">{titolo}</h2>
+    <Pannello
+      titolo={titolo}
+      azione={
         <button type="button" onClick={onNuova} className="flex items-center gap-1 text-sm font-medium text-cobalto">
           <Plus className="size-4" aria-hidden="true" />
-          Nuova
+          Nuova categoria
         </button>
-      </div>
-      <ul>
+      }
+    >
+      <ul className="-mt-1">
         {categorie
           .filter((c) => c.tipo === tipo)
           .map((c, i) => (
@@ -209,6 +214,6 @@ function Gruppo({
             </li>
           ))}
       </ul>
-    </section>
+    </Pannello>
   )
 }
