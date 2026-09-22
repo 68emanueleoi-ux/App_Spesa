@@ -1,6 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useEffect } from 'react'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { useState } from 'react'
 import { useToast } from '@/components/useToast'
 import { IconaCategoria } from '@/components/IconaCategoria'
 import { Sheet } from '@/components/ui/Sheet'
@@ -15,7 +14,7 @@ import { coloreCss } from '@/lib/colori'
 import { oggiIso } from '@/lib/date'
 import { centesimiInInput, parseImporto } from '@/lib/importi'
 import { testoPerRegola } from '@/lib/testo'
-import { fineMeseCorrente, resolverMovimento, type ValoriMovimento } from './validaMovimento'
+import { fineMeseCorrente, validaMovimento, type ErroriMovimento, type ValoriMovimento } from './validaMovimento'
 
 interface Props {
   aperto: boolean
@@ -26,206 +25,245 @@ interface Props {
 }
 
 export function FormMovimento({ aperto, movimento, tipoIniziale, onChiudi, onElimina }: Props) {
-  const { mostra, errore } = useToast()
+  const titolo = movimento ? 'Modifica movimento' : 'Aggiungi movimento'
+
+  return (
+    <Sheet aperto={aperto} onChiudi={onChiudi} titolo={titolo} senzaFocus>
+      {/* Il corpo viene montato a ogni apertura: i valori ripartono puliti senza
+          un effetto di reset, come già fanno FormCategoria e FormRegola. */}
+      {aperto && (
+        <Corpo
+          key={movimento?.id ?? `nuovo-${tipoIniziale ?? 'uscita'}`}
+          movimento={movimento}
+          tipoIniziale={tipoIniziale}
+          onChiudi={onChiudi}
+          onElimina={onElimina}
+        />
+      )}
+    </Sheet>
+  )
+}
+
+function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'aperto'>) {
+  const { mostra, errore: avvisaErrore } = useToast()
   const modifica = movimento !== undefined
 
-  const { control, register, handleSubmit, setValue, reset, formState } = useForm<ValoriMovimento>({
-    resolver: resolverMovimento,
-    defaultValues: valoriIniziali(movimento, tipoIniziale),
-  })
-  const tipo = useWatch({ control, name: 'tipo' })
-  const categoriaId = useWatch({ control, name: 'categoriaId' })
+  const [valori, setValori] = useState<ValoriMovimento>(() => valoriIniziali(movimento, tipoIniziale))
+  const [errori, setErrori] = useState<ErroriMovimento>({})
+  const [inCorso, setInCorso] = useState(false)
 
-  // Ogni apertura riparte dai valori giusti (nuovo → uscita/oggi, modifica → il movimento)
-  useEffect(() => {
-    if (aperto) reset(valoriIniziali(movimento, tipoIniziale))
-  }, [aperto, movimento, tipoIniziale, reset])
+  const categorie = useLiveQuery(() => db.categorie.where('tipo').equals(valori.tipo).sortBy('ordine'), [valori.tipo])
 
-  const categorie = useLiveQuery(() => db.categorie.where('tipo').equals(tipo).sortBy('ordine'), [tipo])
+  /** Cambia un campo e ne toglie l'errore: correggerlo deve far sparire il messaggio. */
+  function cambia<K extends keyof ValoriMovimento>(campo: K, valore: ValoriMovimento[K]) {
+    setValori((v) => ({ ...v, [campo]: valore }))
+    setErrori((e) => (e[campo] === undefined ? e : { ...e, [campo]: undefined }))
+  }
 
-  // Cambiando tipo, una categoria dell'altro tipo non è più valida
-  useEffect(() => {
-    if (categoriaId && categorie && !categorie.some((c) => c.id === categoriaId)) {
-      setValue('categoriaId', '')
+  /** Cambiare tipo azzera la categoria: quella scelta appartiene all'altro tipo. */
+  function cambiaTipo(t: ValoriMovimento['tipo']) {
+    setValori((v) => ({ ...v, tipo: t, categoriaId: '' }))
+    setErrori({})
+  }
+
+  // Una categoria eliminata da un'altra scheda mentre il form è aperto non è più
+  // selezionabile: la selezione decade qui, senza un effetto che reimposti lo stato.
+  const categoriaId = categorie?.some((c) => c.id === valori.categoriaId) ? valori.categoriaId : ''
+
+  const salva = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const trovati = validaMovimento({ ...valori, categoriaId })
+    if (Object.keys(trovati).length > 0) {
+      setErrori(trovati)
+      return
     }
-  }, [categorie, categoriaId, setValue])
 
-  const salva = handleSubmit(async (v) => {
     const dati = {
-      tipo: v.tipo,
-      importo: parseImporto(v.importo)!,
-      categoriaId: v.categoriaId,
-      data: v.data,
-      descrizione: v.descrizione,
+      tipo: valori.tipo,
+      importo: parseImporto(valori.importo)!,
+      categoriaId,
+      data: valori.data,
+      descrizione: valori.descrizione,
     }
-    if (modifica) {
-      // Il pannello resta aperto se il salvataggio non riesce: i dati scritti non si perdono.
-      const fatto = await conAvviso(() => aggiornaMovimento(movimento.id, dati), 'salvare le modifiche', errore)
-      if (!fatto) return
-      const testo = testoPerRegola(v.descrizione)
-      // Categoria corretta su un movimento importato: proponi una regola per la prossima volta
-      if (movimento.origine === 'import' && movimento.categoriaId !== v.categoriaId && testo && !(await esisteRegola(testo).catch(() => true))) {
-        const nomeCat = categorie?.find((c) => c.id === v.categoriaId)?.nome ?? 'questa categoria'
-        mostra(`Assegnare sempre "${testo}" a ${nomeCat}?`, {
-          etichetta: 'Crea regola',
-          esegui: () => {
-            void conAvviso(() => aggiungiRegola(testo, v.categoriaId), 'creare la regola', errore)
-          },
-        }, 7000)
-      } else {
-        mostra('Modifiche salvate', undefined, 2500)
-      }
-    } else {
-      const fatto = await conAvviso(() => aggiungiMovimento(dati), 'salvare il movimento', errore)
-      if (!fatto) return
-      mostra(v.tipo === 'uscita' ? 'Spesa aggiunta' : 'Entrata aggiunta', undefined, 2500)
-    }
-    onChiudi()
-  })
 
-  // Descrizione senza categoria scelta: prova le regole di categorizzazione
+    setInCorso(true)
+    try {
+      if (modifica) {
+        // Il pannello resta aperto se il salvataggio non riesce: i dati digitati non si perdono.
+        const fatto = await conAvviso(() => aggiornaMovimento(movimento.id, dati), 'salvare le modifiche', avvisaErrore)
+        if (!fatto) return
+        const testo = testoPerRegola(valori.descrizione)
+        // Categoria corretta su un movimento importato: proponi una regola per la prossima volta
+        if (
+          movimento.origine === 'import' &&
+          movimento.categoriaId !== categoriaId &&
+          testo &&
+          !(await esisteRegola(testo).catch(() => true))
+        ) {
+          const nomeCat = categorie?.find((c) => c.id === categoriaId)?.nome ?? 'questa categoria'
+          mostra(
+            `Assegnare sempre "${testo}" a ${nomeCat}?`,
+            {
+              etichetta: 'Crea regola',
+              esegui: () => {
+                void conAvviso(() => aggiungiRegola(testo, categoriaId), 'creare la regola', avvisaErrore)
+              },
+            },
+            7000,
+          )
+        } else {
+          mostra('Modifiche salvate', undefined, 2500)
+        }
+      } else {
+        const fatto = await conAvviso(() => aggiungiMovimento(dati), 'salvare il movimento', avvisaErrore)
+        if (!fatto) return
+        mostra(valori.tipo === 'uscita' ? 'Spesa aggiunta' : 'Entrata aggiunta', undefined, 2500)
+      }
+      onChiudi()
+    } finally {
+      setInCorso(false)
+    }
+  }
+
+  // Descrizione scritta senza categoria scelta: prova le regole di categorizzazione
   const suggerisciCategoria = async (descrizione: string) => {
     if (categoriaId) return
     try {
       const regole = await db.regole.toArray()
       const id = applicaRegole(descrizione, regole)
-      if (id && categorie?.some((c) => c.id === id)) setValue('categoriaId', id)
+      if (id && categorie?.some((c) => c.id === id)) cambia('categoriaId', id)
     } catch (e) {
       // Suggerimento facoltativo: se le regole non si leggono, l'utente sceglie a mano.
       console.error('Regole non leggibili', e)
     }
   }
 
-  const titolo = modifica ? 'Modifica movimento' : tipo === 'uscita' ? 'Aggiungi spesa' : 'Aggiungi entrata'
-  const errori = formState.errors
-  const importoReg = register('importo')
+  const titolo = modifica ? 'Modifica movimento' : valori.tipo === 'uscita' ? 'Aggiungi spesa' : 'Aggiungi entrata'
 
   return (
-    <Sheet aperto={aperto} onChiudi={onChiudi} titolo={titolo} senzaFocus>
-      <form onSubmit={salva} noValidate className="flex flex-col">
-        {/* Tipo */}
-        <Controller
-          control={control}
-          name="tipo"
-          render={({ field }) => (
-            <div role="radiogroup" aria-label="Tipo" className="grid grid-cols-2 rounded-lg bg-carta p-[3px] text-sm font-medium">
-              {(['uscita', 'entrata'] as const).map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  role="radio"
-                  aria-checked={field.value === t}
-                  onClick={() => field.onChange(t)}
-                  className={cn(
-                    'rounded-ctrl py-2 text-inchiostro-2 transition-colors',
-                    field.value === t && 'bg-foglio text-inchiostro shadow-[0_1px_2px_rgba(0,0,0,0.12)]',
-                  )}
-                >
-                  {t === 'uscita' ? 'Uscita' : 'Entrata'}
-                </button>
-              ))}
-            </div>
-          )}
-        />
+    <form onSubmit={salva} noValidate className="flex flex-col">
+      {/* Tipo */}
+      <div
+        role="radiogroup"
+        aria-label="Tipo"
+        className="grid grid-cols-2 rounded-lg bg-carta p-[3px] text-sm font-medium"
+      >
+        {(['uscita', 'entrata'] as const).map((t) => (
+          <button
+            key={t}
+            type="button"
+            role="radio"
+            aria-checked={valori.tipo === t}
+            onClick={() => cambiaTipo(t)}
+            className={cn(
+              'rounded-ctrl py-2 text-inchiostro-2 transition-colors',
+              valori.tipo === t && 'bg-foglio text-inchiostro shadow-[0_1px_2px_rgba(0,0,0,0.12)]',
+            )}
+          >
+            {t === 'uscita' ? 'Uscita' : 'Entrata'}
+          </button>
+        ))}
+      </div>
 
-        {/* Importo */}
-        <label className="mt-5 flex items-baseline gap-2 border-b border-filetto pb-3">
-          <span className="font-display text-lg text-inchiostro-2">€</span>
+      {/* Importo */}
+      <label className="mt-5 flex items-baseline gap-2 border-b border-filetto pb-3">
+        <span className="font-display text-lg text-inchiostro-2">€</span>
+        <input
+          value={valori.importo}
+          onChange={(e) => cambia('importo', e.target.value)}
+          type="text"
+          inputMode="decimal"
+          autoComplete="off"
+          enterKeyHint="done"
+          placeholder="0,00"
+          aria-label="Importo in euro"
+          aria-invalid={!!errori.importo}
+          className="num w-full min-w-0 bg-transparent font-display text-2xl font-medium tracking-tight outline-none placeholder:text-filetto"
+        />
+      </label>
+      <Errore messaggio={errori.importo} />
+
+      {/* Categoria */}
+      <div
+        role="radiogroup"
+        aria-label="Categoria"
+        className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] gap-2"
+      >
+        {(categorie ?? []).map((c) => {
+          const attiva = categoriaId === c.id
+          return (
+            <button
+              key={c.id}
+              type="button"
+              role="radio"
+              aria-checked={attiva}
+              onClick={() => cambia('categoriaId', c.id)}
+              className={cn(
+                'flex min-h-11 items-center gap-2 rounded-ctrl border border-filetto px-2.5 py-2 text-left text-sm font-medium active:bg-carta',
+                attiva && 'border-cobalto ring-1 ring-cobalto ring-inset',
+                c.diSistema && 'text-inchiostro-2',
+              )}
+            >
+              <IconaCategoria nome={c.icona} className="size-4 shrink-0" style={{ color: coloreCss(c.colore) }} />
+              <span className="truncate">{c.nome}</span>
+            </button>
+          )
+        })}
+      </div>
+      <Errore messaggio={errori.categoriaId} />
+
+      {/* Data e descrizione */}
+      <div className="mt-4 grid grid-cols-[1fr_1.4fr] gap-2">
+        <div>
           <input
-            {...importoReg}
+            value={valori.data}
+            onChange={(e) => cambia('data', e.target.value)}
+            type="date"
+            max={fineMeseCorrente()}
+            aria-label="Data"
+            aria-invalid={!!errori.data}
+            className="h-11 w-full min-w-0 rounded-ctrl border border-filetto bg-foglio px-3 text-sm"
+          />
+          <Errore messaggio={errori.data} />
+        </div>
+        <div>
+          <input
+            value={valori.descrizione}
+            onChange={(e) => cambia('descrizione', e.target.value)}
+            onBlur={(e) => void suggerisciCategoria(e.target.value)}
             type="text"
-            inputMode="decimal"
+            placeholder="Descrizione"
+            aria-label="Descrizione"
             autoComplete="off"
             enterKeyHint="done"
-            placeholder="0,00"
-            aria-label="Importo in euro"
-            aria-invalid={!!errori.importo}
-            className="num w-full min-w-0 bg-transparent font-display text-2xl font-medium tracking-tight outline-none placeholder:text-filetto"
+            maxLength={100}
+            className="h-11 w-full rounded-ctrl border border-filetto bg-foglio px-3 text-sm placeholder:text-inchiostro-2"
           />
-        </label>
-        <Errore messaggio={errori.importo?.message} />
-
-        {/* Categoria */}
-        <Controller
-          control={control}
-          name="categoriaId"
-          render={({ field }) => (
-            <div role="radiogroup" aria-label="Categoria" className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] gap-2">
-              {(categorie ?? []).map((c) => {
-                const attiva = field.value === c.id
-                return (
-                  <button
-                    key={c.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={attiva}
-                    onClick={() => field.onChange(c.id)}
-                    className={cn(
-                      'flex min-h-11 items-center gap-2 rounded-ctrl border border-filetto px-2.5 py-2 text-left text-sm font-medium active:bg-carta',
-                      attiva && 'border-cobalto ring-1 ring-cobalto ring-inset',
-                      c.diSistema && 'text-inchiostro-2',
-                    )}
-                  >
-                    <IconaCategoria nome={c.icona} className="size-4 shrink-0" style={{ color: coloreCss(c.colore) }} />
-                    <span className="truncate">{c.nome}</span>
-                  </button>
-                )
-              })}
-            </div>
-          )}
-        />
-        <Errore messaggio={errori.categoriaId?.message} />
-
-        {/* Data e descrizione */}
-        <div className="mt-4 grid grid-cols-[1fr_1.4fr] gap-2">
-          <div>
-            <input
-              {...register('data')}
-              type="date"
-              max={fineMeseCorrente()}
-              aria-label="Data"
-              aria-invalid={!!errori.data}
-              className="h-11 w-full min-w-0 rounded-ctrl border border-filetto bg-foglio px-3 text-sm"
-            />
-            <Errore messaggio={errori.data?.message} />
-          </div>
-          <div>
-            <input
-              {...register('descrizione', { onBlur: (e) => void suggerisciCategoria(e.target.value) })}
-              type="text"
-              placeholder="Descrizione"
-              aria-label="Descrizione"
-              autoComplete="off"
-              enterKeyHint="done"
-              maxLength={100}
-              className="h-11 w-full rounded-ctrl border border-filetto bg-foglio px-3 text-sm placeholder:text-inchiostro-2"
-            />
-            <Errore messaggio={errori.descrizione?.message} />
-          </div>
+          <Errore messaggio={errori.descrizione} />
         </div>
+      </div>
 
+      <button
+        type="submit"
+        disabled={inCorso}
+        className="mt-5 h-12 rounded-lg bg-cobalto text-base font-bold text-cobalto-testo active:brightness-95 disabled:opacity-60"
+      >
+        {modifica ? 'Salva modifiche' : titolo}
+      </button>
+
+      {modifica && (
         <button
-          type="submit"
-          disabled={formState.isSubmitting}
-          className="mt-5 h-12 rounded-lg bg-cobalto text-base font-bold text-cobalto-testo active:brightness-95 disabled:opacity-60"
+          type="button"
+          onClick={async () => {
+            onChiudi()
+            await onElimina(movimento.id)
+          }}
+          className="mt-2 h-11 rounded-lg text-sm font-medium text-rosso active:bg-carta"
         >
-          {modifica ? 'Salva modifiche' : titolo}
+          {movimento.tipo === 'uscita' ? 'Elimina spesa' : 'Elimina entrata'}
         </button>
-
-        {modifica && (
-          <button
-            type="button"
-            onClick={async () => {
-              onChiudi()
-              await onElimina(movimento.id)
-            }}
-            className="mt-2 h-11 rounded-lg text-sm font-medium text-rosso active:bg-carta"
-          >
-            {movimento.tipo === 'uscita' ? 'Elimina spesa' : 'Elimina entrata'}
-          </button>
-        )}
-      </form>
-    </Sheet>
+      )}
+    </form>
   )
 }
 

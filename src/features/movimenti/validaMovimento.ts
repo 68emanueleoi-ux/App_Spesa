@@ -1,4 +1,3 @@
-import type { Resolver } from 'react-hook-form'
 import { giorniNelMese, meseCorrente } from '@/lib/date'
 import { parseImporto } from '@/lib/importi'
 
@@ -40,15 +39,4 @@ export function validaMovimento(v: ValoriMovimento): ErroriMovimento {
   if (v.descrizione.length > 100) errori.descrizione = 'Massimo 100 caratteri'
 
   return errori
-}
-
-/** Adatta `validaMovimento` al formato che react-hook-form si aspetta. */
-export const resolverMovimento: Resolver<ValoriMovimento> = (valori) => {
-  const errori = validaMovimento(valori)
-  const campi = Object.keys(errori) as (keyof ValoriMovimento)[]
-  if (campi.length === 0) return { values: valori, errors: {} }
-  return {
-    values: {},
-    errors: Object.fromEntries(campi.map((c) => [c, { type: 'validazione', message: errori[c] }])),
-  }
 }

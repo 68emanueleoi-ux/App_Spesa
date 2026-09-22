@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { meseCorrente, meseSuccessivo } from '@/lib/date'
-import { fineMeseCorrente, resolverMovimento, validaMovimento, type ValoriMovimento } from '../validaMovimento'
+import { fineMeseCorrente, validaMovimento, type ValoriMovimento } from '../validaMovimento'
 
 const valido: ValoriMovimento = {
   tipo: 'uscita',
@@ -57,19 +57,5 @@ describe('validaMovimento', () => {
   it('segnala tutti i campi sbagliati insieme, non solo il primo', () => {
     const errori = validaMovimento({ ...valido, importo: '', categoriaId: '', data: 'x' })
     expect(Object.keys(errori).sort()).toEqual(['categoriaId', 'data', 'importo'])
-  })
-})
-
-describe('resolverMovimento', () => {
-  const contesto = { criteriaMode: 'firstError' as const, fields: {}, shouldUseNativeValidation: false }
-
-  it('restituisce i valori quando è tutto a posto', async () => {
-    expect(await resolverMovimento(valido, undefined, contesto)).toEqual({ values: valido, errors: {} })
-  })
-
-  it('traduce gli errori nel formato di react-hook-form', async () => {
-    const esito = await resolverMovimento({ ...valido, importo: '' }, undefined, contesto)
-    expect(esito.values).toEqual({})
-    expect(esito.errors.importo).toMatchObject({ message: 'Inserisci un importo maggiore di zero' })
   })
 })
