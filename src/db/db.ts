@@ -18,6 +18,14 @@ export class SpeseDb extends Dexie {
       impostazioni: 'chiave',
     })
 
+    // v2: via `tipo` e `[tipo+data]` da movimenti. Nessuna query li ha mai usati
+    // (si filtra per tipo in memoria, sui movimenti del mese già caricati) e ogni
+    // indice si paga a ogni scrittura, quindi a ogni import. Dexie riscrive solo
+    // gli indici: i movimenti restano dove sono.
+    this.version(2).stores({
+      movimenti: 'id, data, categoriaId',
+    })
+
     // Il seed gira dentro la transazione che crea il database: due schede aperte
     // insieme al primo avvio non possono seminare due volte (prima era un
     // count() seguito da bulkAdd, e la seconda scheda falliva con un errore di

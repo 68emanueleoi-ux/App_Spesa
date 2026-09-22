@@ -95,3 +95,26 @@ describe('firmaCsv', () => {
     expect(firmaCsv(['Data', 'Descrizione', 'Importo'])).toBe(firmaCsv(['DATA', 'descrizione', 'Importo']))
   })
 })
+
+describe('righe scartate', () => {
+  it('distingue un importo a zero da uno illeggibile', () => {
+    const mappatura = {
+      data: 0,
+      importo: 1,
+      descrizione: 2,
+      tipo: { modo: 'tutteUscite' as const },
+      decimale: 'auto' as const,
+    }
+    const { valide, scartate } = interpretaRighe(
+      [
+        ['01/09/2026', '0,00', 'storno'],
+        ['02/09/2026', 'abc', 'illeggibile'],
+        ['03/09/2026', '12,50', 'buona'],
+      ],
+      mappatura,
+    )
+    expect(valide).toHaveLength(1)
+    expect(scartate[0].motivo).toBe('Importo a zero: non è un movimento')
+    expect(scartate[1].motivo).toContain('Importo non riconosciuto')
+  })
+})

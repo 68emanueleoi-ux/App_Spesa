@@ -20,7 +20,7 @@ import {
   movimentiDelMese,
   ripristinaMovimento,
 } from '../movimenti'
-import { aggiungiRegola, aggiornaRegola, eliminaRegola, esisteRegola } from '../regole'
+import { aggiungiRegola, aggiungiRegole, aggiornaRegola, eliminaRegola, esisteRegola } from '../regole'
 import { creaBackup, dataUltimoBackup, leggiBackup, ripristinaBackup, type Backup } from '../backup'
 import { chiaviEsistenti, importaMovimenti, mappaturaRicordata, ricordaMappatura } from '../importazione'
 
@@ -272,6 +272,48 @@ describe('regole', () => {
     expect(await db.regole.get(r.id)).toMatchObject({ contiene: 'esselunga', categoriaId: 'svago' })
     await eliminaRegola(r.id)
     expect(await db.regole.get(r.id)).toBeUndefined()
+  })
+})
+
+describe('aggiungiRegole (in blocco, dall importazione)', () => {
+  it('crea solo quelle che non esistono gia', async () => {
+    await aggiungiRegola('conad', 'spesa')
+    const create = await aggiungiRegole([
+      { contiene: 'Conad', categoriaId: 'svago' },
+      { contiene: 'esselunga', categoriaId: 'spesa' },
+    ])
+    expect(create).toBe(1)
+    expect(await db.regole.count()).toBe(2)
+    const conad = (await db.regole.toArray()).find((r) => r.contiene === 'conad')
+    expect(conad?.categoriaId).toBe('spesa')
+  })
+
+  it('salta i doppioni dentro lo stesso file', async () => {
+    const create = await aggiungiRegole([
+      { contiene: 'conad', categoriaId: 'spesa' },
+      { contiene: '  CONAD  ', categoriaId: 'svago' },
+    ])
+    expect(create).toBe(1)
+  })
+
+  it('salta i testi vuoti', async () => {
+    expect(await aggiungiRegole([{ contiene: '   ', categoriaId: 'spesa' }])).toBe(0)
+    expect(await db.regole.count()).toBe(0)
+  })
+
+  it('assegna priorita crescenti che continuano da quelle esistenti', async () => {
+    const prima = await aggiungiRegola('conad', 'spesa')
+    await aggiungiRegole([
+      { contiene: 'esselunga', categoriaId: 'spesa' },
+      { contiene: 'coop', categoriaId: 'spesa' },
+    ])
+    const tutte = await db.regole.orderBy('priorita').toArray()
+    expect(tutte.map((r) => r.contiene)).toEqual(['conad', 'esselunga', 'coop'])
+    expect(tutte[1].priorita).toBeGreaterThan(prima.priorita)
+  })
+
+  it('con un elenco vuoto non fa nulla', async () => {
+    expect(await aggiungiRegole([])).toBe(0)
   })
 })
 

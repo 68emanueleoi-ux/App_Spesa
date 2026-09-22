@@ -6,7 +6,7 @@ import { useToast } from '@/components/useToast'
 import { senzaCategoria } from '@/db/categorie'
 import { db } from '@/db/db'
 import { chiaviEsistenti, importaMovimenti, mappaturaRicordata, ricordaMappatura } from '@/db/importazione'
-import { aggiungiRegola, esisteRegola } from '@/db/regole'
+import { aggiungiRegole } from '@/db/regole'
 import type { Categoria } from '@/db/tipi'
 import { applicaRegole, chiaveDuplicato } from '@/lib/calcoli'
 import { cn } from '@/lib/cn'
@@ -111,10 +111,10 @@ export function ImportazionePage() {
     )
     if (!fatto) return
     try {
-      for (const r of daImportare) {
-        const testo = testoPerRegola(r.descrizione)
-        if (r.creaRegola && testo && !(await esisteRegola(testo))) await aggiungiRegola(testo, r.categoriaId)
-      }
+      const regoleNuove = daImportare
+        .filter((r) => r.creaRegola)
+        .map((r) => ({ contiene: testoPerRegola(r.descrizione), categoriaId: r.categoriaId }))
+      await aggiungiRegole(regoleNuove)
       await ricordaMappatura(passo.firma, passo.mappatura)
     } catch (e) {
       // Accessori: i movimenti sono già dentro, non vale la pena allarmare l'utente.

@@ -202,8 +202,14 @@ export function interpretaRighe(
         tipo = negativo !== m.tipo.invertito ? 'uscita' : 'entrata'
       }
     }
-    if (grezzo === null || grezzo === 0) {
+    if (grezzo === null) {
       scartate.push({ indice, motivo: `Importo non riconosciuto: "${r[m.importo] ?? ''}"` })
+      return
+    }
+    // Zero è un importo valido ma non è un movimento: dirlo, invece di far
+    // credere che la colonna sia sbagliata.
+    if (grezzo === 0) {
+      scartate.push({ indice, motivo: 'Importo a zero: non è un movimento' })
       return
     }
     valide.push({ indice, data, importo: Math.abs(grezzo), tipo, descrizione })
