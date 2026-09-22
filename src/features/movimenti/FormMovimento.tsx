@@ -157,7 +157,7 @@ export function FormMovimento({ aperto, movimento, tipoIniziale, onChiudi, onEli
           control={control}
           name="categoriaId"
           render={({ field }) => (
-            <div role="radiogroup" aria-label="Categoria" className="mt-4 grid grid-cols-3 gap-2">
+            <div role="radiogroup" aria-label="Categoria" className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] gap-2">
               {(categorie ?? []).map((c) => {
                 const attiva = field.value === c.id
                 return (

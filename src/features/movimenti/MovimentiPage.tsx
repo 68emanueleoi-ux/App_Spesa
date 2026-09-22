@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { ArrowDownUp, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router'
 import { SelettoreMese } from '@/components/SelettoreMese'
 import { db } from '@/db/db'
 import { movimentiDelMese } from '@/db/movimenti'
@@ -20,8 +21,10 @@ type Ordine = 'data' | 'importo'
 export function MovimentiPage() {
   const { mese } = useMeseSelezionato()
   const { apriNuovo } = useMovimenti()
+  const [params] = useSearchParams()
   const [tipo, setTipo] = useState<FiltroTipo>('tutti')
-  const [categoriaId, setCategoriaId] = useState('')
+  // ?cat=... arriva dal report (tocco su una barra); poi il filtro vive nello stato locale
+  const [categoriaId, setCategoriaId] = useState(() => params.get('cat') ?? '')
   const [ordine, setOrdine] = useState<Ordine>('data')
   const [ricerca, setRicerca] = useState('')
 
