@@ -8,6 +8,7 @@ import type { Categoria, ColoreCategoria, TipoMovimento } from '@/db/tipi'
 import { cn } from '@/lib/cn'
 import { conAvviso } from '@/lib/errori'
 import { COLORI_TAVOLOZZA, coloreCss } from '@/lib/colori'
+import { centesimiInInput, parseImporto } from '@/lib/importi'
 
 interface Props {
   aperto: boolean
@@ -51,6 +52,7 @@ function Corpo({
   const [nome, setNome] = useState(categoria?.nome ?? '')
   const [colore, setColore] = useState<ColoreCategoria>(categoria?.colore ?? (tipo === 'entrata' ? 'verde' : 'c1'))
   const [icona, setIcona] = useState(categoria?.icona ?? (tipo === 'entrata' ? 'hand-coins' : 'shopping-basket'))
+  const [budget, setBudget] = useState(categoria?.budget ? centesimiInInput(categoria.budget) : '')
   const [errore, setErrore] = useState<string | null>(null)
   const modifica = categoria !== undefined
 
@@ -61,9 +63,20 @@ function Corpo({
       campoNome.current?.focus()
       return
     }
+    // Campo vuoto = nessun tetto. Un testo che non è un importo è un errore, non uno zero.
+    let tetto: number | undefined
+    if (tipo === 'uscita' && budget.trim() !== '') {
+      const c = parseImporto(budget)
+      if (c === null || c <= 0) {
+        setErrore('Il budget deve essere un importo maggiore di zero (oppure lascialo vuoto)')
+        return
+      }
+      tetto = c
+    }
+
     if (modifica) {
       const fatto = await conAvviso(
-        () => aggiornaCategoria(categoria.id, { nome, colore, icona }),
+        () => aggiornaCategoria(categoria.id, { nome, colore, icona, budget: tetto }),
         'salvare la categoria',
         avvisaErrore,
       )
@@ -71,7 +84,7 @@ function Corpo({
       mostra('Categoria aggiornata', undefined, 2500)
     } else {
       const fatto = await conAvviso(
-        () => aggiungiCategoria({ nome, tipo, colore, icona }),
+        () => aggiungiCategoria({ nome, tipo, colore, icona, budget: tetto }),
         'creare la categoria',
         avvisaErrore,
       )
@@ -158,6 +171,35 @@ function Corpo({
           </button>
         ))}
       </div>
+
+      {/* Budget: solo per le uscite, e solo se lo vuoi */}
+      {tipo === 'uscita' && (
+        <>
+          <label className="mt-5 block text-xs text-inchiostro-2" htmlFor="campo-budget">
+            Budget mensile <span className="text-inchiostro-2">(facoltativo)</span>
+          </label>
+          <div className="mt-1 flex h-11 items-center gap-2 rounded-ctrl border border-filetto bg-foglio px-3 focus-within:border-cobalto">
+            <span className="text-inchiostro-2">€</span>
+            <input
+              id="campo-budget"
+              value={budget}
+              onChange={(e) => {
+                setBudget(e.target.value)
+                setErrore(null)
+              }}
+              type="text"
+              inputMode="decimal"
+              autoComplete="off"
+              enterKeyHint="done"
+              placeholder="nessun tetto"
+              className="num w-full min-w-0 bg-transparent text-base outline-none placeholder:text-inchiostro-2"
+            />
+          </div>
+          <p className="mt-1 text-xs text-inchiostro-2">
+            Con un tetto, il report mostra quanto ne hai consumato e se il ritmo regge.
+          </p>
+        </>
+      )}
 
       <button
         type="submit"

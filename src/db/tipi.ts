@@ -15,6 +15,11 @@ export interface Categoria {
   icona: string
   /** ordine di visualizzazione */
   ordine: number
+  /**
+   * Tetto di spesa mensile in CENTESIMI, solo per le categorie di uscita.
+   * Assente = nessun budget: la categoria non compare fra quelle sorvegliate.
+   */
+  budget?: number
   /** true per "Senza categoria": non eliminabile */
   diSistema?: boolean
 }

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { Movimento, RegolaCategoria } from '@/db/tipi'
 import {
   applicaRegole,
+  statoBudget,
   chiaveDuplicato,
   confrontoConMesePrecedente,
   cumulataUscite,
@@ -154,5 +155,68 @@ describe('chiaveDuplicato', () => {
     expect(chiaveDuplicato(base)).not.toBe(chiaveDuplicato({ ...base, importo: 1251 }))
     expect(chiaveDuplicato(base)).not.toBe(chiaveDuplicato({ ...base, data: '2026-09-11' }))
     expect(chiaveDuplicato(base)).not.toBe(chiaveDuplicato({ ...base, tipo: 'entrata' }))
+  })
+})
+
+
+describe('statoBudget', () => {
+  const cat = (id: string, budget?: number) => ({ id, budget })
+
+  it('considera solo le categorie con un tetto maggiore di zero', () => {
+    const r = statoBudget([mov({ importo: 1000 })], [cat('spesa', 5000), cat('svago'), cat('casa', 0)], '2026-09')
+    expect(r.voci.map((v) => v.categoriaId)).toEqual(['spesa'])
+  })
+
+  it('calcola speso, percentuale e residuo', () => {
+    const r = statoBudget(
+      [mov({ importo: 3000, categoriaId: 'spesa' }), mov({ importo: 1000, categoriaId: 'spesa' })],
+      [cat('spesa', 20000)],
+      '2026-09',
+    )
+    expect(r.voci[0]).toMatchObject({ speso: 4000, budget: 20000, percentuale: 20, residuo: 16000 })
+  })
+
+  it('ignora le entrate', () => {
+    const r = statoBudget(
+      [mov({ importo: 9000, categoriaId: 'spesa', tipo: 'entrata' })],
+      [cat('spesa', 10000)],
+      '2026-09',
+    )
+    expect(r.voci[0].speso).toBe(0)
+  })
+
+  it('segnala le categorie sforate con residuo negativo', () => {
+    const r = statoBudget(
+      [mov({ importo: 12000, categoriaId: 'spesa' }), mov({ importo: 500, categoriaId: 'svago' })],
+      [cat('spesa', 10000), cat('svago', 10000)],
+      '2026-09',
+    )
+    expect(r.sforate).toBe(1)
+    expect(r.voci[0]).toMatchObject({ categoriaId: 'spesa', percentuale: 120, residuo: -2000 })
+  })
+
+  it('ordina dalla piu consumata', () => {
+    const r = statoBudget(
+      [mov({ importo: 1000, categoriaId: 'spesa' }), mov({ importo: 9000, categoriaId: 'svago' })],
+      [cat('spesa', 10000), cat('svago', 10000)],
+      '2026-09',
+    )
+    expect(r.voci.map((v) => v.categoriaId)).toEqual(['svago', 'spesa'])
+  })
+
+  it('somma i totali dei soli budget sorvegliati', () => {
+    const r = statoBudget(
+      [mov({ importo: 1000, categoriaId: 'spesa' }), mov({ importo: 7000, categoriaId: 'senza-tetto' })],
+      [cat('spesa', 10000), cat('svago', 5000), cat('senza-tetto')],
+      '2026-09',
+    )
+    expect(r.budgetTotale).toBe(15000)
+    expect(r.spesoTotale).toBe(1000)
+  })
+
+  it('dice quanta parte del mese e trascorsa, per giudicare il ritmo', () => {
+    expect(statoBudget([], [], '2026-09', 15).attesoOggi).toBe(50) // 15 di 30
+    expect(statoBudget([], [], '2026-02', 14).attesoOggi).toBe(50) // 14 di 28
+    expect(statoBudget([], [], '2026-09').attesoOggi).toBeNull() // mese concluso
   })
 })

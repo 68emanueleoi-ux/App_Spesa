@@ -1,4 +1,4 @@
-import type { Movimento, RegolaCategoria } from '@/db/tipi'
+import type { Categoria, Movimento, RegolaCategoria } from '@/db/tipi'
 import { giorniNelMese, giornoDi, type MeseKey } from './date'
 import { normalizza } from './testo'
 
@@ -123,4 +123,69 @@ export function applicaRegole(descrizione: string | undefined, regole: RegolaCat
 /** Chiave per riconoscere un duplicato in importazione: stessa data, tipo, importo e descrizione. */
 export function chiaveDuplicato(m: Pick<Movimento, 'data' | 'importo' | 'descrizione' | 'tipo'>): string {
   return `${m.data}|${m.tipo}|${m.importo}|${normalizza(m.descrizione ?? '')}`
+}
+
+export interface VoceBudget {
+  categoriaId: string
+  speso: number
+  budget: number
+  /** quota del budget consumata, intero; oltre 100 significa sforato */
+  percentuale: number
+  /** budget − speso: negativo se sforato */
+  residuo: number
+}
+
+export interface RiepilogoBudget {
+  /** solo le categorie con un tetto, dalla più consumata */
+  voci: VoceBudget[]
+  budgetTotale: number
+  spesoTotale: number
+  sforate: number
+  /**
+   * Quota di mese trascorsa (0–100), per capire se il ritmo è sostenibile:
+   * al giorno 10 di 30 ci si aspetta circa il 33%. Null a mese concluso.
+   */
+  attesoOggi: number | null
+}
+
+/**
+ * Stato dei budget del mese. Un tetto senza confronto col tempo trascorso
+ * dice poco: "60% speso" è tranquillo il giorno 25 e preoccupante il giorno 5,
+ * per questo il riepilogo porta anche il ritmo atteso.
+ */
+export function statoBudget(
+  movimenti: Movimento[],
+  categorie: Pick<Categoria, 'id' | 'budget'>[],
+  mese: MeseKey,
+  giornoOggi?: number,
+): RiepilogoBudget {
+  const speso = new Map<string, number>()
+  for (const m of movimenti) {
+    if (m.tipo !== 'uscita') continue
+    speso.set(m.categoriaId, (speso.get(m.categoriaId) ?? 0) + m.importo)
+  }
+
+  const voci: VoceBudget[] = categorie
+    .filter((c) => typeof c.budget === 'number' && c.budget > 0)
+    .map((c) => {
+      const budget = c.budget as number
+      const s = speso.get(c.id) ?? 0
+      return {
+        categoriaId: c.id,
+        speso: s,
+        budget,
+        percentuale: Math.round((s / budget) * 100),
+        residuo: budget - s,
+      }
+    })
+    .sort((a, b) => b.percentuale - a.percentuale)
+
+  const giorni = giorniNelMese(mese)
+  return {
+    voci,
+    budgetTotale: voci.reduce((t, v) => t + v.budget, 0),
+    spesoTotale: voci.reduce((t, v) => t + v.speso, 0),
+    sforate: voci.filter((v) => v.residuo < 0).length,
+    attesoOggi: giornoOggi === undefined ? null : Math.round((Math.min(giornoOggi, giorni) / giorni) * 100),
+  }
 }

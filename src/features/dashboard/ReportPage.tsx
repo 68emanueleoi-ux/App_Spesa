@@ -8,13 +8,14 @@ import { SelettoreMese } from '@/components/SelettoreMese'
 import { db } from '@/db/db'
 import { movimentiDelMese } from '@/db/movimenti'
 import type { Movimento } from '@/db/tipi'
-import { confrontoConMesePrecedente, cumulataUscite, ripartizioneUscite, totali, type Confronto } from '@/lib/calcoli'
+import { confrontoConMesePrecedente, cumulataUscite, ripartizioneUscite, statoBudget, totali, type Confronto } from '@/lib/calcoli'
 import { cn } from '@/lib/cn'
 import { giornoDi, mesePrecedente as calcolaMesePrecedente, oggiIso } from '@/lib/date'
 import { formatImporto, formatImportoMovimento } from '@/lib/importi'
 import { useMeseSelezionato } from '@/lib/mese'
 import { useMovimenti } from '@/features/movimenti/useMovimenti'
 import { RigaMovimento } from '@/features/movimenti/RigaMovimento'
+import { Budget } from './Budget'
 import { RipartizioneCategorie } from './RipartizioneCategorie'
 import { TracciatoMese } from './TracciatoMese'
 
@@ -42,8 +43,9 @@ export function ReportPage() {
       cumCorrente: cumulataUscite(movimenti, mese, giornoOggi),
       cumPrecedente: precedenti.length ? cumulataUscite(precedenti, mesePrec) : [],
       confronto: confrontoConMesePrecedente(movimenti, precedenti, mesePrec, giornoOggi),
+      budget: statoBudget(movimenti, categorie ?? [], mese, giornoOggi),
     }
-  }, [movimenti, precedenti, mese, mesePrec, giornoOggi])
+  }, [movimenti, precedenti, categorie, mese, mesePrec, giornoOggi])
 
   return (
     <>
@@ -78,6 +80,9 @@ export function ReportPage() {
 
           {/* Totali */}
           <Totali entrate={dati.totali.entrate} uscite={dati.totali.uscite} saldo={dati.totali.saldo} />
+
+          {/* Budget: c'è solo se almeno una categoria ha un tetto */}
+          <Budget riepilogo={dati.budget} perId={perId} mese={mese} />
 
           <div className="md:grid md:grid-cols-2 md:gap-x-10">
             {/* Ripartizione */}

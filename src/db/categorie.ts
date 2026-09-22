@@ -1,7 +1,7 @@
 import { db, nuovoId } from './db'
 import { SENZA_CATEGORIA_ENTRATA, SENZA_CATEGORIA_USCITA, type Categoria, type TipoMovimento } from './tipi'
 
-export type DatiCategoria = Pick<Categoria, 'nome' | 'tipo' | 'colore' | 'icona'>
+export type DatiCategoria = Pick<Categoria, 'nome' | 'tipo' | 'colore' | 'icona' | 'budget'>
 
 export function senzaCategoria(tipo: TipoMovimento): string {
   return tipo === 'uscita' ? SENZA_CATEGORIA_USCITA : SENZA_CATEGORIA_ENTRATA
@@ -16,7 +16,8 @@ export async function aggiungiCategoria(dati: DatiCategoria): Promise<Categoria>
 }
 
 export async function aggiornaCategoria(id: string, dati: Omit<DatiCategoria, 'tipo'>): Promise<void> {
-  await db.categorie.update(id, { ...dati, nome: dati.nome.trim() })
+  // budget undefined va scritto esplicitamente: togliere il tetto deve cancellarlo davvero
+  await db.categorie.update(id, { ...dati, nome: dati.nome.trim(), budget: dati.budget })
 }
 
 export function contaMovimentiCategoria(id: string): Promise<number> {
