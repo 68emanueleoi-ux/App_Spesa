@@ -6,9 +6,18 @@ import { it } from 'date-fns/locale'
 import { BottoneTema } from '@/components/AppShell'
 import { SelettoreMese } from '@/components/SelettoreMese'
 import { db } from '@/db/db'
-import { movimentiDelMese } from '@/db/movimenti'
+import { movimentiDelMese, movimentiFraMesi } from '@/db/movimenti'
 import type { Movimento } from '@/db/tipi'
-import { confrontoConMesePrecedente, cumulataUscite, ripartizioneUscite, statoBudget, totali, type Confronto } from '@/lib/calcoli'
+import {
+  confrontoConMesePrecedente,
+  cumulataUscite,
+  mediaUscitePerCategoria,
+  mesiPrecedenti,
+  ripartizioneUscite,
+  statoBudget,
+  totali,
+  type Confronto,
+} from '@/lib/calcoli'
 import { cn } from '@/lib/cn'
 import { giornoDi, mesePrecedente as calcolaMesePrecedente, oggiIso } from '@/lib/date'
 import { formatImporto, formatImportoMovimento } from '@/lib/importi'
@@ -20,6 +29,8 @@ import { RipartizioneCategorie } from './RipartizioneCategorie'
 import { TracciatoMese } from './TracciatoMese'
 
 const ULTIMI = 8
+/** Su quanti mesi si calcola il "solito": tre bastano a dare un riferimento senza inseguire stagionalità lontane. */
+const MESI_MEDIA = 3
 
 export function ReportPage() {
   const { mese, eCorrente } = useMeseSelezionato()
@@ -29,6 +40,15 @@ export function ReportPage() {
 
   const movimenti = useLiveQuery(() => movimentiDelMese(mese), [mese])
   const precedenti = useLiveQuery(() => movimentiDelMese(mesePrec), [mesePrec])
+  const mesiStorico = useMemo(() => mesiPrecedenti(mese, MESI_MEDIA), [mese])
+  const storico = useLiveQuery(
+    () => movimentiFraMesi(mesiStorico[0], mesiStorico[mesiStorico.length - 1]),
+    [mesiStorico],
+  )
+  const medie = useMemo(
+    () => (storico ? mediaUscitePerCategoria(storico, mesiStorico) : undefined),
+    [storico, mesiStorico],
+  )
   const categorie = useLiveQuery(() => db.categorie.toArray())
   const perId = useMemo(() => new Map((categorie ?? []).map((c) => [c.id, c])), [categorie])
 
@@ -91,7 +111,7 @@ export function ReportPage() {
               {dati.quote.length === 0 ? (
                 <p className="text-sm text-inchiostro-2">Nessuna uscita questo mese.</p>
               ) : (
-                <RipartizioneCategorie quote={dati.quote} perId={perId} mese={mese} />
+                <RipartizioneCategorie quote={dati.quote} perId={perId} mese={mese} medie={medie} mesiMedia={MESI_MEDIA} />
               )}
             </section>
 

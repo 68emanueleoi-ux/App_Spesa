@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import type { Movimento, RegolaCategoria } from '@/db/tipi'
 import {
   applicaRegole,
+  mediaUscitePerCategoria,
+  mesiPrecedenti,
   statoBudget,
   chiaveDuplicato,
   confrontoConMesePrecedente,
@@ -218,5 +220,79 @@ describe('statoBudget', () => {
     expect(statoBudget([], [], '2026-09', 15).attesoOggi).toBe(50) // 15 di 30
     expect(statoBudget([], [], '2026-02', 14).attesoOggi).toBe(50) // 14 di 28
     expect(statoBudget([], [], '2026-09').attesoOggi).toBeNull() // mese concluso
+  })
+})
+
+
+describe('mesiPrecedenti', () => {
+  it('elenca i mesi prima di quello dato, dal piu lontano', () => {
+    expect(mesiPrecedenti('2026-09', 3)).toEqual(['2026-06', '2026-07', '2026-08'])
+  })
+
+  it('scavalca il capodanno', () => {
+    expect(mesiPrecedenti('2026-02', 3)).toEqual(['2025-11', '2025-12', '2026-01'])
+  })
+
+  it('con zero mesi non restituisce nulla', () => {
+    expect(mesiPrecedenti('2026-09', 0)).toEqual([])
+  })
+})
+
+describe('mediaUscitePerCategoria', () => {
+  const mesi = ['2026-06', '2026-07', '2026-08']
+
+  it('divide per i mesi con dati, non per quanti ne abbiamo chiesti', () => {
+    // un solo mese di storico: la media e' quel mese, non un terzo
+    const m = mediaUscitePerCategoria([mov({ importo: 30000, data: '2026-08-05' })], mesi)
+    expect(m.get('spesa')).toBe(30000)
+  })
+
+  it('fa la media sui mesi effettivamente usati', () => {
+    const m = mediaUscitePerCategoria(
+      [
+        mov({ importo: 10000, data: '2026-06-05' }),
+        mov({ importo: 20000, data: '2026-07-05' }),
+        mov({ importo: 30000, data: '2026-08-05' }),
+      ],
+      mesi,
+    )
+    expect(m.get('spesa')).toBe(20000)
+  })
+
+  it('ignora i mesi fuori intervallo', () => {
+    const m = mediaUscitePerCategoria(
+      [mov({ importo: 10000, data: '2026-08-05' }), mov({ importo: 99900, data: '2026-09-05' })],
+      mesi,
+    )
+    expect(m.get('spesa')).toBe(10000)
+  })
+
+  it('ignora le entrate ma il loro mese conta come mese usato', () => {
+    const m = mediaUscitePerCategoria(
+      [
+        mov({ importo: 10000, data: '2026-07-05' }),
+        mov({ importo: 50000, data: '2026-08-05', tipo: 'entrata', categoriaId: 'stipendio' }),
+      ],
+      mesi,
+    )
+    expect(m.get('stipendio')).toBeUndefined()
+    expect(m.get('spesa')).toBe(5000) // 10000 su due mesi con movimenti
+  })
+
+  it('tiene le categorie separate', () => {
+    const m = mediaUscitePerCategoria(
+      [
+        mov({ importo: 10000, data: '2026-07-05', categoriaId: 'spesa' }),
+        mov({ importo: 6000, data: '2026-07-06', categoriaId: 'svago' }),
+      ],
+      mesi,
+    )
+    expect(m.get('spesa')).toBe(10000)
+    expect(m.get('svago')).toBe(6000)
+  })
+
+  it('senza storico restituisce una mappa vuota', () => {
+    expect(mediaUscitePerCategoria([], mesi).size).toBe(0)
+    expect(mediaUscitePerCategoria([mov({ importo: 100, data: '2026-09-05' })], mesi).size).toBe(0)
   })
 })

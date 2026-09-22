@@ -1,5 +1,5 @@
 import type { Categoria, Movimento, RegolaCategoria } from '@/db/tipi'
-import { giorniNelMese, giornoDi, type MeseKey } from './date'
+import { giorniNelMese, giornoDi, mesePrecedente, type MeseKey } from './date'
 import { normalizza } from './testo'
 
 export interface Totali {
@@ -188,4 +188,42 @@ export function statoBudget(
     sforate: voci.filter((v) => v.residuo < 0).length,
     attesoOggi: giornoOggi === undefined ? null : Math.round((Math.min(giornoOggi, giorni) / giorni) * 100),
   }
+}
+
+/**
+ * Uscite medie mensili per categoria sui mesi indicati.
+ *
+ * Divide per i mesi che hanno almeno un movimento, non per quanti ne abbiamo
+ * chiesti: al secondo mese di utilizzo dividere per tre darebbe una "media"
+ * falsa, che farebbe sembrare ogni spesa fuori misura.
+ * Restituisce una mappa vuota se non c'è storico.
+ */
+export function mediaUscitePerCategoria(movimenti: Movimento[], mesi: MeseKey[]): Map<string, number> {
+  const consentiti = new Set(mesi)
+  const somme = new Map<string, number>()
+  const mesiConDati = new Set<string>()
+
+  for (const m of movimenti) {
+    const mese = m.data.slice(0, 7)
+    if (!consentiti.has(mese)) continue
+    mesiConDati.add(mese)
+    if (m.tipo !== 'uscita') continue
+    somme.set(m.categoriaId, (somme.get(m.categoriaId) ?? 0) + m.importo)
+  }
+
+  if (mesiConDati.size === 0) return new Map()
+  const medie = new Map<string, number>()
+  for (const [categoriaId, totale] of somme) medie.set(categoriaId, Math.round(totale / mesiConDati.size))
+  return medie
+}
+
+/** I `quanti` mesi che precedono `mese`, dal più lontano al più vicino. */
+export function mesiPrecedenti(mese: MeseKey, quanti: number): MeseKey[] {
+  const lista: MeseKey[] = []
+  let corrente = mese
+  for (let i = 0; i < quanti; i++) {
+    corrente = mesePrecedente(corrente)
+    lista.unshift(corrente)
+  }
+  return lista
 }

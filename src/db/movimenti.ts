@@ -31,6 +31,12 @@ export async function ripristinaMovimento(m: Movimento): Promise<void> {
   await db.movimenti.put(m)
 }
 
+/** Movimenti da un mese all'altro, estremi inclusi ("2026-06" → "2026-08"). */
+export async function movimentiFraMesi(daMese: string, aMese: string): Promise<Movimento[]> {
+  if (daMese > aMese) return []
+  return db.movimenti.where('data').between(`${daMese}-01`, `${aMese}-31`, true, true).toArray()
+}
+
 /** Movimenti di un mese ("2026-09"), dal più recente (a parità di data, l'ultimo inserito per primo). */
 export async function movimentiDelMese(mese: string): Promise<Movimento[]> {
   const lista = await db.movimenti.where('data').between(`${mese}-01`, `${mese}-31`, true, true).toArray()
