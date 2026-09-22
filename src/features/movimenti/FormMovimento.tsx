@@ -1,8 +1,6 @@
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useEffect } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
-import { z } from 'zod'
 import { useToast } from '@/components/useToast'
 import { IconaCategoria } from '@/components/IconaCategoria'
 import { Sheet } from '@/components/ui/Sheet'
@@ -14,33 +12,10 @@ import { applicaRegole } from '@/lib/calcoli'
 import { cn } from '@/lib/cn'
 import { conAvviso } from '@/lib/errori'
 import { coloreCss } from '@/lib/colori'
-import { giorniNelMese, meseCorrente, oggiIso } from '@/lib/date'
+import { oggiIso } from '@/lib/date'
 import { centesimiInInput, parseImporto } from '@/lib/importi'
 import { testoPerRegola } from '@/lib/testo'
-
-function fineMeseCorrente(): string {
-  const m = meseCorrente()
-  return `${m}-${String(giorniNelMese(m)).padStart(2, '0')}`
-}
-
-const schema = z.object({
-  tipo: z.enum(['entrata', 'uscita']),
-  importo: z.string().refine(
-    (v) => {
-      const c = parseImporto(v)
-      return c !== null && c > 0
-    },
-    { message: 'Inserisci un importo maggiore di zero' },
-  ),
-  categoriaId: z.string().min(1, 'Scegli una categoria'),
-  data: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Inserisci una data')
-    .refine((d) => d <= fineMeseCorrente(), { message: 'La data non può essere in un mese futuro' }),
-  descrizione: z.string().max(100, 'Massimo 100 caratteri'),
-})
-
-type Valori = z.infer<typeof schema>
+import { fineMeseCorrente, resolverMovimento, type ValoriMovimento } from './validaMovimento'
 
 interface Props {
   aperto: boolean
@@ -54,8 +29,8 @@ export function FormMovimento({ aperto, movimento, tipoIniziale, onChiudi, onEli
   const { mostra, errore } = useToast()
   const modifica = movimento !== undefined
 
-  const { control, register, handleSubmit, setValue, reset, formState } = useForm<Valori>({
-    resolver: zodResolver(schema),
+  const { control, register, handleSubmit, setValue, reset, formState } = useForm<ValoriMovimento>({
+    resolver: resolverMovimento,
     defaultValues: valoriIniziali(movimento, tipoIniziale),
   })
   const tipo = useWatch({ control, name: 'tipo' })
@@ -254,7 +229,7 @@ export function FormMovimento({ aperto, movimento, tipoIniziale, onChiudi, onEli
   )
 }
 
-function valoriIniziali(m: Movimento | undefined, tipoIniziale: TipoMovimento | undefined): Valori {
+function valoriIniziali(m: Movimento | undefined, tipoIniziale: TipoMovimento | undefined): ValoriMovimento {
   if (m) {
     return {
       tipo: m.tipo,
