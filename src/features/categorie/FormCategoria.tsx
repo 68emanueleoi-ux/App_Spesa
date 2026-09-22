@@ -134,6 +134,39 @@ function Corpo({
         </p>
       )}
 
+      {/*
+        Il budget sta prima di colore e icona: è la scelta che cambia qualcosa
+        nel report, mentre dopo la griglia delle icone, su telefono, bisognava
+        scorrerne cinquanta per scoprire che esisteva.
+      */}
+      {tipo === 'uscita' && (
+        <>
+          <label className="mt-5 block text-xs text-inchiostro-2" htmlFor="campo-budget">
+            Budget mensile <span className="text-inchiostro-2">(facoltativo)</span>
+          </label>
+          <div className="mt-1 flex h-11 items-center gap-2 rounded-ctrl border border-filetto bg-foglio px-3 focus-within:border-cobalto">
+            <span className="text-inchiostro-2">€</span>
+            <input
+              id="campo-budget"
+              value={budget}
+              onChange={(e) => {
+                setBudget(e.target.value)
+                setErrore(null)
+              }}
+              type="text"
+              inputMode="decimal"
+              autoComplete="off"
+              enterKeyHint="done"
+              placeholder="nessun tetto"
+              className="num w-full min-w-0 bg-transparent text-base outline-none placeholder:text-inchiostro-2"
+            />
+          </div>
+          <p className="mt-1 text-xs text-inchiostro-2">
+            Con un tetto, il report mostra quanto ne resta e se il ritmo di spesa regge.
+          </p>
+        </>
+      )}
+
       {/* Colore */}
       <p className="mt-5 text-xs text-inchiostro-2">Colore</p>
       <div {...gruppoColore.propsGruppo} role="radiogroup" aria-label="Colore" className="mt-2 flex flex-wrap gap-2.5">
@@ -183,35 +216,6 @@ function Corpo({
           </button>
         ))}
       </div>
-
-      {/* Budget: solo per le uscite, e solo se lo vuoi */}
-      {tipo === 'uscita' && (
-        <>
-          <label className="mt-5 block text-xs text-inchiostro-2" htmlFor="campo-budget">
-            Budget mensile <span className="text-inchiostro-2">(facoltativo)</span>
-          </label>
-          <div className="mt-1 flex h-11 items-center gap-2 rounded-ctrl border border-filetto bg-foglio px-3 focus-within:border-cobalto">
-            <span className="text-inchiostro-2">€</span>
-            <input
-              id="campo-budget"
-              value={budget}
-              onChange={(e) => {
-                setBudget(e.target.value)
-                setErrore(null)
-              }}
-              type="text"
-              inputMode="decimal"
-              autoComplete="off"
-              enterKeyHint="done"
-              placeholder="nessun tetto"
-              className="num w-full min-w-0 bg-transparent text-base outline-none placeholder:text-inchiostro-2"
-            />
-          </div>
-          <p className="mt-1 text-xs text-inchiostro-2">
-            Con un tetto, il report mostra quanto ne hai consumato e se il ritmo regge.
-          </p>
-        </>
-      )}
 
       <button
         type="submit"

@@ -20,7 +20,10 @@ interface Props {
  */
 export function Budget({ riepilogo, perId, mese }: Props) {
   const { voci, budgetTotale, spesoTotale, sforate, attesoOggi } = riepilogo
-  if (voci.length === 0) return null
+
+  // Senza budget il pannello spariva del tutto: chi non sapeva che la funzione
+  // esiste non aveva modo di scoprirla. Uno spazio vuoto è un invito ad agire.
+  if (voci.length === 0) return <Invito />
 
   const residuoTotale = budgetTotale - spesoTotale
 
@@ -63,6 +66,23 @@ export function Budget({ riepilogo, perId, mese }: Props) {
           La tacca segna il {attesoOggi}% del mese trascorso: una barra che la supera sta correndo più del tempo.
         </p>
       )}
+    </Pannello>
+  )
+}
+
+function Invito() {
+  return (
+    <Pannello titolo="Budget">
+      <p className="text-sm text-inchiostro-2">
+        Metti un tetto mensile a una categoria e qui vedrai quanto ne resta, e se il ritmo di spesa regge fino a fine
+        mese.
+      </p>
+      <Link
+        to="/categorie"
+        className="mt-3.5 inline-grid h-11 place-items-center rounded-lg bg-carta px-4 text-sm font-medium"
+      >
+        Scegli una categoria
+      </Link>
     </Pannello>
   )
 }
