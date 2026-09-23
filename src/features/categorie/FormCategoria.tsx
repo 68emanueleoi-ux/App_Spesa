@@ -105,11 +105,7 @@ function Corpo({
 
       {/* Anteprima + nome */}
       <div className="mt-4 flex items-center gap-3">
-        <span
-          className="grid size-11 shrink-0 place-items-center rounded-ctrl"
-          style={{ color: coloreCss(colore), background: 'color-mix(in srgb, currentColor 14%, transparent)' }}
-          aria-hidden="true"
-        >
+        <span className="riquadro size-11 shrink-0" style={{ color: coloreCss(colore) }} aria-hidden="true">
           <IconaCategoria nome={icona} className="size-5" />
         </span>
         <input

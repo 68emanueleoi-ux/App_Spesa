@@ -115,8 +115,8 @@ export function MovimentiPage() {
           aria-label="Categoria"
           className={cn(
             // 16px: sotto i 16 iPhone ingrandisce la pagina al tocco e ci resta
-            'h-9 shrink-0 appearance-none rounded-ctrl border bg-foglio px-3 text-base',
-            categoriaId ? 'border-cobalto font-medium text-cobalto' : 'border-filetto',
+            'h-9 shrink-0 appearance-none rounded-full border bg-foglio px-3.5 text-base',
+            categoriaId ? 'border-cobalto font-semibold text-cobalto' : 'border-filetto text-inchiostro-2',
           )}
         >
           <option value="">Tutte le categorie</option>
@@ -276,8 +276,10 @@ function Chip({
       tabIndex={tabIndex}
       onClick={onClick}
       className={cn(
-        'flex h-9 shrink-0 items-center gap-1.5 rounded-ctrl border bg-foglio px-3 text-sm whitespace-nowrap',
-        attivo ? 'border-cobalto font-medium text-cobalto' : 'border-filetto',
+        'flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-sm whitespace-nowrap transition-colors',
+        attivo
+          ? 'accento border-transparent font-bold shadow-[0_6px_16px_var(--alone)]'
+          : 'border-filetto bg-foglio text-inchiostro-2',
       )}
     >
       {children}

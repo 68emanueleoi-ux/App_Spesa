@@ -172,17 +172,10 @@ function Gruppo({
                 aria-label={c.diSistema ? c.nome : `${c.nome}. Modifica`}
                 className="flex min-w-0 flex-1 items-center gap-3 py-2.5 text-left text-sm active:bg-filetto-leggero disabled:cursor-default"
               >
-                <span
-                  className="grid size-8 shrink-0 place-items-center rounded-ctrl"
-                  style={{
-                    color: coloreCss(c.colore),
-                    background: 'color-mix(in srgb, currentColor 14%, transparent)',
-                  }}
-                  aria-hidden="true"
-                >
-                  <IconaCategoria nome={c.icona} className="size-4" />
+                <span className="riquadro size-10 shrink-0" style={{ color: coloreCss(c.colore) }} aria-hidden="true">
+                  <IconaCategoria nome={c.icona} className="size-[18px]" />
                 </span>
-                <span className={c.diSistema ? 'truncate text-inchiostro-2' : 'truncate'}>{c.nome}</span>
+                <span className={c.diSistema ? 'truncate text-inchiostro-2' : 'truncate font-semibold'}>{c.nome}</span>
                 {c.budget !== undefined && (
                   <span className="num ml-auto shrink-0 pr-2 text-xs whitespace-nowrap text-inchiostro-2">
                     {formatImporto(c.budget)}/mese
