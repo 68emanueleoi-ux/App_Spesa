@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spese — due direzioni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Spese — due direzioni, secondo giro.
+   N (Notte): fondo scuro, colori saturi, sfumature, bagliori.
+   G (Giorno): chiaro e pulito, tinte piene ma calme, molto spazio.
+   Le animazioni si rigiocano da sole: il punto è vederle.
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0; background: #0b0c10; color: #eceef4;
+  font-family: "Inter", system-ui, sans-serif; font-size: 15px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.testata { padding: 26px 24px 16px; border-bottom: 1px solid rgba(255,255,255,.08); }
+.testata h1 { font-size: 21px; font-weight: 700; margin: 0; letter-spacing: -.02em; }
+.testata p { margin: 7px 0 0; color: #9aa0af; font-size: 14px; max-width: 76ch; }
+.comandi { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; align-items: center; }
+.bottone {
+  appearance: none; border: 1px solid rgba(255,255,255,.14); background: #181a21; color: #eceef4;
+  font: 600 13px Inter, sans-serif; padding: 8px 15px; border-radius: 10px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.bottone:hover { background: #22252e; }
+.bottone svg { width: 14px; height: 14px; }
+.avviso { color: #9aa0af; font-size: 12.5px; }
+
+.pista { display: flex; gap: 34px; padding: 26px 24px 70px; justify-content: center; flex-wrap: wrap; }
+.blocco { width: 393px; }
+.blocco > h2 { font-size: 18px; font-weight: 700; margin: 0 0 3px; letter-spacing: -.01em; }
+.blocco > p { margin: 0 0 16px; color: #9aa0af; font-size: 13.5px; }
+.eti { font-size: 11.5px; color: #8e94a3; margin: 18px 0 7px; font-weight: 600; letter-spacing: .02em; }
+
+.telefono {
+  width: 393px; height: 760px; border-radius: 40px; overflow: hidden; position: relative;
+  isolation: isolate; box-shadow: 0 24px 60px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.07);
+}
+.vista { height: 100%; overflow: hidden; }
+.barra-stato { display: flex; align-items: center; justify-content: space-between; padding: 14px 30px 4px; font-size: 13px; font-weight: 600; }
+.barra-stato .segnali { display: flex; gap: 5px; align-items: center; }
+.barra-stato svg { display: block; }
+.contenuto { padding: 6px 20px 100px; height: calc(100% - 34px); overflow-y: auto; scrollbar-width: none; }
+.contenuto::-webkit-scrollbar { display: none; }
+
+/* barra schede */
+.tabbar { position: absolute; inset: auto 0 0 0; z-index: 5; display: grid; grid-template-columns: repeat(3,1fr); padding: 10px 0 15px; }
+.tabbar a { display: grid; justify-items: center; gap: 4px; font-size: 10.5px; font-weight: 600; text-decoration: none; }
+.tabbar svg { width: 22px; height: 22px; }
+.fab { position: absolute; z-index: 6; right: 20px; bottom: 82px; width: 58px; height: 58px; border-radius: 20px; display: grid; place-items: center; }
+.fab svg { width: 26px; height: 26px; }
+
+/* ==========================================================
+   N — NOTTE
+   ========================================================== */
+.n {
+  --sfondo: #070910; --sup: #131829; --sup2: #1b2238; --linea: rgba(255,255,255,.09);
+  --testo: #f4f6ff; --testo2: #8b93b0;
+  --g1: #6d5cff; --g2: #21d4fd; --verde: #2be39b; --rosso: #ff6b6b;
+  --spesa: #5b7cff; --ristoranti: #ff5c9d; --trasporti: #17d6b0; --abbonamenti: #ff8a3d;
+  --sigarette: #a8d63a; --svago: #b368ff; --salute: #38bdf8; --casa: #ffc53d;
+}
+.n .telefono { background: var(--sfondo); color: var(--testo); font-family: "Manrope", sans-serif; }
+.n .barra-stato { color: var(--testo); }
+.n .tabbar { background: rgba(7,9,16,.82); backdrop-filter: blur(18px); border-top: 1px solid var(--linea); }
+.n .tabbar a { color: var(--testo2); }
+.n .tabbar a.on { color: #fff; }
+.n .tabbar a.on svg { filter: drop-shadow(0 0 8px rgba(109,92,255,.9)); color: #a89bff; }
+.n .fab { background: linear-gradient(135deg, var(--g1), var(--g2)); color: #0a0c14; box-shadow: 0 10px 30px rgba(109,92,255,.5); }
+
+.n .capo { display: flex; align-items: center; justify-content: space-between; padding: 6px 0 14px; }
+.n .capo .mese { font-size: 19px; font-weight: 800; letter-spacing: -.02em; display: flex; align-items: center; gap: 7px; }
+.n .capo .mese svg { width: 16px; height: 16px; color: var(--testo2); }
+.n .tondo { width: 38px; height: 38px; border-radius: 13px; background: var(--sup); display: grid; place-items: center; border: 1px solid var(--linea); }
+.n .tondo svg { width: 17px; height: 17px; color: var(--testo2); }
+
+/* scheda principale con sfumatura viva */
+.n .hero {
+  position: relative; border-radius: 26px; padding: 20px 20px 4px; overflow: hidden;
+  background: linear-gradient(150deg, #2a2070 0%, #171c42 48%, #0d1226 100%);
+  border: 1px solid rgba(255,255,255,.1);
+  box-shadow: 0 20px 50px rgba(10,6,40,.6);
+}
+.n .hero::before {
+  content: ""; position: absolute; inset: -40% -10% auto -10%; height: 220px; pointer-events: none;
+  background: radial-gradient(60% 80% at 20% 50%, rgba(109,92,255,.55), transparent 70%),
+              radial-gradient(50% 70% at 85% 30%, rgba(33,212,253,.35), transparent 70%);
+  filter: blur(6px); opacity: .9;
+  animation: aurora 9s ease-in-out infinite alternate;
+}
+@keyframes aurora { from { transform: translate3d(-4%,0,0) scale(1); } to { transform: translate3d(6%,6px,0) scale(1.08); } }
+.n .hero .etichetta { position: relative; font-size: 12.5px; color: #b8bddd; font-weight: 600; }
+.n .hero .cifra {
+  position: relative; font-size: 52px; font-weight: 800; letter-spacing: -.035em; line-height: 1.05;
+  font-variant-numeric: tabular-nums; margin-top: 2px; display: flex; align-items: baseline; gap: 2px;
+}
+.n .hero .cifra .val { background: linear-gradient(92deg, #ffffff 30%, #c9c4ff 75%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.n .hero .cifra .eu { font-size: 22px; font-weight: 700; color: #9c9ad6; }
+.n .hero .delta {
+  position: relative; display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
+  padding: 5px 11px 5px 8px; border-radius: 999px; font-size: 12.5px; font-weight: 700;
+  background: rgba(43,227,155,.14); color: var(--verde); border: 1px solid rgba(43,227,155,.25);
+}
+.n .hero .delta svg { width: 13px; height: 13px; }
+.n .hero .grafico { position: relative; margin: 6px -20px -6px; }
+.n .hero svg.curva { width: 100%; display: block; }
+.n .hero .giorni-eti { position: relative; display: flex; justify-content: space-between; font-size: 10.5px; color: #8b8fb8; padding: 0 2px 12px; font-variant-numeric: tabular-nums; }
+
+.n .trio { display: grid; grid-template-columns: repeat(3,1fr); gap: 9px; margin-top: 13px; }
+.n .trio div { background: var(--sup); border: 1px solid var(--linea); border-radius: 17px; padding: 11px 12px; }
+.n .trio .k { font-size: 11px; color: var(--testo2); font-weight: 600; display: flex; align-items: center; gap: 5px; }
+.n .trio .k i { width: 7px; height: 7px; border-radius: 50%; }
+.n .trio .v { font-size: 16px; font-weight: 800; margin-top: 5px; font-variant-numeric: tabular-nums; letter-spacing: -.02em; white-space: nowrap; }
+
+.n .titolo { display: flex; align-items: baseline; justify-content: space-between; margin: 24px 0 12px; }
+.n .titolo h3 { font-size: 15.5px; font-weight: 800; margin: 0; letter-spacing: -.01em; }
+.n .titolo a { font-size: 12.5px; font-weight: 700; color: #9c8dff; text-decoration: none; }
+
+/* anelli budget */
+.n .anelli { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.n .anello { background: var(--sup); border: 1px solid var(--linea); border-radius: 20px; padding: 13px 10px 12px; text-align: center; }
+.n .anello svg { width: 62px; height: 62px; display: block; margin: 0 auto 8px; }
+.n .anello .n2 { font-size: 12px; font-weight: 700; }
+.n .anello .n3 { font-size: 10.5px; color: var(--testo2); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.n .anello .perc { font-size: 13px; font-weight: 800; fill: #fff; }
+
+/* righe categoria */
+.n .lista { background: var(--sup); border: 1px solid var(--linea); border-radius: 22px; padding: 6px 14px; }
+.n .cat { display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; padding: 11px 0; }
+.n .cat + .cat { border-top: 1px solid rgba(255,255,255,.055); }
+.n .cat .tile { width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center; }
+.n .cat .tile svg { width: 19px; height: 19px; }
+.n .cat .nome { font-size: 14px; font-weight: 700; }
+.n .cat .barra { height: 6px; border-radius: 99px; background: rgba(255,255,255,.07); margin-top: 7px; overflow: hidden; }
+.n .cat .barra i { display: block; height: 100%; border-radius: 99px; width: 0; }
+.n .cat .imp { font-size: 14.5px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.n .cat .qta { font-size: 10.5px; color: var(--testo2); text-align: right; margin-top: 3px; font-variant-numeric: tabular-nums; }
+
+.n .mov { display: grid; grid-template-columns: 42px 1fr auto; gap: 12px; align-items: center; padding: 10px 0; }
+.n .mov + .mov { border-top: 1px solid rgba(255,255,255,.055); }
+.n .mov .tile { width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center; }
+.n .mov .tile svg { width: 19px; height: 19px; }
+.n .mov .d1 { font-size: 14px; font-weight: 700; }
+.n .mov .d2 { font-size: 11.5px; color: var(--testo2); margin-top: 2px; }
+.n .mov .imp { font-size: 14.5px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.n .mov .imp.piu { color: var(--verde); }
+
+.n .campo { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 15px; border-radius: 16px; background: var(--sup); border: 1px solid var(--linea); color: var(--testo2); font-size: 14px; }
+.n .campo svg { width: 17px; height: 17px; }
+.n .chips { display: flex; gap: 8px; margin-top: 12px; }
+.n .chip { padding: 8px 15px; border-radius: 999px; font-size: 13px; font-weight: 700; background: var(--sup); border: 1px solid var(--linea); color: var(--testo2); }
+.n .chip.on { background: linear-gradient(135deg, var(--g1), var(--g2)); color: #0a0c14; border-color: transparent; box-shadow: 0 8px 22px rgba(109,92,255,.35); }
+.n .gruppo-data { display: flex; align-items: baseline; justify-content: space-between; margin: 20px 2px 8px; }
+.n .gruppo-data .g { font-size: 13px; font-weight: 700; }
+.n .gruppo-data .t { font-size: 12px; color: var(--testo2); font-variant-numeric: tabular-nums; }
+.n .griglia-cat { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+.n .carta-cat { background: var(--sup); border: 1px solid var(--linea); border-radius: 20px; padding: 14px; }
+.n .carta-cat .alto { display: flex; align-items: flex-start; justify-content: space-between; }
+.n .carta-cat .tile { width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center; }
+.n .carta-cat .tile svg { width: 19px; height: 19px; }
+/* l'anello del budget: senza misura esplicita l'svg si prende tutta la scheda */
+.n .carta-cat .alto > svg { width: 34px; height: 34px; flex: none; }
+.g .anellino svg { width: 34px; height: 34px; display: block; }
+.n .carta-cat .nome { font-size: 14px; font-weight: 700; margin-top: 11px; }
+.n .carta-cat .sotto { font-size: 11.5px; color: var(--testo2); margin-top: 3px; font-variant-numeric: tabular-nums; }
+
+/* ==========================================================
+   G — GIORNO
+   ========================================================== */
+.g {
+  --sfondo: #f4f5f7; --carta: #fff; --linea: rgba(9,12,20,.07);
+  --testo: #0a0c12; --testo2: #767c8a;
+  --blu: #2f6bff; --verde: #17a673; --rosso: #e5484d;
+  --spesa: #2f6bff; --ristoranti: #f0428a; --trasporti: #06b6a4; --abbonamenti: #ff8a00;
+  --sigarette: #94a825; --svago: #8b5cf6; --salute: #0ea5e9; --casa: #f5a524;
+}
+.g .telefono { background: var(--sfondo); color: var(--testo); font-family: "Inter", sans-serif; letter-spacing: -.011em; }
+.g .barra-stato { color: var(--testo); }
+.g .tabbar { background: rgba(244,245,247,.86); backdrop-filter: blur(20px); border-top: 1px solid var(--linea); }
+.g .tabbar a { color: var(--testo2); }
+.g .tabbar a.on { color: var(--blu); }
+.g .fab { background: var(--blu); color: #fff; border-radius: 50%; box-shadow: 0 10px 26px rgba(47,107,255,.4); }
+
+.g .capo { display: flex; align-items: center; justify-content: space-between; padding: 4px 0 12px; }
+.g .capo h1 { font-size: 30px; font-weight: 800; margin: 0; letter-spacing: -.035em; }
+.g .capo .tondo { width: 36px; height: 36px; border-radius: 50%; background: var(--carta); display: grid; place-items: center; box-shadow: 0 1px 3px rgba(9,12,20,.08); }
+.g .capo .tondo svg { width: 17px; height: 17px; color: var(--testo2); }
+
+.g .scheda { background: var(--carta); border-radius: 24px; padding: 20px; box-shadow: 0 1px 2px rgba(9,12,20,.06), 0 8px 24px rgba(9,12,20,.05); }
+.g .scheda + .scheda { margin-top: 14px; }
+.g .anelli-box { display: flex; align-items: center; gap: 20px; }
+.g .anelli-box svg { width: 132px; height: 132px; flex: none; }
+.g .leggenda { display: grid; gap: 11px; min-width: 0; }
+.g .leggenda .r { display: grid; grid-template-columns: 10px 1fr; gap: 9px; align-items: center; }
+.g .leggenda i { width: 10px; height: 10px; border-radius: 3px; }
+.g .leggenda .k { font-size: 11.5px; color: var(--testo2); font-weight: 500; }
+.g .leggenda .v { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+
+.g .totale { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--linea); display: flex; align-items: flex-end; justify-content: space-between; }
+.g .totale .k { font-size: 12.5px; color: var(--testo2); font-weight: 500; }
+.g .totale .v { font-size: 34px; font-weight: 800; letter-spacing: -.04em; font-variant-numeric: tabular-nums; margin-top: 1px; }
+.g .pillola { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600; background: rgba(23,166,115,.12); color: var(--verde); }
+.g .pillola svg { width: 13px; height: 13px; }
+
+.g .titolo { display: flex; align-items: baseline; justify-content: space-between; margin: 24px 4px 10px; }
+.g .titolo h3 { font-size: 17px; font-weight: 700; margin: 0; letter-spacing: -.02em; }
+.g .titolo a { font-size: 13.5px; font-weight: 600; color: var(--blu); text-decoration: none; }
+
+/* barra unica a segmenti arrotondati */
+.g .segmenti { display: flex; gap: 3px; height: 14px; }
+.g .segmenti i { border-radius: 99px; width: 0; transition: width .9s cubic-bezier(.22,1,.36,1); }
+.g .griglia-leg { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; margin-top: 16px; }
+.g .griglia-leg .r { display: grid; grid-template-columns: 8px 1fr auto; gap: 8px; align-items: center; font-size: 13px; }
+.g .griglia-leg i { width: 8px; height: 8px; border-radius: 50%; }
+.g .griglia-leg .k { color: var(--testo2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.g .griglia-leg .v { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.g .elenco { background: var(--carta); border-radius: 20px; overflow: hidden; box-shadow: 0 1px 2px rgba(9,12,20,.06), 0 8px 24px rgba(9,12,20,.04); }
+.g .voce { display: grid; grid-template-columns: 38px 1fr auto; gap: 13px; align-items: center; padding: 12px 16px; }
+.g .voce + .voce { box-shadow: inset 0 1px 0 var(--linea); }
+.g .voce .tile { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; color: #fff; }
+.g .voce .tile svg { width: 18px; height: 18px; }
+.g .voce .d1 { font-size: 14.5px; font-weight: 600; }
+.g .voce .d2 { font-size: 12px; color: var(--testo2); margin-top: 1px; }
+.g .voce .imp { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.g .voce .imp.piu { color: var(--verde); }
+.g .voce .coda { display: flex; align-items: center; gap: 8px; }
+.g .voce .coda svg { width: 15px; height: 15px; color: #c3c7d0; }
+
+.g .cerca { display: flex; align-items: center; gap: 9px; height: 40px; padding: 0 13px; border-radius: 12px; background: rgba(9,12,20,.06); color: var(--testo2); font-size: 15px; }
+.g .cerca svg { width: 17px; height: 17px; }
+.g .segmentato { display: flex; background: rgba(9,12,20,.06); border-radius: 11px; padding: 3px; margin-top: 12px; }
+.g .segmentato span { flex: 1; text-align: center; font-size: 13.5px; font-weight: 600; padding: 7px 0; border-radius: 9px; color: var(--testo2); }
+.g .segmentato span.on { background: var(--carta); color: var(--testo); box-shadow: 0 1px 3px rgba(9,12,20,.14); }
+.g .intestazione-giorno { font-size: 13px; font-weight: 600; color: var(--testo2); margin: 20px 4px 8px; display: flex; justify-content: space-between; }
+.g .anellino { width: 34px; height: 34px; }
+
+/* entrata in scena: vale per tutte e due */
+.entra { opacity: 0; transform: translateY(14px); }
+.riproduci .entra { animation: sali .62s cubic-bezier(.2,.85,.3,1) forwards; }
+@keyframes sali { to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="testata">
+  <h1>Spese — due direzioni, secondo giro</h1>
+  <p>A sinistra <b>Notte</b>: fondo scuro, colori saturi, sfumature e bagliori. A destra <b>Giorno</b>: chiaro e pulito, tinte piene ma calme, molto spazio. Stessi dati di settembre. Le animazioni si rigiocano da sole ogni 8 secondi — o premi il pulsante.</p>
+  <div class="comandi">
+    <button class="bottone" id="rigioca">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+      Rigioca le animazioni
+    </button>
+    <span class="avviso" id="conto">prossimo giro fra 8s</span>
+  </div>
+</header>
+
+<main class="pista">
+
+  <!-- ================= NOTTE ================= -->
+  <section class="blocco n">
+    <h2>N — Notte</h2>
+    <p>Fondo profondo, sfumatura viva dietro il numero, categorie al neon. Il grafico si disegna, il numero sale, gli anelli si riempiono.</p>
+
+    <p class="eti">Report</p>
+    <div class="telefono" data-schermo="n-report"></div>
+
+    <p class="eti">Movimenti</p>
+    <div class="telefono" data-schermo="n-movimenti"></div>
+
+    <p class="eti">Categorie</p>
+    <div class="telefono" data-schermo="n-categorie"></div>
+  </section>
+
+  <!-- ================= GIORNO ================= -->
+  <section class="blocco g">
+    <h2>G — Giorno</h2>
+    <p>Chiaro, arioso, grandi angoli morbidi. Tre anelli dicono il mese in un colpo d'occhio; le liste sono blocchi bianchi che respirano.</p>
+
+    <p class="eti">Report</p>
+    <div class="telefono" data-schermo="g-report"></div>
+
+    <p class="eti">Movimenti</p>
+    <div class="telefono" data-schermo="g-movimenti"></div>
+
+    <p class="eti">Categorie</p>
+    <div class="telefono" data-schermo="g-categorie"></div>
+  </section>
+
+</main>
+
+<script>
+/* =============== dati (settembre 2026) =============== */
+const CAT = {
+  spesa:       { n: "Spesa",       i: "cesto" },
+  ristoranti:  { n: "Ristoranti",  i: "posate" },
+  trasporti:   { n: "Trasporti",   i: "bus" },
+  abbonamenti: { n: "Abbonamenti", i: "ciclo" },
+  sigarette:   { n: "Sigarette",   i: "sigaretta" },
+  svago:       { n: "Svago",       i: "festa" },
+  casa:        { n: "Casa",        i: "divano" },
+  salute:      { n: "Salute",      i: "cuore" },
+  entrate:     { n: "Entrate",     i: "valigetta" },
+};
+const QUOTE = [
+  ["spesa", 268.40, 32], ["ristoranti", 154.90, 18], ["trasporti", 121.30, 14],
+  ["abbonamenti", 89.97, 11], ["sigarette", 62.00, 7], ["svago", 58.50, 7],
+  ["casa", 45.00, 5], ["salute", 42.08, 5],
+];
+const BUDGET = { spesa: 300, ristoranti: 180, sigarette: 50 };
+const MOV = [
+  { g: 23, gio: "mercoledì", d: "Conad",             c: "spesa",       v: -34.20 },
+  { g: 23, gio: "mercoledì", d: "Tabacchi Rosa",     c: "sigarette",   v: -6.00 },
+  { g: 22, gio: "martedì",   d: "Netflix",           c: "abbonamenti", v: -12.99 },
+  { g: 22, gio: "martedì",   d: "Trenitalia",        c: "trasporti",   v: -19.50 },
+  { g: 21, gio: "lunedì",    d: "Pizzeria Da Mimmo", c: "ristoranti",  v: -27.00 },
+  { g: 21, gio: "lunedì",    d: "Farmacia Centrale", c: "salute",      v: -14.60 },
+  { g: 20, gio: "domenica",  d: "Borsa di studio",   c: "entrate",     v: 700.00 },
+  { g: 20, gio: "domenica",  d: "Esselunga",         c: "spesa",       v: -52.80 },
+];
+const GIORNI = [12.40,0,38.90,9.99,54.00,7.20,0,63.50,14.00,22.80,0,41.20,18.60,95.00,6.00,0,29.40,12.99,47.30,52.80,41.60,32.49,40.20];
+const TOT = 842.15, ENTRATE = 1180.00, SALDO = 337.85, OGGI = 23, GG = 30;
+
+/* useGrouping esplicito: senza, questo Chrome scrive "1180,00" invece di "1.180,00" */
+const num = (v, dec = 2) =>
+  v.toLocaleString("it-IT", { minimumFractionDigits: dec, maximumFractionDigits: dec, useGrouping: true });
+const segno = (v) => (v < 0 ? "−" : "+") + " " + num(Math.abs(v));
+
+/* =============== icone =============== */
+const D = {
+  cesto: '<path d="M5 11h14l-1.5 8h-11L5 11Z"/><path d="M9 11 7 6M15 11l2-5"/>',
+  posate: '<path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10"/><path d="M17 3c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6ZM17 9v12"/>',
+  bus: '<rect x="4" y="5" width="16" height="12" rx="2"/><path d="M4 11h16M7 21v-2M17 21v-2"/><circle cx="8" cy="15" r="1"/><circle cx="16" cy="15" r="1"/>',
+  ciclo: '<path d="M17 2l4 4-4 4"/><path d="M3 10V9a3 3 0 0 1 3-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 14v1a3 3 0 0 1-3 3H3"/>',
+  sigaretta: '<rect x="2" y="13" width="14" height="5" rx="1"/><path d="M19 13v5M22 13v5M18 8c1-1.5.5-3-1-4"/>',
+  festa: '<path d="M4 20l5-14 9 9-14 5Z"/><path d="M15 4v2M19 8h2M17.5 2.5l1.5 1.5"/>',
+  divano: '<path d="M4 12V9a2 2 0 0 1 4 0v3M16 12V9a2 2 0 0 1 4 0v3"/><rect x="3" y="12" width="18" height="6" rx="2"/><path d="M6 18v2M18 18v2"/>',
+  cuore: '<path d="M12 20s-7-4.5-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.5-7 9-7 9Z"/><path d="M8 12h2l1.5-2 1.5 4 1.5-2H17"/>',
+  valigetta: '<rect x="3" y="7" width="18" height="12" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>',
+  grafico: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  lista: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  livelli: '<path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 14 9 5 9-5"/>',
+  lente: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  piu: '<path d="M12 5v14M5 12h14"/>',
+  giu: '<path d="m6 9 6 6 6-6"/>',
+  destra: '<path d="m9 6 6 6-6 6"/>',
+  calendario: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 11h18"/>',
+  luna: '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/>',
+  freccia_giu: '<path d="M12 5v14M19 12l-7 7-7-7"/>',
+  filtro: '<path d="M3 5h18M6 12h12M10 19h4"/>',
+};
+const ic = (k, st = 1.9) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${st}" stroke-linecap="round" stroke-linejoin="round">${D[k] || ""}</svg>`;
+
+/* barra di stato disegnata, non finta con i caratteri */
+const STATO = `<div class="barra-stato"><span>17:45</span><span class="segnali">
+  <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+  <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M1 4.2a10 10 0 0 1 14 0"/><path d="M3.6 6.9a6.4 6.4 0 0 1 8.8 0"/><circle cx="8" cy="10" r="1.1" fill="currentColor" stroke="none"/></svg>
+  <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x=".6" y=".6" width="21" height="10.8" rx="3" stroke="currentColor" stroke-opacity=".45"/><rect x="2.2" y="2.2" width="11" height="7.6" rx="1.8" fill="currentColor"/><path d="M23.4 4.2v3.6a2 2 0 0 0 0-3.6Z" fill="currentColor" fill-opacity=".5"/></svg>
+</span></div>`;
+
+const tab = (attiva, stile) => `<nav class="tabbar">
+  ${[["grafico","Report"],["lista","Movimenti"],["livelli","Categorie"]].map(([i,t]) =>
+    `<a href="#" class="${t.toLowerCase() === attiva ? "on" : ""}">${ic(i, 2)}<span>${t}</span></a>`).join("")}
+</nav>`;
+const fab = `<div class="fab">${ic("piu", 2.6)}</div>`;
+
+const colore = (k, blocco) => getComputedStyle(document.querySelector("." + blocco)).getPropertyValue("--" + k).trim();
+
+/* =============== anelli =============== */
+function anello(percentuale, colore, dim, spessore, testoDentro) {
+  const r = (dim - spessore) / 2, c = 2 * Math.PI * r;
+  return `<svg viewBox="0 0 ${dim} ${dim}">
+    <circle cx="${dim/2}" cy="${dim/2}" r="${r}" fill="none" stroke="currentColor" stroke-opacity=".13" stroke-width="${spessore}"/>
+    <circle class="arco" cx="${dim/2}" cy="${dim/2}" r="${r}" fill="none" stroke="${colore}" stroke-width="${spessore}" stroke-linecap="round"
+      stroke-dasharray="${c}" stroke-dashoffset="${c}" data-arco="${(c * (1 - Math.min(1, percentuale))).toFixed(1)}"
+      transform="rotate(-90 ${dim/2} ${dim/2})" style="transition: stroke-dashoffset 1.1s cubic-bezier(.22,1,.36,1)"/>
+    ${testoDentro ? `<text class="perc" x="${dim/2}" y="${dim/2 + 4}" text-anchor="middle">${Math.round(percentuale * 100)}%</text>` : ""}
+  </svg>`;
+}
+
+/* =============== curva del mese (Notte) =============== */
+function curva() {
+  const W = 393, H = 132;
+  let acc = 0;
+  const punti = GIORNI.map((v, i) => { acc += v; return [i / (GG - 1) * W, acc]; });
+  const max = acc * 1.06;
+  const yy = (v) => H - (v / max) * (H - 18) - 6;
+  let d = `M${punti[0][0]},${yy(punti[0][1])}`;
+  for (let i = 1; i < punti.length; i++) {
+    const [x0, v0] = punti[i - 1], [x1, v1] = punti[i];
+    const cx = (x0 + x1) / 2;
+    d += ` C${cx},${yy(v0)} ${cx},${yy(v1)} ${x1},${yy(v1)}`;
+  }
+  const ultimo = punti[punti.length - 1];
+  return `<svg class="curva" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="riemp" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#8b7cff" stop-opacity=".55"/>
+        <stop offset="100%" stop-color="#8b7cff" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="tratto" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#6d5cff"/><stop offset="100%" stop-color="#21d4fd"/>
+      </linearGradient>
+      <clipPath id="tagliaArea"><rect class="taglia" x="0" y="0" width="0" height="${H}"/></clipPath>
+    </defs>
+    <path d="${d} L${ultimo[0]},${H} L0,${H} Z" fill="url(#riemp)" clip-path="url(#tagliaArea)"/>
+    <path class="tratto" d="${d}" fill="none" stroke="url(#tratto)" stroke-width="3" stroke-linecap="round"/>
+    <circle class="testina" cx="${ultimo[0].toFixed(1)}" cy="${yy(ultimo[1]).toFixed(1)}" r="5" fill="#21d4fd" stroke="#0b1024" stroke-width="3"/>
+  </svg>`;
+}
+
+/* =============== schermate =============== */
+const S = {};
+
+S["n-report"] = () => `
+  <div class="vista">${STATO}<div class="contenuto">
+    <div class="capo">
+      <span class="mese">Settembre 2026 ${ic("giu", 2.4)}</span>
+      <span class="tondo">${ic("luna")}</span>
+    </div>
+
+    <div class="hero entra" style="animation-delay:.05s">
+      <div class="etichetta">Speso finora</div>
+      <div class="cifra"><span class="eu">€</span><span class="val" data-conta="${TOT}">0,00</span></div>
+      <div class="delta">${ic("freccia_giu", 2.6)} 96,40 in meno di agosto</div>
+      <div class="grafico">${curva()}</div>
+      <div class="giorni-eti"><span>1 set</span><span>8</span><span>15</span><span>23 · oggi</span><span>30</span></div>
+    </div>
+
+    <div class="trio">
+      ${[["Entrate", ENTRATE, "verde", "+"], ["Uscite", TOT, "ristoranti", "−"], ["Saldo", SALDO, "trasporti", ""]]
+        .map(([k, v, c, s], i) => `<div class="entra" style="animation-delay:${.15 + i * .06}s">
+          <div class="k"><i style="background:var(--${c})"></i>${k}</div>
+          <div class="v">${s} ${num(v)}</div></div>`).join("")}
+    </div>
+
+    <div class="titolo"><h3>Budget del mese</h3><a href="#">Gestisci</a></div>
+    <div class="anelli">
+      ${Object.entries(BUDGET).map(([k, b], i) => {
+        const v = QUOTE.find((q) => q[0] === k)[1], p = v / b;
+        return `<div class="anello entra" style="animation-delay:${.3 + i * .07}s;color:#fff">
+          ${anello(p, p > 1 ? "#ff6b6b" : `var(--${k})`, 62, 7, true)}
+          <div class="n2">${CAT[k].n}</div>
+          <div class="n3">${num(v)} / ${num(b)}</div>
+        </div>`;
+      }).join("")}
+    </div>
+
+    <div class="titolo"><h3>Dove sono finiti i soldi</h3><a href="#">Tutte</a></div>
+    <div class="lista entra" style="animation-delay:.42s">
+      ${QUOTE.slice(0, 5).map(([k, v, p]) => `
+        <div class="cat">
+          <span class="tile" style="background:color-mix(in srgb, var(--${k}) 22%, transparent);color:var(--${k})">${ic(CAT[k].i)}</span>
+          <span><span class="nome">${CAT[k].n}</span>
+            <span class="barra"><i data-largo="${p * 3.1}%" style="background:linear-gradient(90deg, var(--${k}), color-mix(in srgb, var(--${k}) 45%, #fff))"></i></span></span>
+          <span><span class="imp">${num(v)}</span><div class="qta">${p}%</div></span>
+        </div>`).join("")}
+    </div>
+
+    <div class="titolo"><h3>Ultimi movimenti</h3><a href="#">Tutti</a></div>
+    <div class="lista entra" style="animation-delay:.5s">
+      ${MOV.slice(0, 4).map((m) => `
+        <div class="mov">
+          <span class="tile" style="background:color-mix(in srgb, var(--${m.c}) 22%, transparent);color:var(--${m.c})">${ic(CAT[m.c].i)}</span>
+          <span><div class="d1">${m.d}</div><div class="d2">${CAT[m.c].n} · ${m.g} set</div></span>
+          <span class="imp ${m.v > 0 ? "piu" : ""}">${segno(m.v)}</span>
+        </div>`).join("")}
+    </div>
+  </div></div>${fab}${tab("report")}`;
+
+S["n-movimenti"] = () => {
+  const perG = {};
+  MOV.forEach((m) => (perG[m.g] = perG[m.g] || []).push(m));
+  return `<div class="vista">${STATO}<div class="contenuto">
+    <div class="capo"><span class="mese">Movimenti</span><span class="tondo">${ic("filtro")}</span></div>
+    <div class="campo entra">${ic("lente")} Cerca in tutti i mesi</div>
+    <div class="chips entra" style="animation-delay:.06s">
+      <span class="chip on">Tutti</span><span class="chip">Uscite</span><span class="chip">Entrate</span><span class="chip">Per importo</span>
+    </div>
+    ${Object.keys(perG).sort((a, b) => b - a).map((g, i) => {
+      const righe = perG[g], tot = righe.reduce((s, m) => s + m.v, 0);
+      return `<div class="entra" style="animation-delay:${.12 + i * .08}s">
+        <div class="gruppo-data"><span class="g">${g} settembre</span><span class="t">${segno(tot)}</span></div>
+        <div class="lista">${righe.map((m) => `
+          <div class="mov">
+            <span class="tile" style="background:color-mix(in srgb, var(--${m.c}) 22%, transparent);color:var(--${m.c})">${ic(CAT[m.c].i)}</span>
+            <span><div class="d1">${m.d}</div><div class="d2">${CAT[m.c].n}</div></span>
+            <span class="imp ${m.v > 0 ? "piu" : ""}">${segno(m.v)}</span>
+          </div>`).join("")}</div></div>`;
+    }).join("")}
+  </div></div>${fab}${tab("movimenti")}`;
+};
+
+S["n-categorie"] = () => `
+  <div class="vista">${STATO}<div class="contenuto">
+    <div class="capo"><span class="mese">Categorie</span><span class="tondo">${ic("piu", 2.4)}</span></div>
+    <div class="titolo"><h3>Uscite</h3><a href="#">Riordina</a></div>
+    <div class="griglia-cat">
+      ${QUOTE.map(([k, v], i) => {
+        const b = BUDGET[k];
+        return `<div class="carta-cat entra" style="animation-delay:${.05 + i * .05}s;color:#fff">
+          <div class="alto">
+            <span class="tile" style="background:color-mix(in srgb, var(--${k}) 24%, transparent);color:var(--${k})">${ic(CAT[k].i)}</span>
+            ${b ? anello(v / b, v > b ? "#ff6b6b" : `var(--${k})`, 34, 4, false) : ""}
+          </div>
+          <div class="nome">${CAT[k].n}</div>
+          <div class="sotto">${b ? num(v) + " di " + num(b) : num(v) + " · nessun tetto"}</div>
+        </div>`;
+      }).join("")}
+    </div>
+  </div></div>${fab}${tab("categorie")}`;
+
+S["g-report"] = () => {
+  const anelli = [
+    ["Uscite", "spesa", TOT / ENTRATE],
+    ["Budget usato", "ristoranti", 485.30 / 530],
+    ["Risparmio", "trasporti", SALDO / ENTRATE],
+  ];
+  const dim = 132, sp = 13;
+  const archi = anelli.map(([, c, p], i) => {
+    const r = dim / 2 - sp / 2 - i * (sp + 4), circ = 2 * Math.PI * r;
+    return `<circle cx="${dim/2}" cy="${dim/2}" r="${r}" fill="none" stroke="var(--${c})" stroke-opacity=".15" stroke-width="${sp}"/>
+      <circle class="arco" cx="${dim/2}" cy="${dim/2}" r="${r}" fill="none" stroke="var(--${c})" stroke-width="${sp}" stroke-linecap="round"
+        stroke-dasharray="${circ}" stroke-dashoffset="${circ}" data-arco="${(circ * (1 - Math.min(1, p))).toFixed(1)}"
+        transform="rotate(-90 ${dim/2} ${dim/2})" style="transition: stroke-dashoffset 1.2s cubic-bezier(.22,1,.36,1) ${i * .12}s"/>`;
+  }).join("");
+
+  return `<div class="vista">${STATO}<div class="contenuto">
+    <div class="capo"><h1>Settembre</h1><span class="tondo">${ic("calendario")}</span></div>
+
+    <div class="scheda entra">
+      <div class="anelli-box">
+        <svg viewBox="0 0 ${dim} ${dim}">${archi}</svg>
+        <div class="leggenda">
+          ${anelli.map(([k, c, p], i) => `<div class="r"><i style="background:var(--${c})"></i>
+            <div><div class="k">${k}</div><div class="v">${i === 1 ? Math.round(p * 100) + "%" : num(i === 0 ? TOT : SALDO)}</div></div></div>`).join("")}
+        </div>
+      </div>
+      <div class="totale">
+        <div><div class="k">Speso finora, su 1.180,00 entrati</div>
+          <div class="v" data-conta="${TOT}">0,00</div></div>
+        <span class="pillola">${ic("freccia_giu", 2.6)} 96,40</span>
+      </div>
+    </div>
+
+    <div class="titolo"><h3>Dove sono finiti i soldi</h3><a href="#">Tutte</a></div>
+    <div class="scheda">
+      <div class="segmenti">
+        ${QUOTE.map(([k, , p]) => `<i data-largo="${p}%" style="background:var(--${k})"></i>`).join("")}
+      </div>
+      <div class="griglia-leg">
+        ${QUOTE.slice(0, 6).map(([k, v]) => `<div class="r"><i style="background:var(--${k})"></i>
+          <span class="k">${CAT[k].n}</span><span class="v">${num(v)}</span></div>`).join("")}
+      </div>
+    </div>
+
+    <div class="titolo"><h3>Ultimi movimenti</h3><a href="#">Tutti</a></div>
+    <div class="elenco entra" style="animation-delay:.2s">
+      ${MOV.slice(0, 5).map((m) => `
+        <div class="voce">
+          <span class="tile" style="background:var(--${m.c})">${ic(CAT[m.c].i)}</span>
+          <span><div class="d1">${m.d}</div><div class="d2">${CAT[m.c].n} · ${m.g} settembre</div></span>
+          <span class="coda"><span class="imp ${m.v > 0 ? "piu" : ""}">${segno(m.v)}</span>${ic("destra", 2.4)}</span>
+        </div>`).join("")}
+    </div>
+  </div></div>${fab}${tab("report")}`;
+};
+
+S["g-movimenti"] = () => {
+  const perG = {};
+  MOV.forEach((m) => (perG[m.g] = perG[m.g] || []).push(m));
+  return `<div class="vista">${STATO}<div class="contenuto">
+    <div class="capo"><h1>Movimenti</h1><span class="tondo">${ic("calendario")}</span></div>
+    <div class="cerca entra">${ic("lente")} Cerca in tutti i mesi</div>
+    <div class="segmentato entra" style="animation-delay:.05s">
+      <span class="on">Tutti</span><span>Uscite</span><span>Entrate</span>
+    </div>
+    ${Object.keys(perG).sort((a, b) => b - a).map((g, i) => {
+      const righe = perG[g], tot = righe.reduce((s, m) => s + m.v, 0);
+      return `<div class="entra" style="animation-delay:${.1 + i * .08}s">
+        <div class="intestazione-giorno"><span>${righe[0].gio.charAt(0).toUpperCase() + righe[0].gio.slice(1)} ${g}</span><span>${segno(tot)}</span></div>
+        <div class="elenco">${righe.map((m) => `
+          <div class="voce">
+            <span class="tile" style="background:var(--${m.c})">${ic(CAT[m.c].i)}</span>
+            <span><div class="d1">${m.d}</div><div class="d2">${CAT[m.c].n}</div></span>
+            <span class="coda"><span class="imp ${m.v > 0 ? "piu" : ""}">${segno(m.v)}</span>${ic("destra", 2.4)}</span>
+          </div>`).join("")}</div></div>`;
+    }).join("")}
+  </div></div>${fab}${tab("movimenti")}`;
+};
+
+S["g-categorie"] = () => `
+  <div class="vista">${STATO}<div class="contenuto">
+    <div class="capo"><h1>Categorie</h1><span class="tondo">${ic("piu", 2.4)}</span></div>
+    <div class="titolo" style="margin-top:6px"><h3>Uscite</h3><a href="#">Modifica</a></div>
+    <div class="elenco entra">
+      ${QUOTE.map(([k, v]) => {
+        const b = BUDGET[k];
+        return `<div class="voce">
+          <span class="tile" style="background:var(--${k})">${ic(CAT[k].i)}</span>
+          <span><div class="d1">${CAT[k].n}</div><div class="d2">${b ? "tetto " + num(b) + " al mese" : "nessun tetto"}</div></span>
+          <span class="coda">
+            ${b ? `<span class="anellino" style="color:var(--${k})">${anello(v / b, v > b ? "var(--rosso)" : `var(--${k})`, 34, 4, false)}</span>` : ""}
+            <span class="imp">${num(v)}</span>${ic("destra", 2.4)}
+          </span></div>`;
+      }).join("")}
+    </div>
+    <div class="titolo"><h3>Regole</h3><a href="#">Nuova</a></div>
+    <div class="elenco entra" style="animation-delay:.12s">
+      ${[["conad", "spesa"], ["trenitalia", "trasporti"], ["netflix", "abbonamenti"]].map(([t, k]) => `
+        <div class="voce">
+          <span class="tile" style="background:var(--${k})">${ic(CAT[k].i)}</span>
+          <span><div class="d1">contiene “${t}”</div><div class="d2">assegna ${CAT[k].n}</div></span>
+          <span class="coda">${ic("destra", 2.4)}</span>
+        </div>`).join("")}
+    </div>
+  </div></div>${fab}${tab("categorie")}`;
+
+/* =============== montaggio =============== */
+document.querySelectorAll("[data-schermo]").forEach((n) => { n.innerHTML = S[n.dataset.schermo](); });
+
+/* =============== animazioni, rigiocabili =============== */
+function conta(el, fino, durata = 1100) {
+  const inizio = performance.now();
+  const passo = (t) => {
+    const p = Math.min(1, (t - inizio) / durata);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = num(fino * e);
+    if (p < 1) requestAnimationFrame(passo);
+  };
+  requestAnimationFrame(passo);
+}
+
+function riproduci() {
+  document.querySelectorAll(".telefono").forEach((tel) => {
+    tel.classList.remove("riproduci");
+    tel.querySelectorAll(".entra").forEach((e) => { e.style.animation = "none"; });
+    tel.querySelectorAll("[data-largo]").forEach((e) => { e.style.transition = "none"; e.style.width = "0"; });
+    tel.querySelectorAll(".arco").forEach((e) => { e.style.strokeDashoffset = e.getAttribute("stroke-dasharray"); });
+    tel.querySelectorAll(".taglia").forEach((e) => { e.style.transition = "none"; e.setAttribute("width", "0"); });
+    tel.querySelectorAll(".tratto").forEach((p) => {
+      const L = p.getTotalLength();
+      p.style.transition = "none";
+      p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
+    });
+    tel.querySelectorAll(".testina").forEach((c) => { c.style.transition = "none"; c.style.opacity = 0; });
+  });
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll(".telefono").forEach((tel) => {
+      tel.querySelectorAll(".entra").forEach((e) => { e.style.animation = ""; });
+      tel.classList.add("riproduci");
+      tel.querySelectorAll("[data-conta]").forEach((e) => conta(e, parseFloat(e.dataset.conta)));
+      setTimeout(() => {
+        tel.querySelectorAll("[data-largo]").forEach((e, i) => {
+          e.style.transition = `width .85s cubic-bezier(.22,1,.36,1) ${i * 60}ms`;
+          e.style.width = e.dataset.largo;
+        });
+        tel.querySelectorAll(".arco").forEach((e) => { e.style.strokeDashoffset = e.dataset.arco; });
+        tel.querySelectorAll(".taglia").forEach((e) => {
+          e.style.transition = "none";
+          e.animate([{ width: 0 }, { width: 393 }], { duration: 1300, easing: "cubic-bezier(.3,.9,.3,1)", fill: "forwards" });
+        });
+        tel.querySelectorAll(".tratto").forEach((p) => {
+          p.style.transition = "stroke-dashoffset 1.3s cubic-bezier(.3,.9,.3,1)";
+          p.style.strokeDashoffset = 0;
+        });
+        tel.querySelectorAll(".testina").forEach((c) => {
+          c.style.transition = "opacity .3s 1.15s";
+          c.style.opacity = 1;
+        });
+      }, 120);
+    });
+  }));
+}
+
+document.getElementById("rigioca").addEventListener("click", riproduci);
+riproduci();
+
+/* conto alla rovescia + giro automatico: le animazioni vanno viste, non immaginate */
+let restano = 8;
+const conto = document.getElementById("conto");
+window.giro = setInterval(() => {
+  if (document.hidden) return;          /* in secondo piano il browser ferma tutto: inutile contare */
+  restano -= 1;
+  if (restano <= 0) { riproduci(); restano = 8; }
+  conto.textContent = `prossimo giro fra ${restano}s`;
+}, 1000);
+
+/* Tornando sulla pagina si riparte da capo: le animazioni non girano mentre la
+   scheda è nascosta, e senza questo si troverebbero i numeri a zero. */
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) { riproduci(); restano = 8; }
+});
+</script>
+</body>
+</html>
