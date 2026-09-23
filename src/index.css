@@ -113,6 +113,22 @@
       font-size: max(16px, 1em) !important;
     }
   }
+  /*
+    Su iPhone due tocchi ravvicinati nello stesso punto ingrandiscono la pagina,
+    e lo zoom ci resta. Nelle categorie succede di continuo: le frecce per
+    riordinare si toccano più volte di fila, e al secondo tocco Safari ingrandisce
+    il pulsante invece di spostare la categoria. Stessa cosa passando da una
+    scheda all'altra in fondo allo schermo, dove i tocchi sono vicini e rapidi.
+
+    `manipulation` toglie il doppio tocco per ingrandire dai comandi, e solo da
+    quelli: il pinch resta (è l'unico zoom che si chiede davvero) e sul testo
+    il doppio tocco continua a funzionare.
+  */
+  a, button, label, summary, input, select, textarea,
+  [role="radio"], [role="button"], [role="tab"] {
+    touch-action: manipulation;
+  }
+
   :focus-visible {
     outline: 2px solid var(--cobalto);
     outline-offset: 2px;
