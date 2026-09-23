@@ -66,7 +66,7 @@ export function AppShell() {
         type="button"
         aria-label="Aggiungi movimento"
         onClick={() => apriNuovo()}
-        className="accento fixed right-5 bottom-[calc(78px+env(safe-area-inset-bottom))] z-20 grid size-14 place-items-center rounded-[20px] shadow-[0_10px_30px_var(--alone)] transition-transform active:scale-95 md:hidden"
+        className="accento fixed right-5 bottom-[calc(78px+env(safe-area-inset-bottom))] z-20 grid size-14 place-items-center rounded-[22px] shadow-[0_10px_30px_var(--alone)] transition-transform active:scale-95 md:hidden"
       >
         <Plus className="size-7" strokeWidth={2.6} />
       </button>

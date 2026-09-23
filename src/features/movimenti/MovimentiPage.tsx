@@ -81,7 +81,7 @@ export function MovimentiPage() {
       </div>
 
       {/* Ricerca e filtri sono un cluster solo: prima galleggiavano sciolti sulla carta */}
-      <div className="mt-1 rounded-[18px] bg-foglio p-3 md:p-3.5 dark:ring-1 dark:ring-filetto-leggero">
+      <div className="mt-1 rounded-scheda bg-foglio p-3 md:p-3.5 dark:ring-1 dark:ring-filetto-leggero">
       <label className="flex h-11 items-center gap-2 rounded-ctrl bg-carta px-3 text-sm focus-within:ring-1 focus-within:ring-cobalto">
         <Search className="size-4 shrink-0 text-inchiostro-2" aria-hidden="true" />
         <input
@@ -239,7 +239,7 @@ function ListaPerGiorno({ movimenti, perId }: { movimenti: Movimento[]; perId: M
 /** Il registro sta su foglio, come i blocchi del report. */
 function Lista({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mt-4 rounded-[18px] bg-foglio px-5 py-4 md:px-6 md:py-5 dark:ring-1 dark:ring-filetto-leggero">
+    <div className="mt-4 rounded-scheda bg-foglio px-5 py-4 md:px-6 md:py-5 dark:ring-1 dark:ring-filetto-leggero">
       {children}
     </div>
   )
@@ -247,7 +247,7 @@ function Lista({ children }: { children: React.ReactNode }) {
 
 function Vuoto({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mt-4 rounded-[18px] bg-foglio px-5 py-16 text-center text-sm text-inchiostro-2 dark:ring-1 dark:ring-filetto-leggero">
+    <p className="mt-4 rounded-scheda bg-foglio px-5 py-16 text-center text-sm text-inchiostro-2 dark:ring-1 dark:ring-filetto-leggero">
       {children}
     </p>
   )

@@ -137,7 +137,7 @@ export function ImportazionePage() {
       <h1 className="py-3 font-display text-xl font-semibold">Importa CSV</h1>
       <Passi corrente={passo.n} />
 
-      <div className="rounded-[18px] bg-foglio p-5 md:p-6 dark:ring-1 dark:ring-filetto-leggero">
+      <div className="rounded-scheda bg-foglio p-5 md:p-6 dark:ring-1 dark:ring-filetto-leggero">
       {passo.n === 1 && <PassoFile onFile={caricaFile} errore={errore} />}
 
       {passo.n === 2 && (
@@ -213,7 +213,7 @@ function PassoFile({ onFile, errore }: { onFile: (f: File) => void; errore: stri
           if (f) onFile(f)
         }}
         className={cn(
-          'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-[14px] bg-carta px-4 py-14 text-center',
+          'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-tessera bg-carta px-4 py-14 text-center',
           trascinando && 'ring-2 ring-cobalto ring-inset',
         )}
       >
@@ -440,7 +440,7 @@ function PassoMappatura({
         <button
           type="button"
           onClick={onIndietro}
-          className="h-11 rounded-lg border border-filetto px-4 text-sm font-medium"
+          className="h-11 rounded-ctrl border border-filetto px-4 text-sm font-medium"
         >
           Cambia file
         </button>
@@ -586,7 +586,7 @@ function PassoAnteprima({
         <button
           type="button"
           onClick={onIndietro}
-          className="h-11 rounded-lg border border-filetto px-4 text-sm font-medium"
+          className="h-11 rounded-ctrl border border-filetto px-4 text-sm font-medium"
         >
           Indietro
         </button>

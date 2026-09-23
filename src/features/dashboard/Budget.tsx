@@ -79,7 +79,7 @@ function Invito() {
       </p>
       <Link
         to="/categorie"
-        className="mt-3.5 inline-grid h-11 place-items-center rounded-lg bg-carta px-4 text-sm font-medium"
+        className="mt-3.5 inline-grid h-11 place-items-center rounded-ctrl border border-filetto px-4 text-sm font-semibold"
       >
         Scegli una categoria
       </Link>

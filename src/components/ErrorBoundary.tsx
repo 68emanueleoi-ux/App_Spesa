@@ -55,7 +55,7 @@ export class ErrorBoundary extends Component<Props, Stato> {
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="h-11 rounded-lg border border-filetto px-5 text-sm font-medium"
+            className="h-11 rounded-ctrl border border-filetto px-5 text-sm font-medium"
           >
             Ricarica l'app
           </button>

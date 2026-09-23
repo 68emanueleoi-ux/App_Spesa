@@ -91,11 +91,18 @@
   --color-rosso: var(--rosso);
   --color-ghost: var(--ghost);
 
-  --font-display: "Bricolage Grotesque Variable", "Helvetica Neue", Arial, sans-serif;
-  --font-testo: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+  /* Un carattere solo: Manrope regge sia i titoli sia le cifre grandi, e le
+     cifre tabellari non ballano mentre i numeri si aggiornano. */
+  --font-display: "Manrope Variable", "Segoe UI", system-ui, sans-serif;
+  --font-testo: "Manrope Variable", "Segoe UI", system-ui, sans-serif;
 
-  --radius-ctrl: 6px;
-  --radius-sheet: 16px;
+  /* Angoli larghi: le superfici devono sembrare tasselli morbidi, non fogli
+     ritagliati. Il pannello che sale dal basso e la scheda del totale sono i
+     piu' tondi; comandi e riquadri seguono in proporzione. */
+  --radius-ctrl: 14px;
+  --radius-sheet: 32px;
+  --radius-scheda: 26px;
+  --radius-tessera: 16px;
 
   /* Scala tipografica: base 16, rapporto ~1,25 */
   --text-xs: 12px;
@@ -176,7 +183,7 @@
 
 @utility font-display-opsz {
   font-family: var(--font-display);
-  font-variation-settings: "opsz" 96;
+  font-weight: 700;
 }
 
 /* Animazioni: rispondono solo ad azioni (apertura pannello, toast). Con prefers-reduced-motion durano 0. */
@@ -205,9 +212,8 @@
    così il numero non "balla" mentre si aggiungono movimenti. */
 @utility totale-mese {
   font-family: var(--font-display);
-  font-variation-settings: "opsz" 96;
   font-size: var(--text-totale);
-  font-weight: 600;
+  font-weight: 800;
   line-height: 0.88;
   letter-spacing: -0.035em;
   font-variant-numeric: tabular-nums;

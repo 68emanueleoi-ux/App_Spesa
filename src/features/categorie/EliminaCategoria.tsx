@@ -93,11 +93,11 @@ function Corpo({ categoria, categorie, onChiudi }: { categoria: Categoria; categ
         type="button"
         onClick={conferma}
         disabled={conteggio === undefined}
-        className="mt-5 h-12 w-full rounded-lg bg-rosso text-base font-bold text-white active:brightness-95 disabled:opacity-60"
+        className="mt-5 h-12 w-full rounded-ctrl bg-rosso text-base font-bold text-white active:brightness-95 disabled:opacity-60"
       >
         {conteggio ? 'Sposta i movimenti ed elimina' : 'Elimina categoria'}
       </button>
-      <button type="button" onClick={onChiudi} className="mt-2 h-11 w-full rounded-lg text-sm font-medium text-inchiostro-2 active:bg-carta">
+      <button type="button" onClick={onChiudi} className="mt-2 h-11 w-full rounded-ctrl text-sm font-medium text-inchiostro-2 active:bg-filetto-leggero">
         Annulla
       </button>
     </>
