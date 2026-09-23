@@ -36,7 +36,16 @@ export function CategoriePage() {
     <>
       <h1 className="py-3 font-display text-xl font-semibold">Categorie</h1>
 
-      <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+      {/*
+        grid-cols-1 non è decorativo: senza, su telefono la colonna è implicita e
+        larga `auto`, cioè almeno quanto il min-content del contenuto. Nel min-content
+        il testo di una regola conta per intero, puntini di sospensione esclusi: bastava
+        una regola lunga per allargare la colonna oltre lo schermo e portarsi dietro anche
+        Uscite ed Entrate, con le frecce e il cestino fuori dal bordo destro.
+        grid-cols-1 (come lg:grid-cols-2) è minmax(0, 1fr): il minimo è zero, così la
+        colonna non supera mai lo schermo e a stringersi sono i testi, che già troncano.
+      */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-start">
       <Gruppo
         titolo="Uscite"
         tipo="uscita"
@@ -175,11 +184,13 @@ function Gruppo({
                 </span>
                 <span className={c.diSistema ? 'truncate text-inchiostro-2' : 'truncate'}>{c.nome}</span>
                 {c.budget !== undefined && (
-                  <span className="num ml-auto pr-2 text-xs text-inchiostro-2">
+                  <span className="num ml-auto shrink-0 pr-2 text-xs whitespace-nowrap text-inchiostro-2">
                     {formatImporto(c.budget)}/mese
                   </span>
                 )}
-                {c.diSistema && <span className="ml-auto pr-2 text-xs text-inchiostro-2">non eliminabile</span>}
+                {c.diSistema && (
+                  <span className="ml-auto shrink-0 pr-2 text-xs whitespace-nowrap text-inchiostro-2">non eliminabile</span>
+                )}
               </button>
               {!c.diSistema && (
                 <>
