@@ -248,6 +248,53 @@ body {
 .riproduci .entra { animation: sali .62s cubic-bezier(.2,.85,.3,1) forwards; }
 @keyframes sali { to { opacity: 1; transform: none; } }
 
+
+/* ===== varianti del blocco entrate / uscite / saldo (solo per il confronto) ===== */
+.telefono.corto { height: 540px; }
+.telefono.corto .contenuto { padding-bottom: 20px; height: calc(100% - 34px); }
+
+/* 1 · riga nuda: niente scatole, solo numeri e filetti */
+.n .riga-conti { display: grid; grid-template-columns: 1fr 1fr 1fr; margin-top: 16px; }
+.n .riga-conti div { padding: 0 12px; }
+.n .riga-conti div + div { border-left: 1px solid rgba(255,255,255,.1); }
+.n .riga-conti div:first-child { padding-left: 2px; }
+.n .riga-conti .k { font-size: 11.5px; color: var(--testo2); font-weight: 600; }
+.n .riga-conti .v { font-size: 17px; font-weight: 800; letter-spacing: -.025em; font-variant-numeric: tabular-nums; margin-top: 3px; white-space: nowrap; }
+
+/* 2 · dentro la scheda: i conti stanno sulla sfumatura, non fuori */
+.n .hero .conti-dentro {
+  position: relative; display: grid; grid-template-columns: repeat(3,1fr);
+  border-top: 1px solid rgba(255,255,255,.14); margin: 0 -20px; padding: 13px 20px 15px;
+}
+.n .hero .conti-dentro div + div { border-left: 1px solid rgba(255,255,255,.12); padding-left: 14px; }
+.n .hero .conti-dentro .k { font-size: 11px; color: #b0b6dd; font-weight: 600; }
+.n .hero .conti-dentro .v { font-size: 16px; font-weight: 800; letter-spacing: -.025em; font-variant-numeric: tabular-nums; margin-top: 2px; white-space: nowrap; }
+
+/* 3 · bilancia: un oggetto solo, quanto e' entrato e quanto ne resta */
+.n .bilancia { margin-top: 18px; }
+.n .bilancia .scala { position: relative; height: 34px; border-radius: 12px; background: rgba(43,227,155,.16); overflow: hidden; }
+.n .bilancia .scala .usato {
+  position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 12px;
+  background: linear-gradient(90deg, #6d5cff, #ff5c9d);
+  transition: width 1s cubic-bezier(.22,1,.36,1);
+}
+.n .bilancia .scala .eti { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 13px; font-size: 12.5px; font-weight: 700; }
+.n .bilancia .eti .sx { color: #fff; }
+.n .bilancia .eti .dx { color: var(--verde); }
+.n .bilancia .sotto { display: flex; justify-content: space-between; margin-top: 9px; font-size: 11.5px; color: var(--testo2); font-variant-numeric: tabular-nums; }
+
+/* 4 · solo il saldo: il resto si apre a richiesta */
+.n .saldo-solo {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 16px; padding: 14px 16px; border-radius: 18px;
+  background: linear-gradient(120deg, rgba(43,227,155,.16), rgba(33,212,253,.09));
+  border: 1px solid rgba(43,227,155,.22);
+}
+.n .saldo-solo .k { font-size: 12px; color: #a9e8cd; font-weight: 600; }
+.n .saldo-solo .v { font-size: 26px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; margin-top: 1px; }
+.n .saldo-solo .apri { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: var(--testo2); }
+.n .saldo-solo .apri svg { width: 14px; height: 14px; }
+
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
@@ -297,6 +344,19 @@ body {
 
     <p class="eti">Categorie</p>
     <div class="telefono" data-schermo="g-categorie"></div>
+  </section>
+
+
+  <!-- ===== varianti del blocco conti ===== -->
+  <section class="blocco n" id="varianti-conti" style="width: 100%; max-width: 1240px;">
+    <h2>Il blocco entrate / uscite / saldo — quattro modi</h2>
+    <p>Solo la parte alta del Report di Notte. Cambia quello che sta sotto la scheda con la sfumatura.</p>
+    <div style="display:flex; gap:22px; flex-wrap:wrap; margin-top:14px">
+      <div><p class="eti">1 · Riga nuda, senza scatole</p><div class="telefono corto" data-schermo="saldo-1"></div></div>
+      <div><p class="eti">2 · Dentro la scheda</p><div class="telefono corto" data-schermo="saldo-2"></div></div>
+      <div><p class="eti">3 · Bilancia: uno solo</p><div class="telefono corto" data-schermo="saldo-3"></div></div>
+      <div><p class="eti">4 · Solo il saldo</p><div class="telefono corto" data-schermo="saldo-4"></div></div>
+    </div>
   </section>
 
 </main>
@@ -628,6 +688,76 @@ S["g-categorie"] = () => `
         </div>`).join("")}
     </div>
   </div></div>${fab}${tab("categorie")}`;
+
+
+/* ===== quattro varianti del blocco conti, per scegliere ===== */
+const heroBase = () => `
+  <div class="capo">
+    <span class="mese">Settembre 2026 ${ic("giu", 2.4)}</span>
+    <span class="tondo">${ic("luna")}</span>
+  </div>
+  <div class="hero entra">
+    <div class="etichetta">Speso finora</div>
+    <div class="cifra"><span class="eu">€</span><span class="val" data-conta="${TOT}">0,00</span></div>
+    <div class="delta">${ic("freccia_giu", 2.6)} 96,40 in meno di agosto</div>
+    <div class="grafico">${curva()}</div>
+    <div class="giorni-eti"><span>1 set</span><span>8</span><span>15</span><span>23 · oggi</span><span>30</span></div>
+  </div>`;
+
+const CONTI = [
+  ["Entrate", ENTRATE, "verde", "+ "],
+  ["Uscite", TOT, "ristoranti", "− "],
+  ["Saldo", SALDO, "trasporti", ""],
+];
+
+S["saldo-1"] = () => `<div class="vista">${STATO}<div class="contenuto">
+  ${heroBase()}
+  <div class="riga-conti entra" style="animation-delay:.18s">
+    ${CONTI.map(([k, v, c, sg]) => `<div>
+      <div class="k">${k}</div>
+      <div class="v" style="color:${k === "Entrate" ? "var(--verde)" : "var(--testo)"}">${sg}${num(v)}</div>
+    </div>`).join("")}
+  </div>
+</div></div>`;
+
+S["saldo-2"] = () => `<div class="vista">${STATO}<div class="contenuto">
+  <div class="capo">
+    <span class="mese">Settembre 2026 ${ic("giu", 2.4)}</span>
+    <span class="tondo">${ic("luna")}</span>
+  </div>
+  <div class="hero entra">
+    <div class="etichetta">Speso finora</div>
+    <div class="cifra"><span class="eu">€</span><span class="val" data-conta="${TOT}">0,00</span></div>
+    <div class="delta">${ic("freccia_giu", 2.6)} 96,40 in meno di agosto</div>
+    <div class="grafico">${curva()}</div>
+    <div class="giorni-eti"><span>1 set</span><span>8</span><span>15</span><span>23 · oggi</span><span>30</span></div>
+    <div class="conti-dentro">
+      ${CONTI.map(([k, v, c, sg]) => `<div>
+        <div class="k">${k}</div>
+        <div class="v" style="color:${k === "Entrate" ? "#63f0b6" : "#fff"}">${sg}${num(v)}</div>
+      </div>`).join("")}
+    </div>
+  </div>
+</div></div>`;
+
+S["saldo-3"] = () => `<div class="vista">${STATO}<div class="contenuto">
+  ${heroBase()}
+  <div class="bilancia entra" style="animation-delay:.18s">
+    <div class="scala">
+      <span class="usato" data-largo="71.4%"></span>
+      <span class="eti"><span class="sx">speso 842,15</span><span class="dx">restano 337,85</span></span>
+    </div>
+    <div class="sotto"><span>entrate del mese 1.180,00</span><span>71% usato</span></div>
+  </div>
+</div></div>`;
+
+S["saldo-4"] = () => `<div class="vista">${STATO}<div class="contenuto">
+  ${heroBase()}
+  <div class="saldo-solo entra" style="animation-delay:.18s">
+    <div><div class="k">Ti restano questo mese</div><div class="v" data-conta="${SALDO}">0,00</div></div>
+    <div class="apri">Entrate e uscite ${ic("destra", 2.4)}</div>
+  </div>
+</div></div>`;
 
 /* =============== montaggio =============== */
 document.querySelectorAll("[data-schermo]").forEach((n) => { n.innerHTML = S[n.dataset.schermo](); });
