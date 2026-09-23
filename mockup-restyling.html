@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spese — tre direzioni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Mock-up di restyling per Spese — tre direzioni a confronto.
+   Non è codice di produzione: serve a scegliere. Stessi dati in
+   tutte e tre le colonne, così a cambiare è solo il disegno.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --pagina: #1b1d22;
+  --pagina-2: #23262d;
+  --testo: #e9eaee;
+  --testo-2: #9ea3ae;
+  --bordo: rgba(233,235,240,.14);
+
+  /* Tavolozza categorie: la stessa dell'app, validata per contrasto e daltonismo */
+  --spesa: #3b63d8;
+  --ristoranti: #d24b84;
+  --trasporti: #1f9e8a;
+  --abbonamenti: #c2552a;
+  --sigarette: #7a8a1e;
+  --svago: #8b3f9e;
+  --salute: #1a7fa8;
+  --casa: #b87709;
+  --entrata: #1e7a57;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--pagina);
+  color: var(--testo);
+  font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* ---------- impalcatura della pagina di confronto ---------- */
+.testata {
+  padding: 28px 24px 18px;
+  border-bottom: 1px solid var(--bordo);
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in srgb, var(--pagina) 92%, transparent);
+  backdrop-filter: blur(8px);
+}
+.testata h1 {
+  font-family: "Archivo", sans-serif;
+  font-variation-settings: "wdth" 88, "wght" 700;
+  font-size: 22px; margin: 0; letter-spacing: -.01em;
+}
+.testata p { margin: 6px 0 0; color: var(--testo-2); font-size: 14px; max-width: 78ch; }
+.salti { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.salti a {
+  color: var(--testo); text-decoration: none; font-size: 13px;
+  border: 1px solid var(--bordo); border-radius: 999px; padding: 5px 13px;
+}
+.salti a:hover { background: var(--pagina-2); }
+
+.griglia {
+  display: grid; gap: 30px; padding: 26px 24px 80px;
+  grid-template-columns: repeat(3, max-content);
+  justify-content: center;
+}
+@media (max-width: 1340px) { .griglia { grid-template-columns: 1fr; justify-items: center; } }
+
+.colonna { max-width: 393px; }
+.colonna > h2 {
+  font-family: "Archivo", sans-serif;
+  font-variation-settings: "wdth" 85, "wght" 700;
+  font-size: 19px; margin: 0 0 2px; letter-spacing: -.01em;
+}
+.colonna > .nota { margin: 0 0 16px; color: var(--testo-2); font-size: 13.5px; }
+.colonna > .nota b { color: var(--testo); font-weight: 400; }
+.etichetta-schermo {
+  font-size: 11.5px; color: var(--testo-2); margin: 20px 0 7px;
+  font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 90, "wght" 600;
+}
+
+/* ---------- il telaio del telefono ---------- */
+.telefono {
+  width: 393px; height: 700px; overflow: hidden;
+  border-radius: 34px; border: 1px solid var(--bordo);
+  position: relative; isolation: isolate;
+  box-shadow: 0 18px 50px rgba(0,0,0,.35);
+}
+.schermo { height: 100%; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.schermo::-webkit-scrollbar { display: none; }
+.stato {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 26px 2px; font-size: 12px; font-weight: 700; opacity: .75;
+}
+.corpo { padding: 4px 20px 92px; }
+
+/* barra schede comune a tutte le varianti */
+.schede {
+  position: absolute; inset: auto 0 0 0; z-index: 3;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  padding: 9px 0 14px; font-size: 11px;
+}
+.schede div { display: grid; justify-items: center; gap: 3px; opacity: .55; }
+.schede div.attiva { opacity: 1; }
+.schede svg { width: 21px; height: 21px; }
+
+/* pulsante + fluttuante */
+.piu {
+  position: absolute; right: 18px; bottom: 74px; z-index: 4;
+  width: 54px; height: 54px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 26px; font-weight: 700;
+}
+
+/* =====================================================================
+   VARIANTE A — CARTA VIVA
+   L'impianto di oggi. Il colore non decora: dice a quale categoria
+   appartiene una cosa e quanto pesa. Un solo momento di movimento.
+   ===================================================================== */
+.v-a .telefono { background: #f5f3ee; color: #16181d; }
+.v-a { --carta: #f5f3ee; --foglio: #fff; --inchiostro: #16181d; --inchiostro-2: #6f737c; --filetto: rgba(27,33,48,.09); --cobalto: #2f4fd8; }
+.v-a .schermo { font-family: "Atkinson Hyperlegible", sans-serif; }
+.v-a .stato { color: #16181d; }
+.v-a .schede { background: var(--carta); border-top: 1px solid var(--filetto); color: var(--inchiostro-2); }
+.v-a .schede div.attiva { color: var(--cobalto); }
+.v-a .piu { background: var(--cobalto); color: #fff; box-shadow: 0 8px 20px rgba(47,79,216,.4); }
+
+.v-a .riga-mese { display: flex; align-items: center; justify-content: space-between; padding: 6px 0 2px; }
+.v-a .mese { font-family: "Bricolage Grotesque", sans-serif; font-weight: 600; font-size: 19px; }
+.v-a .frecce { color: var(--inchiostro-2); letter-spacing: 10px; }
+
+.v-a .etichetta { font-size: 13px; color: var(--inchiostro-2); margin: 14px 0 0; }
+.v-a .totale {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-variation-settings: "opsz" 96;
+  font-weight: 600; font-size: 62px; line-height: .88; letter-spacing: -.035em;
+  font-variant-numeric: tabular-nums; margin: 6px 0 0;
+}
+.v-a .totale .euro { font-size: .4em; font-weight: 500; vertical-align: .62em; color: var(--inchiostro-2); margin-right: .1em; }
+/* La barra sotto il totale è il mese trascorso: si riempie da sola, giorno dopo giorno */
+.v-a .avanzamento { height: 5px; border-radius: 3px; background: rgba(27,33,48,.08); margin-top: 12px; overflow: hidden; }
+.v-a .avanzamento i { display: block; height: 100%; width: 0; border-radius: 3px; background: linear-gradient(90deg, var(--spesa), var(--ristoranti)); transition: width 1.1s cubic-bezier(.2,.8,.2,1) .15s; }
+.v-a .telefono.vivo .avanzamento i { width: 77%; }
+.v-a .confronto { font-size: 13.5px; margin: 9px 0 0; font-variant-numeric: tabular-nums; }
+.v-a .confronto b { font-weight: 700; }
+.v-a .confronto .meno { color: var(--entrata); }
+
+.v-a .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; }
+.v-a .trio div { border-left: 3px solid; padding-left: 9px; }
+.v-a .trio dt { font-size: 11.5px; color: var(--inchiostro-2); }
+.v-a .trio dd { margin: 2px 0 0; font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.v-a .pannello { background: var(--foglio); border-radius: 18px; padding: 18px; margin-top: 16px; }
+.v-a .pannello h3 { font-family: "Bricolage Grotesque", sans-serif; font-size: 16px; font-weight: 600; margin: 0 0 14px; display: flex; justify-content: space-between; align-items: baseline; }
+.v-a .pannello h3 a { font-size: 13px; font-weight: 400; color: var(--cobalto); text-decoration: none; font-family: "Atkinson Hyperlegible", sans-serif; }
+
+/* barra per categoria: la fascia colorata È il dato, non un ornamento */
+.v-a .quota { display: grid; grid-template-columns: 26px 1fr auto; align-items: center; gap: 10px; padding: 7px 0; }
+.v-a .quota .pastiglia { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; }
+.v-a .quota .pastiglia svg { width: 15px; height: 15px; }
+.v-a .quota .nome { font-size: 13.5px; }
+.v-a .quota .barra { display: block; height: 7px; border-radius: 4px; background: rgba(27,33,48,.07); margin-top: 5px; overflow: hidden; }
+.v-a .quota .barra i { display: block; height: 100%; border-radius: 4px; width: 0; transition: width .9s cubic-bezier(.2,.8,.2,1); }
+.v-a .telefono.vivo .quota .barra i { width: var(--q); }
+.v-a .quota .cifra { font-size: 13.5px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.v-a .quota .perc { font-size: 11.5px; color: var(--inchiostro-2); text-align: right; }
+
+.v-a .mov { display: grid; grid-template-columns: 46px 1fr auto; gap: 10px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--filetto); font-size: 13.5px; }
+.v-a .mov:last-child { border-bottom: 0; }
+.v-a .mov .data { font-size: 11.5px; color: var(--inchiostro-2); font-variant-numeric: tabular-nums; }
+.v-a .mov .chi { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.v-a .mov .punto { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.v-a .mov .desc { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v-a .mov .cifra { font-weight: 700; font-variant-numeric: tabular-nums; }
+.v-a .mov .cifra.piu { color: var(--entrata); }
+
+.v-a .cerca { display: flex; align-items: center; gap: 9px; height: 42px; padding: 0 12px; border-radius: 10px; background: var(--foglio); font-size: 14px; color: var(--inchiostro-2); }
+.v-a .chip-riga { display: flex; gap: 7px; margin-top: 11px; overflow: hidden; }
+.v-a .chip { border-radius: 999px; padding: 6px 13px; font-size: 13px; border: 1px solid var(--filetto); background: var(--foglio); white-space: nowrap; }
+.v-a .chip.on { background: var(--cobalto); border-color: var(--cobalto); color: #fff; font-weight: 700; }
+.v-a .giorno { font-size: 12px; color: var(--inchiostro-2); margin: 18px 0 6px; display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; }
+.v-a .cat-riga { display: grid; grid-template-columns: 34px 1fr auto auto auto; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--filetto); font-size: 14px; }
+.v-a .cat-riga:last-child { border-bottom: 0; }
+.v-a .cat-riga .pastiglia { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; }
+.v-a .cat-riga .pastiglia svg { width: 17px; height: 17px; }
+.v-a .cat-riga .tetto { font-size: 11.5px; color: var(--inchiostro-2); font-variant-numeric: tabular-nums; }
+.v-a .cat-riga .manig { color: var(--inchiostro-2); opacity: .5; }
+
+/* =====================================================================
+   VARIANTE B — IL MESE A STRISCE
+   L'eroe non è il numero ma il mese: trenta strisce, una per giorno,
+   colorate dalla categoria che quel giorno ha pesato di più.
+   ===================================================================== */
+.v-b .telefono { background: #e9edf2; color: #12151a; }
+.v-b { --fondo: #e9edf2; --tessera: #fff; --ink: #12151a; --ink-2: #6b7280; --rete: rgba(18,21,26,.08); --blu: #2743c8; }
+.v-b .schermo { font-family: "Atkinson Hyperlegible", sans-serif; }
+.v-b .stato { color: var(--ink); }
+.v-b .schede { background: color-mix(in srgb, var(--fondo) 94%, transparent); backdrop-filter: blur(6px); border-top: 1px solid var(--rete); color: var(--ink-2); }
+.v-b .schede div.attiva { color: var(--ink); }
+.v-b .piu { background: var(--ink); color: #fff; border-radius: 16px; box-shadow: 0 8px 18px rgba(18,21,26,.3); }
+
+.v-b .testa {
+  display: flex; align-items: baseline; justify-content: space-between;
+  font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 88, "wght" 600;
+  padding: 8px 0 0; font-size: 17px;
+}
+.v-b .testa span { color: var(--ink-2); font-size: 13px; }
+
+/* la spina: il mese giorno per giorno */
+.v-b .spina { margin-top: 14px; }
+.v-b .spina .asse {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
+  align-items: end; gap: 3px; height: 128px;
+}
+.v-b .spina .g { position: relative; height: 100%; display: flex; align-items: flex-end; }
+.v-b .spina .g i {
+  display: block; width: 100%; border-radius: 3px 3px 1px 1px;
+  height: 0; transition: height .5s cubic-bezier(.2,.9,.3,1);
+}
+.v-b .telefono.vivo .spina .g i { height: var(--h); }
+.v-b .spina .g.futuro i { background: var(--rete) !important; }
+.v-b .spina .g.oggi::after {
+  content: ""; position: absolute; inset: auto 0 -7px 0; height: 3px; border-radius: 2px; background: var(--ink);
+}
+.v-b .spina .scala { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--ink-2); margin-top: 11px; font-variant-numeric: tabular-nums; }
+
+.v-b .numero {
+  font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 75, "wght" 700;
+  font-size: 46px; letter-spacing: -.02em; font-variant-numeric: tabular-nums;
+  margin: 16px 0 0; line-height: 1;
+}
+.v-b .numero small { font-size: 15px; font-variation-settings: "wdth" 90, "wght" 600; color: var(--ink-2); display: block; margin-bottom: 5px; letter-spacing: 0; }
+.v-b .delta { font-size: 13.5px; margin-top: 8px; font-variant-numeric: tabular-nums; }
+.v-b .delta b { color: var(--entrata); }
+
+/* tessere categoria */
+.v-b .tessere { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 16px; }
+.v-b .tessera {
+  background: var(--tessera); border-radius: 14px; padding: 12px; position: relative; overflow: hidden;
+}
+.v-b .tessera .fondo { position: absolute; inset: auto 0 0 0; height: 0; opacity: .13; transition: height .8s cubic-bezier(.2,.8,.2,1); }
+.v-b .telefono.vivo .tessera .fondo { height: var(--q); }
+.v-b .tessera .capo { display: flex; align-items: center; gap: 7px; position: relative; }
+.v-b .tessera svg { width: 16px; height: 16px; }
+.v-b .tessera .nome { font-size: 12.5px; color: var(--ink-2); }
+.v-b .tessera .val { position: relative; font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 82, "wght" 700; font-size: 20px; margin-top: 7px; font-variant-numeric: tabular-nums; }
+.v-b .tessera .perc { position: relative; font-size: 11.5px; color: var(--ink-2); }
+
+.v-b .sezione { font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 88, "wght" 600; font-size: 14px; margin: 22px 0 8px; display: flex; justify-content: space-between; align-items: baseline; }
+.v-b .sezione a { font-size: 12.5px; color: var(--blu); text-decoration: none; font-family: "Atkinson Hyperlegible", sans-serif; }
+
+/* lista con binario colorato per giorno */
+.v-b .giorno-blocco { display: grid; grid-template-columns: 38px 1fr; gap: 10px; margin-bottom: 4px; }
+.v-b .giorno-blocco .indice { text-align: right; padding-top: 9px; }
+.v-b .giorno-blocco .num { font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 80, "wght" 700; font-size: 17px; line-height: 1; }
+.v-b .giorno-blocco .gio { font-size: 10px; color: var(--ink-2); }
+.v-b .giorno-blocco .righe { border-left: 2px solid var(--rete); padding-left: 12px; }
+.v-b .mov { display: flex; align-items: center; gap: 9px; padding: 8px 0; font-size: 13.5px; }
+.v-b .mov .punto { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.v-b .mov .desc { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v-b .mov .cat { font-size: 11px; color: var(--ink-2); }
+.v-b .mov .cifra { font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 85, "wght" 600; font-variant-numeric: tabular-nums; }
+.v-b .mov .cifra.piu { color: var(--entrata); }
+
+.v-b .filtri { display: flex; gap: 7px; margin-top: 12px; overflow: hidden; }
+.v-b .fchip { border-radius: 8px; padding: 6px 12px; font-size: 12.5px; background: var(--tessera); white-space: nowrap; }
+.v-b .fchip.on { background: var(--ink); color: #fff; }
+.v-b .cerca { display: flex; align-items: center; gap: 9px; height: 40px; padding: 0 12px; border-radius: 10px; background: var(--tessera); font-size: 13.5px; color: var(--ink-2); margin-top: 12px; }
+
+/* categorie come tessere con anello di budget */
+.v-b .cat-tessera { background: var(--tessera); border-radius: 14px; padding: 12px; display: grid; gap: 8px; }
+.v-b .cat-tessera .alto { display: flex; align-items: center; justify-content: space-between; }
+.v-b .cat-tessera .bollo { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; }
+.v-b .cat-tessera .bollo svg { width: 16px; height: 16px; }
+.v-b .cat-tessera .nome { font-size: 13px; }
+.v-b .cat-tessera .sotto { font-size: 11px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.v-b .regola { display: flex; align-items: center; gap: 8px; background: var(--tessera); border-radius: 10px; padding: 9px 11px; font-size: 12.5px; margin-bottom: 6px; }
+.v-b .regola .frase { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v-b .regola .bersaglio { font-size: 11.5px; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+
+/* =====================================================================
+   VARIANTE C — FLUSSO
+   Plancia scura. In cima i soldi come flusso: da dove entrano, dove
+   escono. Sotto, il mese come griglia di calore.
+   ===================================================================== */
+.v-c .telefono { background: #0d1014; color: #eef1f6; }
+.v-c { --board: #0d1014; --sup: #171b22; --chiaro: #eef1f6; --tenue: #878e9c; --linea: rgba(238,241,246,.1); --viola: #8b7cff; }
+.v-c .schermo { font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 95, "wght" 400; }
+.v-c .stato { color: var(--chiaro); }
+.v-c .schede { background: color-mix(in srgb, var(--board) 90%, transparent); backdrop-filter: blur(8px); border-top: 1px solid var(--linea); color: var(--tenue); }
+.v-c .schede div.attiva { color: var(--viola); }
+.v-c .piu { background: var(--viola); color: #14121f; box-shadow: 0 0 0 6px rgba(139,124,255,.14), 0 10px 24px rgba(139,124,255,.35); }
+
+.v-c .capo { display: flex; align-items: center; justify-content: space-between; padding: 8px 0 0; font-size: 14px; }
+.v-c .capo .mese { font-variation-settings: "wdth" 85, "wght" 700; font-size: 16px; }
+.v-c .capo .oggi { color: var(--tenue); font-size: 12.5px; }
+
+.v-c .grande {
+  font-variation-settings: "wdth" 62, "wght" 800;
+  font-size: 88px; line-height: .82; letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums; margin: 14px 0 0;
+}
+.v-c .grande .eur { font-size: .26em; font-variation-settings: "wdth" 80, "wght" 600; vertical-align: .9em; color: var(--tenue); margin-right: .12em; }
+.v-c .sottotitolo { color: var(--tenue); font-size: 13px; margin-top: 8px; font-variation-settings: "wdth" 95, "wght" 400; }
+.v-c .sottotitolo b { color: #5ddba4; font-variation-settings: "wght" 700; }
+
+.v-c .flusso { margin-top: 18px; }
+.v-c .flusso svg { width: 100%; display: block; }
+.v-c .flusso .nastro { opacity: 0; transform-origin: left center; animation: nastro-entra .7s cubic-bezier(.2,.8,.2,1) forwards; }
+@keyframes nastro-entra { from { opacity: 0; } to { opacity: .82; } }
+.v-c .legenda { display: flex; flex-wrap: wrap; gap: 5px 12px; margin-top: 12px; font-size: 11.5px; color: var(--tenue); }
+.v-c .legenda span { display: flex; align-items: center; gap: 5px; }
+.v-c .legenda i { width: 9px; height: 9px; border-radius: 2px; }
+
+.v-c .titoletto { font-variation-settings: "wdth" 88, "wght" 700; font-size: 13.5px; margin: 24px 0 10px; display: flex; justify-content: space-between; align-items: baseline; }
+.v-c .titoletto span { color: var(--tenue); font-size: 11.5px; font-variation-settings: "wght" 400; }
+
+/* calendario di calore */
+.v-c .calendario { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+.v-c .calendario .intest { font-size: 10px; color: var(--tenue); text-align: center; padding-bottom: 2px; }
+.v-c .calendario .cella {
+  aspect-ratio: 1; border-radius: 7px; background: var(--sup);
+  display: grid; place-items: center; font-size: 11px; color: var(--tenue);
+  opacity: 0; transition: opacity .3s, background .3s;
+  font-variant-numeric: tabular-nums;
+}
+.v-c .telefono.vivo .calendario .cella { opacity: 1; }
+.v-c .calendario .cella.pieno { color: #0d1014; font-variation-settings: "wght" 700; }
+.v-c .calendario .cella.oggi { outline: 2px solid var(--viola); outline-offset: 1px; }
+
+.v-c .classifica { display: grid; gap: 9px; }
+.v-c .voce { display: grid; grid-template-columns: 1fr auto; gap: 3px 10px; align-items: center; }
+.v-c .voce .nome { font-size: 13px; display: flex; align-items: center; gap: 7px; }
+.v-c .voce .nome svg { width: 15px; height: 15px; }
+.v-c .voce .cifra { font-variation-settings: "wdth" 85, "wght" 700; font-size: 14px; font-variant-numeric: tabular-nums; }
+.v-c .voce .traccia { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: var(--sup); overflow: hidden; }
+.v-c .voce .traccia i { display: block; height: 100%; width: 0; border-radius: 3px; transition: width .9s cubic-bezier(.2,.8,.2,1); }
+.v-c .telefono.vivo .voce .traccia i { width: var(--q); }
+
+.v-c .mov { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--linea); font-size: 13px; }
+.v-c .mov:last-child { border-bottom: 0; }
+.v-c .mov .bollo { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; }
+.v-c .mov .bollo svg { width: 15px; height: 15px; }
+.v-c .mov .desc { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v-c .mov .cat { font-size: 11px; color: var(--tenue); }
+.v-c .mov .cifra { font-variation-settings: "wdth" 85, "wght" 700; font-variant-numeric: tabular-nums; }
+.v-c .mov .cifra.piu { color: #5ddba4; }
+.v-c .cerca { display: flex; align-items: center; gap: 9px; height: 42px; padding: 0 13px; border-radius: 12px; background: var(--sup); color: var(--tenue); font-size: 13px; margin-top: 12px; }
+.v-c .pill-riga { display: flex; gap: 7px; margin-top: 10px; overflow: hidden; }
+.v-c .pill { border-radius: 999px; padding: 6px 13px; font-size: 12.5px; background: var(--sup); color: var(--tenue); white-space: nowrap; }
+.v-c .pill.on { background: var(--viola); color: #14121f; font-variation-settings: "wght" 700; }
+.v-c .gr-cat { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.v-c .cat-c { background: var(--sup); border-radius: 14px; padding: 12px; display: grid; gap: 9px; }
+.v-c .cat-c .alto { display: flex; align-items: center; justify-content: space-between; }
+.v-c .cat-c .bollo { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; }
+.v-c .cat-c .bollo svg { width: 17px; height: 17px; }
+.v-c .cat-c .nome { font-size: 13px; }
+.v-c .cat-c .meta { font-size: 11px; color: var(--tenue); font-variant-numeric: tabular-nums; }
+.v-c .anello { width: 30px; height: 30px; }
+
+
+/* =====================================================================
+   VARIANTE D — BUSTE
+   Cambia la domanda: non "quanto ho speso" ma "quanto mi resta".
+   Ogni categoria con un tetto è una busta che si svuota.
+   ===================================================================== */
+.v-d .telefono { background: #dfdbd1; color: #1b1d21; }
+.v-d { --sfondo: #dfdbd1; --busta: #fffdf8; --ink: #1b1d21; --ink-2: #6e6a62; --riga: rgba(27,29,33,.1); --sigillo: #a8321f; }
+.v-d .schermo { font-family: "Atkinson Hyperlegible", sans-serif; }
+.v-d .stato { color: var(--ink); }
+.v-d .schede { background: var(--sfondo); border-top: 1px solid var(--riga); color: var(--ink-2); }
+.v-d .schede div.attiva { color: var(--sigillo); }
+.v-d .piu { background: var(--sigillo); color: #fffdf8; box-shadow: 0 8px 20px rgba(168,50,31,.35); }
+
+.v-d .capo { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0 0; font-size: 13px; color: var(--ink-2); }
+.v-d .capo b { font-size: 17px; color: var(--ink); font-weight: 700; }
+.v-d .resta-eti { font-size: 13px; color: var(--ink-2); margin: 18px 0 0; }
+.v-d .resta {
+  font-family: "Bricolage Grotesque", sans-serif; font-variation-settings: "opsz" 96;
+  font-weight: 700; font-size: 58px; line-height: .9; letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums; margin: 4px 0 0;
+}
+.v-d .resta .e { font-size: .34em; vertical-align: .75em; color: var(--ink-2); margin-right: .12em; }
+.v-d .ritmo { font-size: 13px; margin-top: 8px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.v-d .ritmo b { color: var(--ink); }
+.v-d .giorni { display: grid; grid-auto-flow: column; gap: 3px; margin-top: 14px; }
+.v-d .giorni i { height: 6px; border-radius: 2px; background: rgba(27,29,33,.14); }
+.v-d .giorni i.passato { background: var(--ink); }
+
+.v-d .titolo-sez { font-family: "Bricolage Grotesque", sans-serif; font-weight: 600; font-size: 15px; margin: 24px 0 10px; display: flex; justify-content: space-between; align-items: baseline; }
+.v-d .titolo-sez span { font-family: "Atkinson Hyperlegible", sans-serif; font-weight: 400; font-size: 12px; color: var(--ink-2); }
+
+/* la busta: linguetta a V in alto, contenuto sotto, livello che scende */
+.v-d .busta { background: var(--busta); border-radius: 4px 4px 10px 10px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 0 rgba(27,29,33,.09); }
+.v-d .busta .flap { height: 22px; background: var(--c); clip-path: polygon(0 0, 100% 0, 100% 34%, 50% 100%, 0 34%); }
+.v-d .busta .dentro { padding: 6px 14px 13px; }
+.v-d .busta .riga { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.v-d .busta .nome { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.v-d .busta .nome svg { width: 16px; height: 16px; color: var(--c); }
+.v-d .busta .resto { font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.v-d .busta .livello { height: 8px; border-radius: 4px; background: rgba(27,29,33,.09); margin-top: 9px; overflow: hidden; }
+.v-d .busta .livello i { display: block; height: 100%; width: 0; border-radius: 4px; background: var(--c); transition: width 1s cubic-bezier(.2,.8,.2,1); }
+.v-d .telefono.vivo .busta .livello i { width: var(--q); }
+.v-d .busta .piede { font-size: 11.5px; color: var(--ink-2); margin-top: 7px; font-variant-numeric: tabular-nums; }
+.v-d .busta.vuota { box-shadow: inset 0 0 0 1.5px var(--sigillo); }
+.v-d .busta.vuota .resto { color: var(--sigillo); }
+.v-d .senza { display: flex; align-items: center; justify-content: space-between; padding: 9px 2px; border-bottom: 1px solid var(--riga); font-size: 13.5px; }
+.v-d .senza:last-child { border-bottom: 0; }
+.v-d .senza .nome { display: flex; align-items: center; gap: 8px; }
+.v-d .senza svg { width: 15px; height: 15px; }
+.v-d .senza .cifra { font-weight: 700; font-variant-numeric: tabular-nums; }
+.v-d .mov-d { display: grid; grid-template-columns: 1fr auto; gap: 3px 10px; padding: 9px 0; border-bottom: 1px solid var(--riga); font-size: 13.5px; }
+.v-d .mov-d:last-child { border-bottom: 0; }
+.v-d .mov-d .cifra { font-weight: 700; font-variant-numeric: tabular-nums; }
+.v-d .mov-d .cifra.piu { color: #1e7a57; }
+.v-d .mov-d .da { grid-column: 1 / -1; font-size: 11px; color: var(--ink-2); display: flex; align-items: center; gap: 6px; }
+.v-d .mov-d .da i { width: 8px; height: 8px; border-radius: 2px; }
+.v-d .cerca { display: flex; align-items: center; gap: 9px; height: 42px; padding: 0 13px; border-radius: 8px; background: var(--busta); font-size: 13.5px; color: var(--ink-2); margin-top: 12px; }
+.v-d .giorno-eti { font-size: 12px; color: var(--ink-2); margin: 16px 0 2px; font-variant-numeric: tabular-nums; }
+
+/* =====================================================================
+   VARIANTE E — DIARIO
+   Il mese come un filo continuo: ogni giorno un nodo, ogni spesa una
+   perla grande quanto l'importo. Report e movimenti sono lo stesso
+   oggetto, visto da lontano o da vicino.
+   ===================================================================== */
+.v-e .telefono { background: #fbfbfa; color: #101216; }
+.v-e { --foglio: #fbfbfa; --ink: #101216; --ink-2: #797f88; --filo: rgba(16,18,22,.14); }
+.v-e .schermo { font-family: "Atkinson Hyperlegible", sans-serif; }
+.v-e .stato { color: var(--ink); }
+.v-e .schede { background: color-mix(in srgb, var(--foglio) 92%, transparent); border-top: 1px solid var(--filo); color: var(--ink-2); }
+.v-e .schede div.attiva { color: var(--ink); }
+.v-e .piu { background: var(--ink); color: #fbfbfa; }
+
+.v-e .sommario { background: var(--foglio); padding: 6px 0 12px; }
+.v-e .sommario .eti { font-size: 12.5px; color: var(--ink-2); }
+.v-e .sommario .num {
+  font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 78, "wght" 700;
+  font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums; margin-top: 3px;
+  display: flex; align-items: baseline; justify-content: space-between;
+}
+.v-e .sommario .num small { font-size: 12.5px; font-variation-settings: "wdth" 95, "wght" 400; color: var(--ink-2); }
+
+/* il filo */
+.v-e .filo { border-left: 2px solid var(--filo); margin-left: 34px; }
+.v-e .nodo { position: relative; padding: 0 0 4px 20px; }
+.v-e .nodo .data {
+  position: absolute; left: -56px; top: 1px; width: 44px; text-align: right;
+  font-size: 11.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; line-height: 1.25;
+}
+.v-e .nodo .data b { display: block; font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 80, "wght" 700; font-size: 16px; color: var(--ink); }
+.v-e .nodo::before {
+  content: ""; position: absolute; left: -6px; top: 6px; width: 10px; height: 10px;
+  border-radius: 50%; background: var(--foglio); border: 2px solid var(--filo);
+}
+.v-e .nodo.oggi::before { background: var(--ink); border-color: var(--ink); }
+.v-e .perle { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; padding: 2px 0 14px; }
+.v-e .perla {
+  border-radius: 50%; display: grid; place-items: center; color: #fff;
+  font-size: 10px; font-weight: 700; transform: scale(.2); opacity: 0;
+  transition: transform .45s cubic-bezier(.3,1.4,.5,1), opacity .3s;
+}
+.v-e .telefono.vivo .perla { transform: scale(1); opacity: 1; }
+.v-e .perla.muta { background: transparent !important; border: 1.5px dashed var(--filo); color: var(--ink-2); font-weight: 400; }
+.v-e .nodo .somma { font-size: 12.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; margin-left: 4px; }
+.v-e .voce-e { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 13.5px; }
+.v-e .voce-e .perla { flex: none; }
+.v-e .voce-e .desc { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v-e .voce-e .cat { font-size: 11px; color: var(--ink-2); }
+.v-e .voce-e .cifra { font-weight: 700; font-variant-numeric: tabular-nums; }
+.v-e .titolo-e { font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 88, "wght" 700; font-size: 13.5px; margin: 20px 0 10px; }
+.v-e .filo-cat { display: grid; grid-template-columns: 96px 1fr; align-items: center; gap: 10px; padding: 7px 0; font-size: 13px; }
+.v-e .filo-cat .nome { display: flex; align-items: center; gap: 7px; overflow: hidden; }
+.v-e .filo-cat .nome svg { width: 14px; height: 14px; flex: none; }
+.v-e .filo-cat .nome span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v-e .filo-cat .serie { display: flex; align-items: center; gap: 4px; }
+.v-e .filo-cat .serie i { border-radius: 50%; }
+.v-e .cerca { display: flex; align-items: center; gap: 9px; height: 40px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--filo); font-size: 13.5px; color: var(--ink-2); margin-top: 10px; }
+
+/* =====================================================================
+   VARIANTE F — BOLLE
+   Le categorie come bolle grandi quanto la spesa: il mese si capisce
+   in un colpo d'occhio, senza leggere un numero.
+   ===================================================================== */
+.v-f .telefono { background: #f1f3f6; color: #0f1319; }
+.v-f { --fondo: #f1f3f6; --ink: #0f1319; --ink-2: #6d7482; --carta: #fff; --bordo-f: rgba(15,19,25,.08); }
+.v-f .schermo { font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 95, "wght" 400; }
+.v-f .stato { color: var(--ink); }
+.v-f .schede { background: var(--fondo); border-top: 1px solid var(--bordo-f); color: var(--ink-2); }
+.v-f .schede div.attiva { color: var(--ink); }
+.v-f .piu { background: var(--ink); color: #fff; }
+
+.v-f .capo-f { display: flex; align-items: baseline; justify-content: space-between; padding: 8px 0 0; }
+.v-f .capo-f .mese { font-variation-settings: "wdth" 85, "wght" 700; font-size: 17px; }
+.v-f .capo-f .gg { font-size: 12.5px; color: var(--ink-2); }
+.v-f .bolle { margin-top: 6px; }
+.v-f .bolle svg { width: 100%; display: block; overflow: visible; }
+.v-f .bolla { transform-origin: center; transform-box: fill-box; opacity: 0; animation: bolla-entra .55s cubic-bezier(.3,1.35,.5,1) forwards; }
+@keyframes bolla-entra { from { opacity: 0; transform: scale(.35); } to { opacity: 1; transform: scale(1); } }
+.v-f .bolle text { font-family: "Archivo", sans-serif; fill: #fff; text-anchor: middle; }
+.v-f .bolle .et-nome { font-size: 11px; font-variation-settings: "wdth" 92, "wght" 600; }
+.v-f .bolle .et-val { font-size: 13px; font-variation-settings: "wdth" 80, "wght" 700; }
+.v-f .riassunto { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 14px; gap: 12px; }
+.v-f .riassunto .tot { font-variation-settings: "wdth" 72, "wght" 800; font-size: 42px; line-height: 1; font-variant-numeric: tabular-nums; }
+.v-f .riassunto .tot small { display: block; font-size: 12px; font-variation-settings: "wdth" 95, "wght" 400; color: var(--ink-2); margin-bottom: 4px; }
+.v-f .riassunto .lato { text-align: right; font-size: 12.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.v-f .riassunto .lato b { display: block; font-size: 15px; color: #1e7a57; font-variation-settings: "wght" 700; }
+.v-f .card { background: var(--carta); border-radius: 16px; padding: 14px; margin-top: 14px; }
+.v-f .card h3 { font-size: 13px; font-variation-settings: "wdth" 88, "wght" 700; margin: 0 0 10px; display: flex; justify-content: space-between; align-items: baseline; }
+.v-f .card h3 span { font-variation-settings: "wght" 400; font-size: 11.5px; color: var(--ink-2); }
+.v-f .mov-f { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: 8px 0; font-size: 13px; }
+.v-f .mov-f .goccia { border-radius: 50%; flex: none; }
+.v-f .mov-f .desc { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v-f .mov-f .cat { font-size: 11px; color: var(--ink-2); }
+.v-f .mov-f .cifra { font-variation-settings: "wdth" 85, "wght" 700; font-variant-numeric: tabular-nums; }
+.v-f .mov-f .cifra.piu { color: #1e7a57; }
+.v-f .cerca { display: flex; align-items: center; gap: 9px; height: 42px; padding: 0 13px; border-radius: 12px; background: var(--carta); color: var(--ink-2); font-size: 13px; margin-top: 12px; }
+.v-f .pill-riga { display: flex; gap: 7px; margin-top: 10px; overflow: hidden; }
+.v-f .pill { border-radius: 999px; padding: 6px 13px; font-size: 12.5px; background: var(--carta); color: var(--ink-2); white-space: nowrap; }
+.v-f .pill.on { background: var(--ink); color: #fff; font-variation-settings: "wght" 700; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="testata">
+  <h1>Spese — sei direzioni per il restyling</h1>
+  <p>Stessi dati in tutte le colonne (settembre 2026, i tuoi movimenti e le tue categorie): a cambiare è solo il disegno. Le animazioni partono da sole; ricarica la pagina per rivederle.</p>
+  <div class="salti">
+    <a href="#a">A — Carta viva</a>
+    <a href="#b">B — Il mese a strisce</a>
+    <a href="#c">C — Flusso</a>
+    <a href="#d">D — Buste</a>
+    <a href="#e">E — Diario</a>
+    <a href="#f">F — Bolle</a>
+  </div>
+</header>
+
+<main class="griglia">
+
+  <!-- ============ VARIANTE A ============ -->
+  <section class="colonna v-a" id="a">
+    <h2>A — Carta viva</h2>
+    <p class="nota"><b>Prudente.</b> L'impianto che hai già, ma il colore smette di essere un dettaglio: ogni categoria porta il suo, le barre dicono quanto pesa, e sotto il totale una fascia si riempie man mano che il mese passa. Un solo movimento, all'apertura.</p>
+
+    <p class="etichetta-schermo">Report</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="riga-mese"><span class="mese">Settembre 2026</span><span class="frecce">‹›</span></div>
+        <p class="etichetta">Speso finora</p>
+        <p class="totale"><span class="euro">€</span>842,15</p>
+        <div class="avanzamento"><i></i></div>
+        <p class="confronto"><b class="meno">96,40 in meno</b> rispetto al 23 agosto</p>
+
+        <dl class="trio">
+          <div style="border-color: var(--entrata)"><dt>Entrate</dt><dd style="color: var(--entrata)">+1.180,00</dd></div>
+          <div style="border-color: var(--spesa)"><dt>Uscite</dt><dd>−842,15</dd></div>
+          <div style="border-color: rgba(27,33,48,.2)"><dt>Saldo</dt><dd>337,85</dd></div>
+        </dl>
+
+        <div class="pannello">
+          <h3>Dove sono finiti i soldi</h3>
+          <div data-quote-a></div>
+        </div>
+
+        <div class="pannello">
+          <h3>Ultimi movimenti <a href="#a">Tutti i movimenti</a></h3>
+          <div data-movimenti-a></div>
+        </div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="report"></nav>
+    </div>
+
+    <p class="etichetta-schermo">Movimenti</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="riga-mese"><span class="mese">Settembre 2026</span><span class="frecce">‹›</span></div>
+        <div style="margin-top:12px" class="cerca">⌕ Cerca in tutti i mesi</div>
+        <div class="chip-riga"><span class="chip on">Tutti</span><span class="chip">Uscite</span><span class="chip">Entrate</span><span class="chip">Tutte le categorie</span></div>
+        <div data-lista-a></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="movimenti"></nav>
+    </div>
+
+    <p class="etichetta-schermo">Categorie</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <h2 style="font-family:'Bricolage Grotesque';font-size:24px;font-weight:600;margin:10px 0 14px">Categorie</h2>
+        <div class="pannello">
+          <h3>Uscite <a href="#a">+ Nuova</a></h3>
+          <div data-categorie-a></div>
+        </div>
+        <div class="pannello">
+          <h3>Regole <a href="#a">+ Nuova</a></h3>
+          <div data-regole-a></div>
+        </div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="categorie"></nav>
+    </div>
+  </section>
+
+  <!-- ============ VARIANTE B ============ -->
+  <section class="colonna v-b" id="b">
+    <h2>B — Il mese a strisce</h2>
+    <p class="nota"><b>Media.</b> Il grafico a linea sparisce. Al suo posto trenta strisce, una per giorno, alte quanto hai speso e colorate dalla categoria che quel giorno ha pesato di più: il mese si legge a colpo d'occhio. Il numero resta, ma fa da didascalia.</p>
+
+    <p class="etichetta-schermo">Report</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="testa"><span>Settembre 2026</span><span>23 di 30 giorni</span></div>
+        <div class="spina">
+          <div class="asse" data-spina></div>
+          <div class="scala"><span>1</span><span>8</span><span>15</span><span>23 · oggi</span><span>30</span></div>
+        </div>
+        <p class="numero"><small>Speso finora</small>842,15</p>
+        <p class="delta"><b>96,40 in meno</b> rispetto al 23 agosto · saldo 337,85</p>
+        <div class="tessere" data-tessere-b></div>
+        <div class="sezione">Ultimi movimenti <a href="#b">Tutti</a></div>
+        <div data-lista-b data-compatta="1"></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="report"></nav>
+    </div>
+
+    <p class="etichetta-schermo">Movimenti</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="testa"><span>Settembre 2026</span><span>47 movimenti</span></div>
+        <div class="spina" style="margin-top:10px">
+          <div class="asse" style="height:52px" data-spina></div>
+        </div>
+        <div class="cerca">⌕ Cerca in tutti i mesi</div>
+        <div class="filtri"><span class="fchip on">Tutti</span><span class="fchip">Uscite</span><span class="fchip">Entrate</span><span class="fchip">Per importo</span></div>
+        <div data-lista-b></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="movimenti"></nav>
+    </div>
+
+    <p class="etichetta-schermo">Categorie</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="testa"><span>Categorie</span><span>10 uscite · 4 entrate</span></div>
+        <div class="sezione">Uscite <a href="#b">+ Nuova</a></div>
+        <div class="tessere" data-catgriglia-b></div>
+        <div class="sezione">Regole <a href="#b">+ Nuova</a></div>
+        <div data-regole-b></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="categorie"></nav>
+    </div>
+  </section>
+
+  <!-- ============ VARIANTE C ============ -->
+  <section class="colonna v-c" id="c">
+    <h2>C — Flusso</h2>
+    <p class="nota"><b>Spinta.</b> Plancia scura, niente più metafora della carta. In cima i soldi come flusso: da dove entrano, in che cosa escono. Sotto, il mese come griglia di calore — i giorni cari si vedono da lontano. Numeri strettissimi, colori pieni.</p>
+
+    <p class="etichetta-schermo">Report</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="capo"><span class="mese">Settembre</span><span class="oggi">23 · mercoledì</span></div>
+        <p class="grande"><span class="eur">€</span>842<span style="font-size:.42em">,15</span></p>
+        <p class="sottotitolo">usciti su 1.180,00 entrati · <b>96,40 in meno</b> di agosto</p>
+
+        <div class="flusso"><svg viewBox="0 0 345 164" data-flusso></svg></div>
+        <div class="legenda" data-legenda></div>
+
+        <div class="titoletto">Il mese giorno per giorno <span>più scuro = più speso</span></div>
+        <div class="calendario" data-calendario></div>
+
+        <div class="titoletto">Dove sono finiti i soldi</div>
+        <div class="classifica" data-classifica></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="report"></nav>
+    </div>
+
+    <p class="etichetta-schermo">Movimenti</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="capo"><span class="mese">Movimenti</span><span class="oggi">settembre · 47</span></div>
+        <div class="cerca">⌕ Cerca in tutti i mesi</div>
+        <div class="pill-riga"><span class="pill on">Tutti</span><span class="pill">Uscite</span><span class="pill">Entrate</span><span class="pill">Per importo</span></div>
+        <div class="titoletto" style="margin-top:20px">Mercoledì 23 <span>−40,20</span></div>
+        <div data-lista-c></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="movimenti"></nav>
+    </div>
+
+    <p class="etichetta-schermo">Categorie</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="capo"><span class="mese">Categorie</span><span class="oggi">10 uscite · 4 entrate</span></div>
+        <div class="titoletto" style="margin-top:18px">Uscite <span>+ nuova</span></div>
+        <div class="gr-cat" data-catgriglia-c></div>
+        <div class="titoletto">Regole <span>+ nuova</span></div>
+        <div data-regole-c></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="categorie"></nav>
+    </div>
+  </section>
+
+
+  <!-- ============ VARIANTE D ============ -->
+  <section class="colonna v-d" id="d">
+    <h2>D — Buste</h2>
+    <p class="nota"><b>Cambia la domanda.</b> Non "quanto ho speso" ma "quanto mi resta": ogni categoria con un tetto è una busta che si svuota, e quando finisce si vede. Il numero grande non è più la spesa, è quello che ti rimane.</p>
+
+    <p class="etichetta-schermo">Report</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="capo"><b>Settembre</b><span>mancano 7 giorni</span></div>
+        <p class="resta-eti">Ti restano</p>
+        <p class="resta"><span class="e">€</span>337,85</p>
+        <p class="ritmo">puoi spendere <b>48,26 al giorno</b> e chiudere in pari</p>
+        <div class="giorni" data-giorni-d></div>
+        <div class="titolo-sez">Le buste <span>categorie con un tetto</span></div>
+        <div data-buste-d></div>
+        <div class="titolo-sez">Senza busta <span>nessun tetto fissato</span></div>
+        <div data-senza-d></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="report"></nav>
+    </div>
+
+    <p class="etichetta-schermo">Movimenti</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="capo"><b>Movimenti</b><span>settembre · 47</span></div>
+        <div class="cerca">⌕ Cerca in tutti i mesi</div>
+        <div data-lista-d></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="movimenti"></nav>
+    </div>
+
+    <p class="etichetta-schermo">Categorie</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="capo"><b>Categorie</b><span>10 uscite · 4 entrate</span></div>
+        <div class="titolo-sez">Con tetto <span>+ nuova</span></div>
+        <div data-buste-cat-d></div>
+        <div class="titolo-sez">Senza tetto <span>tocca per fissarne uno</span></div>
+        <div data-senza-d></div>
+        <div class="titolo-sez">Regole <span>+ nuova</span></div>
+        <div data-regole-d></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="categorie"></nav>
+    </div>
+  </section>
+
+  <!-- ============ VARIANTE E ============ -->
+  <section class="colonna v-e" id="e">
+    <h2>E — Diario</h2>
+    <p class="nota"><b>Un filo solo.</b> Il mese è una linea del tempo che scende: ogni giorno un nodo, ogni spesa una perla grande quanto l'importo. Report e Movimenti smettono di essere due schermate diverse — sono lo stesso filo, visto da lontano o da vicino.</p>
+
+    <p class="etichetta-schermo">Report</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="sommario">
+          <div class="eti">Settembre, finora</div>
+          <div class="num">842,15 <small>su 1.180,00 entrati</small></div>
+        </div>
+        <div class="filo" data-filo-e></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="report"></nav>
+    </div>
+
+    <p class="etichetta-schermo">Movimenti</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="sommario">
+          <div class="eti">Movimenti di settembre</div>
+          <div class="num">47 <small>tocca una perla per modificarla</small></div>
+          <div class="cerca">⌕ Cerca in tutti i mesi</div>
+        </div>
+        <div class="filo" data-filo-mov-e></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="movimenti"></nav>
+    </div>
+
+    <p class="etichetta-schermo">Categorie</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="sommario">
+          <div class="eti">Categorie</div>
+          <div class="num">10 <small>uscite · 4 entrate</small></div>
+        </div>
+        <p class="titolo-e">Il mese di ogni categoria</p>
+        <div data-catfili-e></div>
+        <p class="titolo-e">Regole</p>
+        <div data-regole-e></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="categorie"></nav>
+    </div>
+  </section>
+
+  <!-- ============ VARIANTE F ============ -->
+  <section class="colonna v-f" id="f">
+    <h2>F — Bolle</h2>
+    <p class="nota"><b>Capirlo senza leggere.</b> Le categorie diventano bolle grandi quanto la spesa: il mese si valuta con un'occhiata, prima ancora di arrivare alle cifre. Il numero resta, ma sotto, dove serve per il dettaglio.</p>
+
+    <p class="etichetta-schermo">Report</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="capo-f"><span class="mese">Settembre 2026</span><span class="gg">23 di 30</span></div>
+        <div class="bolle"><svg viewBox="0 0 345 240" data-bolle-f></svg></div>
+        <div class="riassunto">
+          <div class="tot"><small>Speso finora</small>842,15</div>
+          <div class="lato"><b>96,40 in meno</b>di agosto, stesso giorno</div>
+        </div>
+        <div class="card">
+          <h3>Ultimi movimenti <span>tutti</span></h3>
+          <div data-lista-f></div>
+        </div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="report"></nav>
+    </div>
+
+    <p class="etichetta-schermo">Movimenti</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="capo-f"><span class="mese">Movimenti</span><span class="gg">settembre · 47</span></div>
+        <div class="cerca">⌕ Cerca in tutti i mesi</div>
+        <div class="pill-riga"><span class="pill on">Tutti</span><span class="pill">Uscite</span><span class="pill">Entrate</span><span class="pill">Per importo</span></div>
+        <div class="card"><h3>Mercoledì 23 <span>−40,20</span></h3><div data-lista-f></div></div>
+        <div class="card"><h3>Martedì 22 <span>−32,49</span></h3><div data-lista-f2></div></div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="movimenti"></nav>
+    </div>
+
+    <p class="etichetta-schermo">Categorie</p>
+    <div class="telefono" data-vivo>
+      <div class="schermo"><div class="stato"><span>17:45</span><span>▮▮▮</span></div><div class="corpo">
+        <div class="capo-f"><span class="mese">Categorie</span><span class="gg">tocca per modificare</span></div>
+        <div class="bolle"><svg viewBox="0 0 345 240" data-bolle-f></svg></div>
+        <div class="card">
+          <h3>Uscite <span>+ nuova</span></h3>
+          <div data-catlista-f></div>
+        </div>
+      </div></div>
+      <div class="piu">+</div>
+      <nav class="schede" data-schede="categorie"></nav>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ------------------------------------------------------------------
+   Dati: settembre 2026. Gli stessi in tutte e tre le varianti, così
+   il confronto è sul disegno e non sui numeri.
+   ------------------------------------------------------------------ */
+const C = {
+  spesa:       { nome: "Spesa",       col: "#3b63d8", icona: "cesto" },
+  ristoranti:  { nome: "Ristoranti",  col: "#d24b84", icona: "posate" },
+  trasporti:   { nome: "Trasporti",   col: "#1f9e8a", icona: "bus" },
+  abbonamenti: { nome: "Abbonamenti", col: "#c2552a", icona: "ciclo" },
+  sigarette:   { nome: "Sigarette",   col: "#7a8a1e", icona: "sigaretta" },
+  svago:       { nome: "Svago",       col: "#8b3f9e", icona: "festa" },
+  salute:      { nome: "Salute",      col: "#1a7fa8", icona: "cuore" },
+  casa:        { nome: "Casa",        col: "#b87709", icona: "divano" },
+  entrate:     { nome: "Entrate",     col: "#1e7a57", icona: "valigetta" },
+};
+
+const QUOTE = [
+  ["spesa", 268.40, 32], ["ristoranti", 154.90, 18], ["trasporti", 121.30, 14],
+  ["abbonamenti", 89.97, 11], ["sigarette", 62.00, 7], ["svago", 58.50, 7],
+  ["casa", 45.00, 5], ["salute", 42.08, 5],
+];
+
+const BUDGET = { spesa: 300, ristoranti: 180, sigarette: 50 };
+
+const MOVIMENTI = [
+  { g: 23, gio: "mer", desc: "Conad",            cat: "spesa",       imp: -34.20 },
+  { g: 23, gio: "mer", desc: "Tabacchi Rosa",    cat: "sigarette",   imp: -6.00 },
+  { g: 22, gio: "mar", desc: "Netflix",          cat: "abbonamenti", imp: -12.99 },
+  { g: 22, gio: "mar", desc: "Trenitalia",       cat: "trasporti",   imp: -19.50 },
+  { g: 21, gio: "lun", desc: "Pizzeria Da Mimmo",cat: "ristoranti",  imp: -27.00 },
+  { g: 21, gio: "lun", desc: "Farmacia Centrale",cat: "salute",      imp: -14.60 },
+  { g: 20, gio: "dom", desc: "Borsa di studio",  cat: "entrate",     imp: 700.00 },
+  { g: 20, gio: "dom", desc: "Esselunga",        cat: "spesa",       imp: -52.80 },
+];
+
+const REGOLE = [
+  ["conad",       "spesa"],
+  ["trenitalia",  "trasporti"],
+  ["tabacchi",    "sigarette"],
+  ["netflix",     "abbonamenti"],
+];
+
+/* spesa giornaliera + categoria dominante del giorno (1..30; oggi = 23) */
+const GIORNI = [
+  [12.40,"spesa"],[0,null],[38.90,"spesa"],[9.99,"abbonamenti"],[54.00,"ristoranti"],
+  [7.20,"trasporti"],[0,null],[63.50,"spesa"],[14.00,"sigarette"],[22.80,"svago"],
+  [0,null],[41.20,"ristoranti"],[18.60,"trasporti"],[95.00,"casa"],[6.00,"sigarette"],
+  [0,null],[29.40,"spesa"],[12.99,"abbonamenti"],[47.30,"ristoranti"],[52.80,"spesa"],
+  [41.60,"ristoranti"],[32.49,"trasporti"],[40.20,"spesa"],[0,null],[0,null],
+  [0,null],[0,null],[0,null],[0,null],[0,null],
+];
+const OGGI = 23;
+
+const eur = (n, segno) => {
+  const s = Math.abs(n).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (!segno) return s;
+  return (n < 0 ? "−" : "+") + " " + s;
+};
+
+/* ---------- icone (tratto, coerenti con lucide) ---------- */
+const ICONE = {
+  cesto:      '<path d="M5 11h14l-1.5 8h-11L5 11Z"/><path d="M9 11 7 6M15 11l2-5"/>',
+  posate:     '<path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10"/><path d="M17 3c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6ZM17 9v12"/>',
+  bus:        '<rect x="4" y="5" width="16" height="12" rx="2"/><path d="M4 11h16M7 21v-2M17 21v-2"/><circle cx="8" cy="15" r="1"/><circle cx="16" cy="15" r="1"/>',
+  ciclo:      '<path d="M17 2l4 4-4 4"/><path d="M3 10V9a3 3 0 0 1 3-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 14v1a3 3 0 0 1-3 3H3"/>',
+  sigaretta:  '<rect x="2" y="13" width="14" height="5" rx="1"/><path d="M19 13v5M22 13v5M18 8c1-1.5.5-3-1-4"/>',
+  festa:      '<path d="M4 20l5-14 9 9-14 5Z"/><path d="M15 4v2M19 8h2M17.5 2.5l1.5 1.5"/>',
+  cuore:      '<path d="M12 20s-7-4.5-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.5-7 9-7 9Z"/><path d="M8 12h2l1.5-2 1.5 4 1.5-2H17"/>',
+  divano:     '<path d="M4 12V9a2 2 0 0 1 4 0v3M16 12V9a2 2 0 0 1 4 0v3"/><rect x="3" y="12" width="18" height="6" rx="2"/><path d="M6 18v2M18 18v2"/>',
+  valigetta:  '<rect x="3" y="7" width="18" height="12" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>',
+  report:     '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  lista:      '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  livelli:    '<path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 14 9 5 9-5"/>',
+};
+const svg = (nome, extra = "") =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICONE[nome] || ""}</svg>`;
+
+const tinta = (col, pct) => `color-mix(in srgb, ${col} ${pct}%, transparent)`;
+
+/* ---------- barra schede, uguale per tutti ---------- */
+document.querySelectorAll("[data-schede]").forEach((n) => {
+  const attiva = n.dataset.schede;
+  n.innerHTML = [["report","Report","report"],["movimenti","Movimenti","lista"],["categorie","Categorie","livelli"]]
+    .map(([k, t, i]) => `<div class="${k === attiva ? "attiva" : ""}">${svg(i)}<span>${t}</span></div>`).join("");
+});
+
+/* ================= VARIANTE A ================= */
+const qa = document.querySelector("[data-quote-a]");
+if (qa) qa.innerHTML = QUOTE.map(([k, v, p]) => {
+  const c = C[k];
+  return `<div class="quota">
+    <span class="pastiglia" style="background:${tinta(c.col, 16)};color:${c.col}">${svg(c.icona)}</span>
+    <span><span class="nome">${c.nome}</span>
+      <span class="barra"><i style="background:${c.col};--q:${p * 3.1}%"></i></span></span>
+    <span><span class="cifra">${eur(v)}</span><br><span class="perc">${p}%</span></span>
+  </div>`;
+}).join("");
+
+const ma = document.querySelector("[data-movimenti-a]");
+if (ma) ma.innerHTML = MOVIMENTI.map((m) => {
+  const c = C[m.cat];
+  return `<div class="mov">
+    <span class="data">${m.g} set</span>
+    <span class="chi"><span class="punto" style="background:${c.col}"></span><span class="desc">${m.desc}</span></span>
+    <span class="cifra ${m.imp > 0 ? "piu" : ""}">${eur(m.imp, true)}</span>
+  </div>`;
+}).join("");
+
+const la = document.querySelector("[data-lista-a]");
+if (la) {
+  const perGiorno = {};
+  MOVIMENTI.forEach((m) => (perGiorno[m.g] = perGiorno[m.g] || []).push(m));
+  la.innerHTML = Object.keys(perGiorno).sort((a, b) => b - a).map((g) => {
+    const righe = perGiorno[g];
+    const tot = righe.reduce((s, m) => s + m.imp, 0);
+    return `<div class="giorno"><span>${g} settembre</span><span>${eur(tot, true)}</span></div>
+      <div class="pannello" style="padding:6px 16px">${righe.map((m) => {
+        const c = C[m.cat];
+        return `<div class="mov" style="grid-template-columns:1fr auto">
+          <span class="chi"><span class="punto" style="background:${c.col}"></span>
+            <span class="desc">${m.desc}<br><span style="font-size:11.5px;color:var(--inchiostro-2)">${c.nome}</span></span></span>
+          <span class="cifra ${m.imp > 0 ? "piu" : ""}">${eur(m.imp, true)}</span></div>`;
+      }).join("")}</div>`;
+  }).join("");
+}
+
+const ca = document.querySelector("[data-categorie-a]");
+if (ca) ca.innerHTML = QUOTE.map(([k]) => {
+  const c = C[k];
+  const b = BUDGET[k];
+  return `<div class="cat-riga">
+    <span class="pastiglia" style="background:${tinta(c.col, 16)};color:${c.col}">${svg(c.icona)}</span>
+    <span>${c.nome}</span>
+    <span class="tetto">${b ? eur(b) + "/mese" : ""}</span>
+    <span class="manig">⌃⌄</span><span class="manig">🗑</span>
+  </div>`;
+}).join("");
+
+const ra = document.querySelector("[data-regole-a]");
+if (ra) ra.innerHTML = REGOLE.map(([t, k]) => {
+  const c = C[k];
+  return `<div class="mov" style="grid-template-columns:1fr auto">
+    <span class="desc">contiene <b>"${t}"</b></span>
+    <span style="color:${c.col};font-size:12.5px;display:flex;align-items:center;gap:5px">${svg(c.icona, 'style="width:13px;height:13px"')}${c.nome}</span>
+  </div>`;
+}).join("");
+
+/* ================= VARIANTE B ================= */
+const maxG = Math.max(...GIORNI.map((g) => g[0]));
+document.querySelectorAll("[data-spina]").forEach((n) => {
+  n.innerHTML = GIORNI.map(([v, k], i) => {
+    const g = i + 1;
+    const futuro = g > OGGI;
+    const col = k ? C[k].col : "transparent";
+    const h = v === 0 ? 3 : Math.max(6, (v / maxG) * 100);
+    return `<span class="g ${futuro ? "futuro" : ""} ${g === OGGI ? "oggi" : ""}">
+      <i style="--h:${futuro ? 12 : h}%;background:${futuro ? "transparent" : col};transition-delay:${i * 18}ms"></i></span>`;
+  }).join("");
+});
+
+const tb = document.querySelector("[data-tessere-b]");
+if (tb) tb.innerHTML = QUOTE.slice(0, 4).map(([k, v, p]) => {
+  const c = C[k];
+  return `<div class="tessera">
+    <span class="fondo" style="background:${c.col};--q:${p * 2.4}%"></span>
+    <span class="capo" style="color:${c.col}">${svg(c.icona)}<span class="nome">${c.nome}</span></span>
+    <div class="val">${eur(v)}</div><div class="perc">${p}% delle uscite</div>
+  </div>`;
+}).join("");
+
+document.querySelectorAll("[data-lista-b]").forEach((n) => {
+  const perGiorno = {};
+  MOVIMENTI.forEach((m) => (perGiorno[m.g] = perGiorno[m.g] || []).push(m));
+  const giorni = Object.keys(perGiorno).sort((a, b) => b - a);
+  const usa = n.dataset.compatta ? giorni.slice(0, 2) : giorni;
+  n.innerHTML = usa.map((g) => {
+    const righe = perGiorno[g];
+    const dom = C[righe[0].cat].col;
+    return `<div class="giorno-blocco">
+      <div class="indice"><div class="num">${g}</div><div class="gio">${righe[0].gio}</div></div>
+      <div class="righe" style="border-color:${dom}">${righe.map((m) => {
+        const c = C[m.cat];
+        return `<div class="mov"><span class="punto" style="background:${c.col}"></span>
+          <span class="desc">${m.desc}<br><span class="cat">${c.nome}</span></span>
+          <span class="cifra ${m.imp > 0 ? "piu" : ""}">${eur(m.imp, true)}</span></div>`;
+      }).join("")}</div></div>`;
+  }).join("");
+});
+
+const cgb = document.querySelector("[data-catgriglia-b]");
+if (cgb) cgb.innerHTML = QUOTE.map(([k, v]) => {
+  const c = C[k]; const b = BUDGET[k];
+  return `<div class="cat-tessera">
+    <div class="alto"><span class="bollo" style="background:${tinta(c.col, 16)};color:${c.col}">${svg(c.icona)}</span>
+      <span class="sotto">${b ? Math.round((v / b) * 100) + "%" : ""}</span></div>
+    <div class="nome">${c.nome}</div>
+    <div class="sotto">${b ? "tetto " + eur(b) : "nessun tetto"}</div>
+  </div>`;
+}).join("");
+
+const rb = document.querySelector("[data-regole-b]");
+if (rb) rb.innerHTML = REGOLE.map(([t, k]) => {
+  const c = C[k];
+  return `<div class="regola"><span class="frase">contiene <b>"${t}"</b></span>
+    <span class="bersaglio" style="background:${tinta(c.col, 18)};color:${c.col}">${c.nome}</span></div>`;
+}).join("");
+
+/* ================= VARIANTE C ================= */
+/* Il flusso: da un'unica sorgente (le entrate) a otto uscite + risparmio. */
+const flusso = document.querySelector("[data-flusso]");
+if (flusso) {
+  const W = 345, H = 164, sx = 0, sw = 16, dx = W - 16, dw = 16;
+  const entrate = 1180;
+  const voci = [...QUOTE.map(([k, v]) => ({ k, v, col: C[k].col })), { k: "saldo", v: 337.85, col: "#3b4150" }];
+  /* Le destinazioni vanno in ordine inverso e staccate: cosi' i nastri si
+     incrociano davvero e si legge un flusso, non una barra impilata. */
+  const vuoto = 4, utile = H - vuoto * (voci.length - 1);
+  const scala = (v) => (v / entrate) * utile;
+  const yDest = [];
+  let acc = 0;
+  [...voci].reverse().forEach((v) => { yDest.unshift(acc); acc += scala(v.v) + vuoto; });
+  let yS = 0, out = "";
+  out += `<rect x="${sx}" y="0" width="${sw}" height="${utile}" rx="4" fill="#1e7a57"/>`;
+  voci.forEach((v, i) => {
+    const h = scala(v.v);
+    const y1 = yS, y2 = yDest[voci.length - 1 - i];
+    const c1 = sx + sw + 60, c2 = dx - 60;
+    out += `<path class="nastro" style="animation-delay:${140 + i * 70}ms"
+      d="M${sx + sw},${y1} C${c1},${y1} ${c2},${y2} ${dx},${y2}
+         L${dx},${y2 + h} C${c2},${y2 + h} ${c1},${y1 + h} ${sx + sw},${y1 + h} Z"
+      fill="${v.col}"/>`;
+    out += `<rect x="${dx}" y="${y2}" width="${dw}" height="${Math.max(1, h - 1.5)}" rx="3" fill="${v.col}"/>`;
+    yS += h;
+  });
+  flusso.innerHTML = out;
+
+  const leg = document.querySelector("[data-legenda]");
+  if (leg) leg.innerHTML = QUOTE.slice(0, 5).map(([k, , p]) =>
+    `<span><i style="background:${C[k].col}"></i>${C[k].nome} ${p}%</span>`).join("")
+    + `<span><i style="background:#3b4150"></i>Risparmio 29%</span>`;
+}
+
+const cal = document.querySelector("[data-calendario]");
+if (cal) {
+  const intest = ["L", "M", "M", "G", "V", "S", "D"].map((g) => `<div class="intest">${g}</div>`).join("");
+  /* 1 settembre 2026 cade di martedì: una cella vuota davanti */
+  const vuote = '<div class="cella" style="background:transparent"></div>';
+  const celle = GIORNI.map(([v, k], i) => {
+    const g = i + 1;
+    const futuro = g > OGGI;
+    const intensita = v === 0 ? 0 : Math.min(1, 0.22 + (v / maxG) * 0.78);
+    const col = k ? C[k].col : null;
+    const sfondo = futuro ? "transparent" : col ? `color-mix(in srgb, ${col} ${Math.round(intensita * 100)}%, #171b22)` : "#171b22";
+    return `<div class="cella ${intensita > .55 ? "pieno" : ""} ${g === OGGI ? "oggi" : ""}"
+      style="background:${sfondo};${futuro ? "border:1px dashed rgba(238,241,246,.12)" : ""};transition-delay:${i * 14}ms">${g}</div>`;
+  }).join("");
+  cal.innerHTML = intest + vuote + celle;
+}
+
+const cls = document.querySelector("[data-classifica]");
+if (cls) cls.innerHTML = QUOTE.map(([k, v, p]) => {
+  const c = C[k];
+  return `<div class="voce">
+    <span class="nome" style="color:${c.col}">${svg(c.icona)}<span style="color:var(--chiaro)">${c.nome}</span></span>
+    <span class="cifra">${eur(v)}</span>
+    <span class="traccia"><i style="background:${c.col};--q:${p * 3.1}%"></i></span>
+  </div>`;
+}).join("");
+
+const lc = document.querySelector("[data-lista-c]");
+if (lc) lc.innerHTML = MOVIMENTI.map((m) => {
+  const c = C[m.cat];
+  return `<div class="mov">
+    <span class="bollo" style="background:${tinta(c.col, 20)};color:${c.col}">${svg(c.icona)}</span>
+    <span class="desc">${m.desc}<br><span class="cat">${c.nome} · ${m.g} set</span></span>
+    <span class="cifra ${m.imp > 0 ? "piu" : ""}">${eur(m.imp, true)}</span>
+  </div>`;
+}).join("");
+
+const cgc = document.querySelector("[data-catgriglia-c]");
+if (cgc) cgc.innerHTML = QUOTE.map(([k, v]) => {
+  const c = C[k]; const b = BUDGET[k];
+  const perc = b ? Math.min(1, v / b) : 0;
+  const anello = b
+    ? `<svg class="anello" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="rgba(238,241,246,.12)" stroke-width="4"/>
+       <circle cx="18" cy="18" r="15" fill="none" stroke="${v > b ? "#ff7b70" : c.col}" stroke-width="4" stroke-linecap="round"
+       stroke-dasharray="${(perc * 94).toFixed(1)} 94" transform="rotate(-90 18 18)"/></svg>`
+    : "";
+  return `<div class="cat-c">
+    <div class="alto"><span class="bollo" style="background:${tinta(c.col, 22)};color:${c.col}">${svg(c.icona)}</span>${anello}</div>
+    <div class="nome">${c.nome}</div>
+    <div class="meta">${b ? eur(v) + " di " + eur(b) : eur(v) + " · nessun tetto"}</div>
+  </div>`;
+}).join("");
+
+const rc = document.querySelector("[data-regole-c]");
+if (rc) rc.innerHTML = REGOLE.map(([t, k]) => {
+  const c = C[k];
+  return `<div class="mov" style="grid-template-columns:1fr auto">
+    <span class="desc">contiene <b>"${t}"</b></span>
+    <span style="color:${c.col};font-size:12px">${c.nome}</span></div>`;
+}).join("");
+
+
+/* ================= VARIANTE D — BUSTE ================= */
+const gd = document.querySelector("[data-giorni-d]");
+if (gd) gd.innerHTML = GIORNI.map((_, i) => `<i class="${i + 1 <= OGGI ? "passato" : ""}"></i>`).join("");
+
+const conTetto = QUOTE.filter(([k]) => BUDGET[k]);
+const senzaTetto = QUOTE.filter(([k]) => !BUDGET[k]);
+
+const busta = ([k, v]) => {
+  const c = C[k], b = BUDGET[k], resto = b - v, finita = resto <= 0;
+  return `<div class="busta ${finita ? "vuota" : ""}" style="--c:${c.col}">
+    <div class="flap"></div>
+    <div class="dentro">
+      <div class="riga">
+        <span class="nome">${svg(c.icona)}${c.nome}</span>
+        <span class="resto">${finita ? "sforata di " + eur(resto) : "restano " + eur(resto)}</span>
+      </div>
+      <div class="livello"><i style="--q:${Math.min(100, (v / b) * 100).toFixed(0)}%"></i></div>
+      <div class="piede">${eur(v)} di ${eur(b)} · ${finita ? "il tetto era " + eur(b) : eur(resto / 7) + " al giorno per i 7 giorni che restano"}</div>
+    </div>
+  </div>`;
+};
+document.querySelectorAll("[data-buste-d], [data-buste-cat-d]").forEach((n) => { n.innerHTML = conTetto.map(busta).join(""); });
+
+document.querySelectorAll("[data-senza-d]").forEach((n) => {
+  n.innerHTML = senzaTetto.map(([k, v]) => {
+    const c = C[k];
+    return `<div class="senza"><span class="nome" style="color:${c.col}">${svg(c.icona)}<span style="color:var(--ink)">${c.nome}</span></span><span class="cifra">${eur(v)}</span></div>`;
+  }).join("");
+});
+
+const ld = document.querySelector("[data-lista-d]");
+if (ld) {
+  const perGiorno = {};
+  MOVIMENTI.forEach((m) => (perGiorno[m.g] = perGiorno[m.g] || []).push(m));
+  ld.innerHTML = Object.keys(perGiorno).sort((a, b) => b - a).map((g) =>
+    `<div class="giorno-eti">${g} settembre</div>` + perGiorno[g].map((m) => {
+      const c = C[m.cat], b = BUDGET[m.cat];
+      return `<div class="mov-d"><span>${m.desc}</span><span class="cifra ${m.imp > 0 ? "piu" : ""}">${eur(m.imp, true)}</span>
+        <span class="da"><i style="background:${c.col}"></i>${b ? "dalla busta " + c.nome : m.imp > 0 ? "entrata" : c.nome + " · senza busta"}</span></div>`;
+    }).join("")).join("");
+}
+
+const rd = document.querySelector("[data-regole-d]");
+if (rd) rd.innerHTML = REGOLE.map(([t, k]) => {
+  const c = C[k];
+  return `<div class="mov-d"><span>contiene "${t}"</span><span style="color:${c.col};font-size:12.5px">${c.nome}</span></div>`;
+}).join("");
+
+/* ================= VARIANTE E — DIARIO ================= */
+const raggio = (v) => Math.max(9, Math.min(34, 8 + Math.sqrt(v) * 2.3));
+
+const fe = document.querySelector("[data-filo-e]");
+if (fe) {
+  const nomiGiorno = ["mer","mar","lun","dom","sab","ven","gio"];
+  let out = "";
+  for (let g = OGGI; g >= OGGI - 9; g--) {
+    const [v, k] = GIORNI[g - 1];
+    const c = k ? C[k] : null;
+    const r = v ? raggio(v) : 18;
+    out += `<div class="nodo ${g === OGGI ? "oggi" : ""}">
+      <span class="data"><b>${g}</b>${nomiGiorno[(OGGI - g) % 7]}</span>
+      <div class="perle">
+        <span class="perla ${v ? "" : "muta"}" style="width:${r * 2}px;height:${r * 2}px;background:${c ? c.col : "transparent"};transition-delay:${(OGGI - g) * 60}ms">${v ? Math.round(v) : "—"}</span>
+        ${v ? `<span class="somma">${c.nome} · ${eur(v)}</span>` : `<span class="somma">niente</span>`}
+      </div></div>`;
+  }
+  fe.innerHTML = out;
+}
+
+const fme = document.querySelector("[data-filo-mov-e]");
+if (fme) {
+  const perGiorno = {};
+  MOVIMENTI.forEach((m) => (perGiorno[m.g] = perGiorno[m.g] || []).push(m));
+  fme.innerHTML = Object.keys(perGiorno).sort((a, b) => b - a).map((g) => {
+    const righe = perGiorno[g];
+    return `<div class="nodo ${+g === OGGI ? "oggi" : ""}">
+      <span class="data"><b>${g}</b>${righe[0].gio}</span>
+      <div style="padding-bottom:12px">${righe.map((m) => {
+        const c = C[m.cat], r = raggio(Math.abs(m.imp)) * 0.62;
+        return `<div class="voce-e">
+          <span class="perla" style="width:${r * 2}px;height:${r * 2}px;background:${c.col}"></span>
+          <span class="desc">${m.desc}<br><span class="cat">${c.nome}</span></span>
+          <span class="cifra">${eur(m.imp, true)}</span></div>`;
+      }).join("")}</div></div>`;
+  }).join("");
+}
+
+const cfe = document.querySelector("[data-catfili-e]");
+if (cfe) cfe.innerHTML = QUOTE.map(([k, v, p]) => {
+  const c = C[k];
+  const n = Math.max(2, Math.round(p / 3));
+  const perle = Array.from({ length: n }, (_, i) => {
+    const d = 6 + ((i * 7 + p) % 11);
+    return `<i style="width:${d}px;height:${d}px;background:${c.col};opacity:${.45 + (i % 3) * .27}"></i>`;
+  }).join("");
+  return `<div class="filo-cat"><span class="nome" style="color:${c.col}">${svg(c.icona)}<span style="color:var(--ink)">${c.nome}</span></span>
+    <span class="serie">${perle}<span class="somma" style="margin-left:6px;font-size:12px;color:var(--ink-2)">${eur(v)}</span></span></div>`;
+}).join("");
+
+const re = document.querySelector("[data-regole-e]");
+if (re) re.innerHTML = REGOLE.map(([t, k]) => {
+  const c = C[k];
+  return `<div class="voce-e"><span class="perla" style="width:10px;height:10px;background:${c.col}"></span>
+    <span class="desc">contiene "${t}"</span><span class="cat">${c.nome}</span></div>`;
+}).join("");
+
+/* ================= VARIANTE F — BOLLE ================= */
+const POSIZIONI = {
+  spesa: [80, 115, 69], ristoranti: [200, 70, 52], trasporti: [225, 168, 46],
+  abbonamenti: [290, 95, 40], sigarette: [140, 200, 33], svago: [305, 175, 32],
+  casa: [32, 30, 28], salute: [128, 32, 27],
+};
+document.querySelectorAll("[data-bolle-f]").forEach((sv) => {
+  sv.innerHTML = QUOTE.map(([k, v], i) => {
+    const c = C[k], [x, y, r] = POSIZIONI[k];
+    const testo = r >= 40
+      ? `<text class="et-nome" x="${x}" y="${y - 4}">${c.nome}</text><text class="et-val" x="${x}" y="${y + 14}">${eur(v)}</text>`
+      : r >= 30 ? `<text class="et-nome" x="${x}" y="${y + 4}">${c.nome}</text>` : "";
+    return `<g class="bolla" style="animation-delay:${i * 65}ms">
+      <circle cx="${x}" cy="${y}" r="${r}" fill="${c.col}"/>${testo}</g>`;
+  }).join("");
+});
+
+const righeF = (lista) => lista.map((m) => {
+  const c = C[m.cat], d = Math.max(10, Math.min(30, Math.sqrt(Math.abs(m.imp)) * 3.1));
+  return `<div class="mov-f">
+    <span class="goccia" style="width:${d}px;height:${d}px;background:${c.col}"></span>
+    <span class="desc">${m.desc}<br><span class="cat">${c.nome}</span></span>
+    <span class="cifra ${m.imp > 0 ? "piu" : ""}">${eur(m.imp, true)}</span></div>`;
+}).join("");
+document.querySelectorAll("[data-lista-f]").forEach((n) => { n.innerHTML = righeF(MOVIMENTI.slice(0, 5)); });
+document.querySelectorAll("[data-lista-f2]").forEach((n) => { n.innerHTML = righeF(MOVIMENTI.slice(2, 5)); });
+
+const clf = document.querySelector("[data-catlista-f]");
+if (clf) clf.innerHTML = QUOTE.map(([k, v]) => {
+  const c = C[k], b = BUDGET[k], d = Math.max(14, Math.min(34, Math.sqrt(v) * 2));
+  return `<div class="mov-f">
+    <span class="goccia" style="width:${d}px;height:${d}px;background:${c.col}"></span>
+    <span class="desc">${c.nome}<br><span class="cat">${b ? "tetto " + eur(b) : "nessun tetto"}</span></span>
+    <span class="cifra">${eur(v)}</span></div>`;
+}).join("");
+
+/* ---------- un solo momento di movimento, quando il telefono entra in vista ---------- */
+const osserva = new IntersectionObserver((voci) => {
+  voci.forEach((v) => { if (v.isIntersecting) { v.target.classList.add("vivo"); osserva.unobserve(v.target); } });
+}, { threshold: .15 });
+document.querySelectorAll("[data-vivo]").forEach((n) => osserva.observe(n));
+</script>
+</body>
+</html>
