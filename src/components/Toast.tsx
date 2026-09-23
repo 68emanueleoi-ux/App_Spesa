@@ -50,7 +50,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {toast && (
         <div
           className={cn(
-            'fixed inset-x-4 bottom-[calc(80px+env(safe-area-inset-bottom))] z-30 mx-auto flex max-w-[420px] items-center gap-3 rounded-lg px-4 py-3 text-sm shadow-[0_8px_24px_rgba(0,0,0,0.25)] animate-[toast-entra_200ms_ease-out] md:bottom-6',
+            'fixed inset-x-4 bottom-[calc(84px+env(safe-area-inset-bottom))] z-30 mx-auto flex max-w-[420px] items-center gap-3 rounded-ctrl px-4 py-3.5 text-sm font-semibold shadow-[0_14px_36px_rgba(0,0,0,0.45)] animate-[toast-entra_200ms_ease-out] md:bottom-6',
             toast.tono === 'errore' ? 'bg-rosso text-white' : 'bg-inchiostro text-carta',
           )}
         >

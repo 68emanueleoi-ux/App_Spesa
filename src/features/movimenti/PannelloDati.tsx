@@ -70,7 +70,7 @@ export function PannelloDati({ aperto, onChiudi, filtrati, perId, descrizioneFil
 
   return (
     <Sheet aperto={aperto} onChiudi={onChiudi} titolo="Dati">
-      <h2 className="font-display text-lg font-semibold">Dati</h2>
+      <h2 className="font-display text-lg font-extrabold tracking-tight">Dati</h2>
 
       {daRipristinare ? (
         <div className="mt-3">
@@ -80,10 +80,10 @@ export function PannelloDati({ aperto, onChiudi, filtrati, perId, descrizioneFil
             <b className="num font-medium">{daRipristinare.categorie.length}</b> categorie.
           </p>
           <p className="mt-2 text-sm text-rosso">Il ripristino sostituisce tutti i dati attuali. Non si può annullare.</p>
-          <button type="button" onClick={confermaRipristino} className="mt-4 h-12 w-full rounded-lg bg-rosso text-base font-bold text-white">
+          <button type="button" onClick={confermaRipristino} className="mt-4 h-12 w-full rounded-ctrl bg-rosso text-base font-bold text-white active:brightness-95">
             Sostituisci i dati con il backup
           </button>
-          <button type="button" onClick={() => setDaRipristinare(null)} className="mt-2 h-11 w-full rounded-lg text-sm font-medium text-inchiostro-2">
+          <button type="button" onClick={() => setDaRipristinare(null)} className="mt-2 h-11 w-full rounded-ctrl text-sm font-semibold text-inchiostro-2 active:bg-filetto-leggero">
             Annulla
           </button>
         </div>
@@ -163,13 +163,13 @@ function Voce({
         type="button"
         onClick={onClick}
         disabled={disabilitato}
-        className="flex w-full items-center gap-3 py-3 text-left active:bg-carta disabled:opacity-50"
+        className="flex w-full items-center gap-3 rounded-ctrl py-3 text-left transition-colors active:bg-filetto-leggero disabled:opacity-50"
       >
-        <span className="grid size-9 shrink-0 place-items-center rounded-ctrl bg-carta text-inchiostro-2">
+        <span className="grid size-10 shrink-0 place-items-center rounded-tessera bg-[color:var(--campo)] text-inchiostro-2">
           <Icona className="size-[18px]" aria-hidden="true" />
         </span>
         <span className="min-w-0">
-          <span className="block text-sm font-medium">{titolo}</span>
+          <span className="block text-sm font-semibold">{titolo}</span>
           <span className="block truncate text-xs text-inchiostro-2">{dettaglio}</span>
         </span>
       </button>

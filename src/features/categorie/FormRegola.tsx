@@ -70,7 +70,7 @@ function Corpo({
 
   return (
     <form onSubmit={salva} noValidate className="flex flex-col">
-      <h2 className="font-display text-lg font-semibold">{regola ? 'Modifica regola' : 'Nuova regola'}</h2>
+      <h2 className="font-display text-lg font-extrabold tracking-tight">{regola ? 'Modifica regola' : 'Nuova regola'}</h2>
       <p className="mt-1 text-sm text-inchiostro-2">
         Quando la descrizione di un movimento contiene questo testo, la categoria viene assegnata da sola.
       </p>
@@ -88,7 +88,7 @@ function Corpo({
           autoComplete="off"
           enterKeyHint="done"
           maxLength={60}
-          className="mt-1 h-11 w-full rounded-ctrl border border-filetto bg-foglio px-3 text-base text-inchiostro placeholder:text-inchiostro-2"
+          className="campo mt-1 h-11 w-full px-3 text-base"
         />
       </label>
 
@@ -100,7 +100,7 @@ function Corpo({
             setCategoriaId(e.target.value)
             setErrore(null)
           }}
-          className="mt-1 h-11 w-full rounded-ctrl border border-filetto bg-foglio px-3 text-base text-inchiostro"
+          className="campo mt-1 h-11 w-full px-3 text-base"
         >
           <option value="">Scegli…</option>
           <optgroup label="Uscite">
@@ -127,7 +127,7 @@ function Corpo({
 
       <button
         type="submit"
-        className="mt-5 h-12 rounded-lg bg-cobalto text-base font-bold text-cobalto-testo active:brightness-95"
+        className="bottone-forte mt-5 h-12 text-base"
       >
         {regola ? 'Salva modifiche' : 'Crea regola'}
       </button>
@@ -140,7 +140,7 @@ function Corpo({
             mostra('Regola eliminata', undefined, 2500)
             onChiudi()
           }}
-          className="mt-2 h-11 rounded-lg text-sm font-medium text-rosso active:bg-carta"
+          className="mt-2 h-11 rounded-ctrl text-sm font-semibold text-rosso active:bg-filetto-leggero"
         >
           Elimina regola
         </button>

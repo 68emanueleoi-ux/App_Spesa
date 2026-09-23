@@ -181,7 +181,7 @@ function Passi({ corrente }: { corrente: 1 | 2 | 3 }) {
           <span
             className={cn(
               'grid size-5 place-items-center rounded-full border text-[11px]',
-              i + 1 <= corrente ? 'border-cobalto bg-cobalto text-cobalto-testo' : 'border-filetto',
+              i + 1 <= corrente ? 'bottone-forte border-transparent' : 'border-filetto',
             )}
             aria-hidden="true"
           >
@@ -448,7 +448,7 @@ function PassoMappatura({
           type="button"
           onClick={onAvanti}
           disabled={esito.valide.length === 0}
-          className="h-11 flex-1 rounded-lg bg-cobalto px-4 text-sm font-bold text-cobalto-testo disabled:opacity-60"
+          className="bottone-forte h-11 flex-1 px-4 text-sm"
         >
           Vedi l'anteprima
         </button>
@@ -601,7 +601,7 @@ function PassoAnteprima({
               setInCorso(false)
             }
           }}
-          className="h-11 flex-1 rounded-lg bg-cobalto px-4 text-sm font-bold text-cobalto-testo disabled:opacity-60"
+          className="bottone-forte h-11 flex-1 px-4 text-sm"
         >
           Importa {selezionate} {selezionate === 1 ? 'movimento' : 'movimenti'}
         </button>

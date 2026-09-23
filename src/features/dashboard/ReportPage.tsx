@@ -152,11 +152,11 @@ function StatoVuoto({ onAggiungi }: { onAggiungi: () => void }) {
         <button
           type="button"
           onClick={onAggiungi}
-          className="h-11 rounded-lg bg-cobalto px-5 text-sm font-bold text-cobalto-testo active:brightness-95"
+          className="bottone-forte h-11 px-5 text-sm"
         >
           Aggiungi spesa
         </button>
-        <Link to="/importazione" className="grid h-11 place-items-center rounded-lg border border-filetto px-5 text-sm font-medium">
+        <Link to="/importazione" className="grid h-11 place-items-center rounded-ctrl border border-filetto px-5 text-sm font-semibold active:bg-filetto-leggero">
           Importa CSV
         </Link>
       </div>

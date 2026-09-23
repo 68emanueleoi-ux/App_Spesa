@@ -48,7 +48,7 @@ export class ErrorBoundary extends Component<Props, Stato> {
           <button
             type="button"
             onClick={() => void this.salvaBackup()}
-            className="h-11 rounded-lg bg-cobalto px-5 text-sm font-bold text-cobalto-testo active:brightness-95"
+            className="bottone-forte h-11 px-5 text-sm"
           >
             Salva un backup
           </button>

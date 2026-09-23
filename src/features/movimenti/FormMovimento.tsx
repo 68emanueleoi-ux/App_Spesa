@@ -156,7 +156,7 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
         {...gruppoTipo.propsGruppo}
         role="radiogroup"
         aria-label="Tipo"
-        className="grid grid-cols-2 rounded-lg bg-carta p-[3px] text-sm font-medium"
+        className="segmentato grid grid-cols-2 text-sm font-semibold"
       >
         {TIPI.map((t, i) => (
           <button
@@ -167,10 +167,8 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
             aria-checked={valori.tipo === t}
             onClick={() => cambiaTipo(t)}
             className={cn(
-              'rounded-ctrl py-2 transition-colors',
-              valori.tipo === t
-                ? 'bg-foglio text-inchiostro shadow-[0_1px_2px_rgba(0,0,0,0.12)]'
-                : 'text-inchiostro-2',
+              'rounded-[calc(var(--radius-ctrl)-4px)] py-2 transition-colors',
+              valori.tipo === t ? 'bottone-forte' : 'text-inchiostro-2',
             )}
           >
             {t === 'uscita' ? 'Uscita' : 'Entrata'}
@@ -179,8 +177,8 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
       </div>
 
       {/* Importo */}
-      <label className="mt-5 flex items-baseline gap-2 border-b border-filetto pb-3">
-        <span className="font-display text-lg text-inchiostro-2">€</span>
+      <label className="campo mt-5 flex items-baseline gap-2 px-3.5 py-2.5">
+        <span className="font-display text-xl font-bold text-inchiostro-2">€</span>
         <input
           value={valori.importo}
           onChange={(e) => cambia('importo', e.target.value)}
@@ -191,7 +189,7 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
           placeholder="0,00"
           aria-label="Importo in euro"
           aria-invalid={!!errori.importo}
-          className="num w-full min-w-0 bg-transparent font-display text-2xl font-medium tracking-tight outline-none placeholder:text-filetto"
+          className="num w-full min-w-0 bg-transparent font-display text-[28px] font-extrabold tracking-tight outline-none placeholder:text-inchiostro-2/40"
         />
       </label>
       <Errore messaggio={errori.importo} />
@@ -214,8 +212,8 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
               aria-checked={attiva}
               onClick={() => cambia('categoriaId', c.id)}
               className={cn(
-                'flex min-h-11 items-center gap-2 rounded-ctrl border px-2.5 py-2 text-left text-sm font-medium active:bg-carta',
-                attiva ? 'border-cobalto ring-1 ring-cobalto ring-inset' : 'border-filetto',
+                'flex min-h-11 items-center gap-2 rounded-ctrl border px-2.5 py-2 text-left text-sm font-semibold transition-colors active:bg-filetto-leggero',
+                attiva ? 'border-cobalto bg-cobalto/10 ring-1 ring-cobalto ring-inset' : 'border-filetto',
                 c.diSistema && 'text-inchiostro-2',
               )}
             >
@@ -237,7 +235,7 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
             max={fineMeseCorrente()}
             aria-label="Data"
             aria-invalid={!!errori.data}
-            className="h-11 w-full min-w-0 rounded-ctrl border border-filetto bg-foglio px-3 text-base"
+            className="campo h-11 w-full min-w-0 px-3 text-base"
           />
           <Errore messaggio={errori.data} />
         </div>
@@ -252,7 +250,7 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
             autoComplete="off"
             enterKeyHint="done"
             maxLength={100}
-            className="h-11 w-full rounded-ctrl border border-filetto bg-foglio px-3 text-base placeholder:text-inchiostro-2"
+            className="campo h-11 w-full px-3 text-base"
           />
           <Errore messaggio={errori.descrizione} />
         </div>
@@ -261,7 +259,7 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
       <button
         type="submit"
         disabled={inCorso}
-        className="mt-5 h-12 rounded-lg bg-cobalto text-base font-bold text-cobalto-testo active:brightness-95 disabled:opacity-60"
+        className="bottone-forte mt-5 h-12 text-base"
       >
         {modifica ? 'Salva modifiche' : titolo}
       </button>
@@ -273,7 +271,7 @@ function Corpo({ movimento, tipoIniziale, onChiudi, onElimina }: Omit<Props, 'ap
             onChiudi()
             await onElimina(movimento.id)
           }}
-          className="mt-2 h-11 rounded-lg text-sm font-medium text-rosso active:bg-carta"
+          className="mt-2 h-11 rounded-ctrl text-sm font-semibold text-rosso active:bg-filetto-leggero"
         >
           {movimento.tipo === 'uscita' ? 'Elimina spesa' : 'Elimina entrata'}
         </button>

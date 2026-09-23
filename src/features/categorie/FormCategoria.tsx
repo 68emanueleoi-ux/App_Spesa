@@ -101,7 +101,7 @@ function Corpo({
 
   return (
     <form onSubmit={salva} noValidate className="flex flex-col">
-      <h2 className="font-display text-lg font-semibold">{titolo}</h2>
+      <h2 className="font-display text-lg font-extrabold tracking-tight">{titolo}</h2>
 
       {/* Anteprima + nome */}
       <div className="mt-4 flex items-center gap-3">
@@ -121,7 +121,7 @@ function Corpo({
           maxLength={30}
           autoComplete="off"
           enterKeyHint="done"
-          className="h-11 w-full rounded-ctrl border border-filetto bg-foglio px-3 text-base placeholder:text-inchiostro-2"
+          className="campo h-11 w-full px-3 text-base"
         />
       </div>
       {errore && (
@@ -140,7 +140,7 @@ function Corpo({
           <label className="mt-5 block text-xs text-inchiostro-2" htmlFor="campo-budget">
             Budget mensile <span className="text-inchiostro-2">(facoltativo)</span>
           </label>
-          <div className="mt-1 flex h-11 items-center gap-2 rounded-ctrl border border-filetto bg-foglio px-3 focus-within:border-cobalto">
+          <div className="campo mt-1 flex h-11 items-center gap-2 px-3">
             <span className="text-inchiostro-2">€</span>
             <input
               id="campo-budget"
@@ -202,9 +202,9 @@ function Corpo({
             aria-label={n}
             onClick={() => setIcona(n)}
             className={cn(
-              'grid aspect-square place-items-center rounded-ctrl border active:bg-carta',
+              'grid aspect-square place-items-center rounded-ctrl border transition-colors active:bg-filetto-leggero',
               icona === n
-                ? 'border-cobalto text-inchiostro ring-1 ring-cobalto ring-inset'
+                ? 'border-cobalto bg-cobalto/10 text-inchiostro ring-1 ring-cobalto ring-inset'
                 : 'border-filetto text-inchiostro-2',
             )}
           >
@@ -215,7 +215,7 @@ function Corpo({
 
       <button
         type="submit"
-        className="mt-6 h-12 rounded-lg bg-cobalto text-base font-bold text-cobalto-testo active:brightness-95"
+        className="bottone-forte mt-6 h-12 text-base"
       >
         {modifica ? 'Salva modifiche' : 'Crea categoria'}
       </button>

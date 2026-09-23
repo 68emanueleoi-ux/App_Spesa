@@ -38,15 +38,15 @@ export function Sheet({ aperto, onChiudi, titolo, children, className, focusIniz
             }
           }}
           className={cn(
-            'fixed z-50 flex flex-col bg-foglio text-inchiostro shadow-[0_-8px_30px_rgba(0,0,0,0.15)] outline-none',
+            'fixed z-50 flex flex-col bg-foglio text-inchiostro shadow-[0_-12px_40px_rgba(0,0,0,0.35)] outline-none',
             // smartphone: dal basso
-            'inset-x-0 bottom-0 max-h-[calc(100dvh-24px)] rounded-t-sheet pb-[max(20px,env(safe-area-inset-bottom))] data-[state=open]:animate-[sale_250ms_cubic-bezier(0.2,0.8,0.2,1)]',
+            'inset-x-0 bottom-0 max-h-[calc(100dvh-24px)] rounded-t-sheet border-t border-filetto pb-[max(20px,env(safe-area-inset-bottom))] data-[state=open]:animate-[sale_250ms_cubic-bezier(0.2,0.8,0.2,1)]',
             // desktop: centrato
-            'md:inset-auto md:top-1/2 md:left-1/2 md:w-[480px] md:max-h-[calc(100dvh-48px)] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-sheet md:pb-6 md:data-[state=open]:animate-[appare_200ms_ease-out]',
+            'md:inset-auto md:top-1/2 md:left-1/2 md:w-[480px] md:max-h-[calc(100dvh-48px)] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-sheet md:border md:pb-6 md:data-[state=open]:animate-[appare_200ms_ease-out]',
             className,
           )}
         >
-          <div className="mx-auto mt-2.5 mb-3 h-1 w-9 rounded-full bg-filetto md:hidden" aria-hidden="true" />
+          <div className="mx-auto mt-3 mb-3 h-1 w-10 rounded-full bg-filetto md:hidden" aria-hidden="true" />
           <Dialog.Title className="sr-only">{titolo}</Dialog.Title>
           <div className="overflow-y-auto px-5 md:px-6 md:pt-6">{children}</div>
         </Dialog.Content>
