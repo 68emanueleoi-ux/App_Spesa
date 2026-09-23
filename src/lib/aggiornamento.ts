@@ -8,38 +8,57 @@ const INTERVALLO_CONTROLLO = 60 * 60 * 1000
  * Aggiornamenti dell'app installata sulla home.
  *
  * Il service worker serve la copia in cache: senza un controllo esplicito una
- * versione nuova può restare invisibile per giorni, e per vederla bisognava
- * chiudere l'app dal multitasking e riaprirla.
+ * versione nuova può restare invisibile per giorni. Qui l'app la cerca
+ * all'avvio, una volta all'ora e ogni volta che torna in primo piano.
  *
- * Qui l'app la cerca all'avvio, una volta all'ora e ogni volta che si torna in
- * primo piano. Quando la trova lo dice, invece di ricaricare da sola:
- * ricaricare mentre si sta scrivendo un movimento farebbe perdere quello che si
- * è digitato.
+ * Il service worker si attiva da solo (vedi vite.config.ts): quello che decide
+ * l'utente è *quando ricaricare*, perché ricaricare mentre si sta scrivendo un
+ * movimento farebbe perdere quello che si è digitato. Finché non ricarica,
+ * continua a vedere la versione che ha già in memoria.
  *
- * Restituisce la funzione per applicare l'aggiornamento, o null se non ce n'è.
+ * Restituisce la funzione per ricaricare, o null se non c'è niente di nuovo.
  */
 export function useAggiornamentoApp(): (() => void) | null {
   const [pronto, setPronto] = useState(false)
-  const applica = useRef<((ricarica: boolean) => Promise<void>) | null>(null)
+  const giaSegnalato = useRef(false)
 
   useEffect(() => {
-    // In sviluppo il service worker non c'è: non c'è niente da aggiornare.
     if (!('serviceWorker' in navigator)) return
 
     let registrazione: ServiceWorkerRegistration | undefined
     let timer: number | undefined
+
+    const segnala = () => {
+      if (giaSegnalato.current) return
+      giaSegnalato.current = true
+      setPronto(true)
+    }
 
     const controlla = () => void registrazione?.update().catch(() => undefined)
     const alRitorno = () => {
       if (document.visibilityState === 'visible') controlla()
     }
 
-    applica.current = registerSW({
+    /**
+     * Il primo service worker della vita dell'app non è un aggiornamento: senza
+     * controller precedente non c'è niente di vecchio da sostituire.
+     */
+    const primaInstallazione = !navigator.serviceWorker.controller
+    const alCambioControllo = () => {
+      if (!primaInstallazione) segnala()
+    }
+    navigator.serviceWorker.addEventListener('controllerchange', alCambioControllo)
+
+    registerSW({
       immediate: true,
-      onNeedRefresh: () => setPronto(true),
+      // Con un service worker che si attiva da solo questo non scatta quasi mai,
+      // ma se restasse in attesa (un'altra scheda aperta) l'avviso arriva lo stesso.
+      onNeedRefresh: segnala,
       onRegisteredSW: (_url, r) => {
         registrazione = r
         if (!r) return
+        // Una versione già installata e in attesa da una sessione precedente.
+        if (r.waiting && navigator.serviceWorker.controller) segnala()
         timer = window.setInterval(controlla, INTERVALLO_CONTROLLO)
         document.addEventListener('visibilitychange', alRitorno)
       },
@@ -48,19 +67,13 @@ export function useAggiornamentoApp(): (() => void) | null {
     return () => {
       window.clearInterval(timer)
       document.removeEventListener('visibilitychange', alRitorno)
+      navigator.serviceWorker.removeEventListener('controllerchange', alCambioControllo)
     }
   }, [])
 
   if (!pronto) return null
 
-  return () => {
-    // Non basta ricaricare: finché il nuovo service worker non ha preso il
-    // controllo, la pagina riceve l'HTML vecchio dalla cache HTTP e servirebbe
-    // una seconda apertura. Prima lo si attiva, poi si ricarica quando è lui a
-    // rispondere. Il timeout è la via d'uscita se il controllo non arriva.
-    const ricarica = () => window.location.reload()
-    navigator.serviceWorker.addEventListener('controllerchange', ricarica, { once: true })
-    window.setTimeout(ricarica, 3000)
-    void applica.current?.(false)
-  }
+  // Il service worker nuovo ha già preso il controllo: basta ricaricare perché
+  // la pagina riceva i file nuovi, e li riceve da lui, non dalla cache HTTP.
+  return () => window.location.reload()
 }

@@ -21,9 +21,9 @@ export function AppShell() {
   return (
     <div className="flex min-h-dvh flex-col">
       {/* Barra desktop */}
-      <header className="hidden border-b border-filetto md:block">
-        <div className="mx-auto flex h-14 max-w-[1040px] items-center gap-7 px-8">
-          <span className="font-display text-lg font-semibold">Spese</span>
+      <header className="vetro sticky top-0 z-30 hidden border-b border-filetto md:block">
+        <div className="mx-auto flex h-16 max-w-[1040px] items-center gap-7 px-8">
+          <span className="font-display text-lg font-extrabold tracking-tight">Spese</span>
           <nav className="flex gap-6" aria-label="Sezioni">
             {VOCI.map(({ a, testo }) => (
               <NavLink
@@ -32,9 +32,9 @@ export function AppShell() {
                 end={a === '/'}
                 className={({ isActive }) =>
                   cn(
-                    'pb-0.5 text-sm font-medium',
+                    'pb-1 text-sm font-semibold transition-colors',
                     isActive
-                      ? 'text-inchiostro shadow-[0_2px_0_var(--inchiostro)]'
+                      ? 'text-inchiostro shadow-[0_2px_0_var(--grad-1)]'
                       : 'text-inchiostro-2 hover:text-inchiostro',
                   )
                 }
@@ -48,7 +48,7 @@ export function AppShell() {
           <button
             type="button"
             onClick={() => apriNuovo()}
-            className="flex items-center gap-1.5 rounded-ctrl bg-cobalto px-3.5 py-2 text-sm font-bold text-cobalto-testo hover:brightness-110 active:brightness-95"
+            className="accento flex items-center gap-1.5 rounded-ctrl px-4 py-2.5 text-sm font-bold shadow-[0_6px_18px_var(--alone)] hover:brightness-110 active:brightness-95"
           >
             <Plus className="size-4" strokeWidth={2.6} />
             Nuovo movimento
@@ -66,15 +66,15 @@ export function AppShell() {
         type="button"
         aria-label="Aggiungi movimento"
         onClick={() => apriNuovo()}
-        className="fixed right-5 bottom-[calc(76px+env(safe-area-inset-bottom))] z-20 grid size-14 place-items-center rounded-full bg-cobalto text-cobalto-testo shadow-[0_6px_16px_rgba(47,79,216,0.35)] active:scale-95 md:hidden"
+        className="accento fixed right-5 bottom-[calc(78px+env(safe-area-inset-bottom))] z-20 grid size-14 place-items-center rounded-[20px] shadow-[0_10px_30px_var(--alone)] transition-transform active:scale-95 md:hidden"
       >
-        <Plus className="size-7" strokeWidth={2.4} />
+        <Plus className="size-7" strokeWidth={2.6} />
       </button>
 
       {/* Schede in basso su smartphone */}
       <nav
         aria-label="Sezioni"
-        className="fixed inset-x-0 bottom-0 z-10 grid grid-cols-3 border-t border-filetto bg-carta pt-2 pb-[max(10px,env(safe-area-inset-bottom))] md:hidden"
+        className="vetro fixed inset-x-0 bottom-0 z-10 grid grid-cols-3 border-t border-filetto pt-2.5 pb-[max(12px,env(safe-area-inset-bottom))] md:hidden"
       >
         {VOCI.map(({ a, testo, Icona }) => (
           <NavLink
@@ -83,8 +83,10 @@ export function AppShell() {
             end={a === '/'}
             className={({ isActive }) =>
               cn(
-                'flex flex-col items-center gap-0.5 py-1 text-[11px] font-medium',
-                isActive ? 'text-inchiostro' : 'text-inchiostro-2',
+                'flex flex-col items-center gap-1 py-1 text-[11px] font-semibold transition-colors',
+                isActive
+                  ? 'text-inchiostro [&>svg]:text-[color:var(--grad-1)] [&>svg]:drop-shadow-[0_0_9px_var(--alone)]'
+                  : 'text-inchiostro-2',
               )
             }
           >
@@ -103,7 +105,7 @@ export function BottoneTema({ scuro, alterna }: { scuro: boolean; alterna: () =>
       type="button"
       onClick={alterna}
       aria-label={scuro ? 'Passa al tema chiaro' : 'Passa al tema scuro'}
-      className="grid size-9 place-items-center rounded-ctrl text-inchiostro-2 hover:bg-filetto-leggero active:bg-filetto"
+      className="grid size-10 place-items-center rounded-ctrl border border-filetto bg-foglio text-inchiostro-2 transition-colors hover:text-inchiostro active:bg-filetto"
     >
       {scuro ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
     </button>

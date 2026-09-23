@@ -10,11 +10,13 @@ export function SelettoreMese() {
         type="button"
         onClick={precedente}
         aria-label="Mese precedente"
-        className="grid size-9 place-items-center rounded-ctrl text-inchiostro-2 hover:bg-filetto-leggero active:bg-filetto"
+        className="grid size-9 place-items-center rounded-ctrl text-inchiostro-2 transition-colors hover:bg-filetto-leggero active:bg-filetto"
       >
         <ChevronLeft className="size-5" />
       </button>
-      <h1 className="min-w-[9ch] text-center font-display text-lg font-semibold whitespace-nowrap">{formatMese(mese)}</h1>
+      <h1 className="min-w-[9ch] text-center font-display text-lg font-extrabold tracking-tight whitespace-nowrap">
+        {formatMese(mese)}
+      </h1>
       <button
         type="button"
         onClick={successivo}

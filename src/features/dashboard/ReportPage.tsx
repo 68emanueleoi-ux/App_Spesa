@@ -14,18 +14,16 @@ import {
   ripartizioneUscite,
   statoBudget,
   totali,
-  type Confronto,
 } from '@/lib/calcoli'
-import { cn } from '@/lib/cn'
-import { giornoDi, mesePrecedente as calcolaMesePrecedente, nomeMese, oggiIso } from '@/lib/date'
-import { formatImporto, formatImportoMovimento } from '@/lib/importi'
+import { giornoDi, mesePrecedente as calcolaMesePrecedente, oggiIso } from '@/lib/date'
 import { useMeseSelezionato } from '@/lib/mese'
 import { useMovimenti } from '@/features/movimenti/useMovimenti'
 import { RigaMovimento } from '@/features/movimenti/RigaMovimento'
 import { Budget } from './Budget'
+import { SaldoDelMese } from './SaldoDelMese'
+import { SchedaTotale } from './SchedaTotale'
 import { Pannello } from '@/components/ui/Pannello'
 import { RipartizioneCategorie } from './RipartizioneCategorie'
-import { TracciatoMese } from './TracciatoMese'
 
 const ULTIMI = 8
 /** Su quanti mesi si calcola il "solito": tre bastano a dare un riferimento senza inseguire stagionalità lontane. */
@@ -84,38 +82,22 @@ export function ReportPage() {
             superficie che si riempie giorno per giorno. È l'unica cosa forte
             della pagina, tutto il resto sta a corpo piccolo.
           */}
-          <section className="mt-1">
-            {/* Numero e conti stanno sulla stessa riga: senza, metà della testata restava vuota */}
-            <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
-              <div className="min-w-0">
-                <p className="text-sm text-inchiostro-2">{eCorrente ? 'Speso finora' : 'Speso in totale'}</p>
-                <p className="totale-mese mt-1.5">
-                  <span className="segno-euro">€</span>
-                  {formatImporto(dati.totali.uscite, { simbolo: false })}
-                </p>
-                <div className="mt-2.5">
-                  <FraseConfronto
-                    confronto={dati.confronto}
-                    mesePrec={mesePrec}
-                    eCorrente={eCorrente}
-                    giornoOggi={giornoOggi}
-                  />
-                </div>
-              </div>
-              <Totali entrate={dati.totali.entrate} uscite={dati.totali.uscite} saldo={dati.totali.saldo} />
-            </div>
+          <SchedaTotale
+            uscite={dati.totali.uscite}
+            confronto={dati.confronto}
+            cumCorrente={dati.cumCorrente}
+            cumPrecedente={dati.cumPrecedente}
+            mese={mese}
+            mesePrecedente={mesePrec}
+            eCorrente={eCorrente}
+            giornoOggi={giornoOggi}
+          />
 
-            {/* La curva parte subito sotto il numero: è la stessa cosa, vista nel tempo */}
-            <div className="mt-4">
-              <TracciatoMese
-                corrente={dati.cumCorrente}
-                precedente={dati.cumPrecedente}
-                mese={mese}
-                mesePrecedente={mesePrec}
-                altezza={172}
-              />
-            </div>
-          </section>
+          <SaldoDelMese
+            entrate={dati.totali.entrate}
+            uscite={dati.totali.uscite}
+            saldo={dati.totali.saldo}
+          />
 
           {/*
             I blocchi di supporto stanno su foglio e si separano con lo spazio.
@@ -156,92 +138,6 @@ export function ReportPage() {
         </>
       )}
     </>
-  )
-}
-
-function FraseConfronto({
-  confronto,
-  mesePrec,
-  eCorrente,
-  giornoOggi,
-}: {
-  confronto: Confronto | null
-  mesePrec: string
-  eCorrente: boolean
-  giornoOggi?: number
-}) {
-  const nomeMesePrec = nomeMese(mesePrec)
-  if (!confronto) {
-    return <p className="mt-1 text-sm text-inchiostro-2">Nessun movimento a {nomeMesePrec} con cui confrontare</p>
-  }
-  if (eCorrente && confronto.stessoGiorno && giornoOggi !== undefined) {
-    const d = confronto.stessoGiorno.differenza
-    return (
-      <p className="num mt-1 text-sm">
-        {d === 0 ? (
-          <>Come al {giornoOggi} {nomeMesePrec}</>
-        ) : (
-          <>
-            <strong className="font-bold">
-              {formatImporto(Math.abs(d))} in {d < 0 ? 'meno' : 'più'}
-            </strong>{' '}
-            rispetto al {giornoOggi} {nomeMesePrec}
-          </>
-        )}
-      </p>
-    )
-  }
-  const d = confronto.differenza
-  return (
-    <p className="num mt-1 text-sm">
-      <strong className="font-bold">
-        {formatImporto(Math.abs(d))} in {d < 0 ? 'meno' : 'più'}
-      </strong>{' '}
-      rispetto a {nomeMesePrec}
-      {confronto.percentuale !== null && (
-        <span className="text-inchiostro-2">
-          {' '}
-          ({confronto.percentuale > 0 ? '+' : ''}
-          {confronto.percentuale}%)
-        </span>
-      )}
-    </p>
-  )
-}
-
-/**
- * Entrate, uscite e saldo su una riga sola.
- * Gli importi non vanno mai a capo: su telefono tre numeri affiancati non ci
- * stanno a corpo fisso, quindi il corpo segue la larghezza dello schermo e
- * scende fino a 13px prima di arrivare al limite.
- */
-function Totali({ entrate, uscite, saldo }: { entrate: number; uscite: number; saldo: number }) {
-  return (
-    <dl className="num grid w-full shrink-0 grid-cols-3 gap-x-3 text-xs text-inchiostro-2 sm:w-auto sm:gap-x-9 sm:text-right">
-      <div className="min-w-0">
-        <dt>Entrate</dt>
-        <dd className="mt-1 text-[clamp(0.8125rem,3.4vw,1.125rem)] font-medium whitespace-nowrap text-verde">
-          {formatImportoMovimento(entrate, 'entrata')}
-        </dd>
-      </div>
-      <div className="min-w-0">
-        <dt>Uscite</dt>
-        <dd className="mt-1 text-[clamp(0.8125rem,3.4vw,1.125rem)] font-medium whitespace-nowrap text-inchiostro">
-          {formatImportoMovimento(uscite, 'uscita')}
-        </dd>
-      </div>
-      <div className="min-w-0">
-        <dt>Saldo</dt>
-        <dd
-          className={cn(
-            'mt-1 text-[clamp(0.8125rem,3.4vw,1.125rem)] font-medium whitespace-nowrap',
-            saldo < 0 ? 'text-rosso' : 'text-inchiostro',
-          )}
-        >
-          {formatImporto(saldo)}
-        </dd>
-      </div>
-    </dl>
   )
 }
 

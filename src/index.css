@@ -4,54 +4,83 @@
 
 /* ---- Token del design system (vedi prompt-tracker-spese.md, Fase 0) ---- */
 :root {
-  --carta: #f7f5f0;
+  /* Tema chiaro: stesse forme del tema scuro, superfici chiare. La scheda del
+     totale resta a sfumatura satura anche qui — è l'ancora dell'identità. */
+  --carta: #f2f3f7;
   --foglio: #ffffff;
-  --inchiostro: #16181d;
-  --inchiostro-2: #71757e;
-  --filetto: rgba(27, 33, 48, 0.15);
-  --filetto-leggero: rgba(27, 33, 48, 0.07);
-  --cobalto: #2f4fd8;
+  --foglio-2: #f7f8fb;
+  --inchiostro: #0e1119;
+  --inchiostro-2: #6b7385;
+  --filetto: rgba(14, 17, 25, 0.1);
+  --filetto-leggero: rgba(14, 17, 25, 0.055);
+  --cobalto: #5b45f5;
   --cobalto-testo: #ffffff;
-  --verde: #1e7a57;
-  --rosso: #b42318;
-  --ghost: rgba(27, 33, 48, 0.28);
-  --cat-1: #3b63d8;
-  --cat-2: #b87709;
-  --cat-3: #1f9e8a;
-  --cat-4: #8b3f9e;
-  --cat-5: #c2552a;
-  --cat-6: #1a7fa8;
-  --cat-7: #d24b84;
-  --cat-8: #7a8a1e;
+  --verde: #0f9d6b;
+  --rosso: #e14b4b;
+  --ghost: rgba(14, 17, 25, 0.3);
+
+  /* Accento: una sfumatura, non una tinta piatta */
+  --grad-1: #6d5cff;
+  --grad-2: #21d4fd;
+  /* Scheda del totale */
+  --hero-1: #3a2a9c;
+  --hero-2: #2a2070;
+  --hero-3: #1a1a52;
+  --hero-testo: #ffffff;
+  --hero-testo-2: #c3c6ef;
+  --alone: rgba(109, 92, 255, 0.28);
+
+  --cat-1: #2f57e0;
+  --cat-2: #b8790a;
+  --cat-3: #0e9c86;
+  --cat-4: #8b3fd6;
+  --cat-5: #d4581f;
+  --cat-6: #0d81c2;
+  --cat-7: #db3f80;
+  --cat-8: #6f8511;
   color-scheme: light;
 }
 
 .dark {
-  --carta: #101216;
-  --foglio: #191c22;
-  --inchiostro: #f0efe9;
-  --inchiostro-2: #90949e;
-  --filetto: rgba(236, 238, 231, 0.16);
-  --filetto-leggero: rgba(236, 238, 231, 0.07);
-  --cobalto: #8da2ff;
-  --cobalto-testo: #15181f;
-  --verde: #4ec79a;
-  --rosso: #ff7b70;
-  --ghost: rgba(236, 238, 231, 0.3);
-  --cat-1: #5f7fe8;
-  --cat-2: #bd8418;
-  --cat-3: #2fa893;
-  --cat-4: #a25cb8;
-  --cat-5: #d4633c;
-  --cat-6: #2e93be;
-  --cat-7: #d95f92;
-  --cat-8: #8e9c2a;
+  /* Notte: fondo profondo, superfici che salgono di un gradino alla volta */
+  --carta: #070910;
+  --foglio: #131829;
+  --foglio-2: #1b2238;
+  --inchiostro: #f4f6ff;
+  --inchiostro-2: #8b93b0;
+  --filetto: rgba(255, 255, 255, 0.09);
+  --filetto-leggero: rgba(255, 255, 255, 0.055);
+  --cobalto: #9c8dff;
+  --cobalto-testo: #0a0c14;
+  --verde: #2be39b;
+  --rosso: #ff6b6b;
+  --ghost: rgba(244, 246, 255, 0.3);
+
+  --grad-1: #6d5cff;
+  --grad-2: #21d4fd;
+  --hero-1: #2a2070;
+  --hero-2: #171c42;
+  --hero-3: #0d1226;
+  --hero-testo: #ffffff;
+  --hero-testo-2: #b8bddd;
+  --alone: rgba(109, 92, 255, 0.5);
+
+  /* Colori di categoria saturi: sul fondo scuro le tinte smorzate spariscono */
+  --cat-1: #5b7cff;
+  --cat-2: #ffc53d;
+  --cat-3: #17d6b0;
+  --cat-4: #b368ff;
+  --cat-5: #ff8a3d;
+  --cat-6: #38bdf8;
+  --cat-7: #ff5c9d;
+  --cat-8: #a8d63a;
   color-scheme: dark;
 }
 
 @theme inline {
   --color-carta: var(--carta);
   --color-foglio: var(--foglio);
+  --color-foglio-2: var(--foglio-2);
   --color-inchiostro: var(--inchiostro);
   --color-inchiostro-2: var(--inchiostro-2);
   --color-filetto: var(--filetto);
@@ -192,4 +221,92 @@
   vertical-align: 0.62em;
   margin-right: 0.12em;
   color: var(--inchiostro-2);
+}
+
+/* La sfumatura d'accento: pulsanti principali, chip attivi, tasto +. */
+@utility accento {
+  background-image: linear-gradient(135deg, var(--grad-1), var(--grad-2));
+  color: var(--cobalto-testo);
+}
+
+/* Vetro della barra schede: il contenuto scorre sotto e si intravede. */
+@utility vetro {
+  background: color-mix(in srgb, var(--carta) 82%, transparent);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* Superficie di un blocco: il gradino sopra la carta. */
+@utility scheda {
+  background: var(--foglio);
+  border: 1px solid var(--filetto);
+  border-radius: var(--radius-scheda);
+}
+
+/* Riquadro colorato dell'icona di categoria: la tinta piena sarebbe urlata,
+   il 20% la rende un fondo su cui l'icona resta leggibile in tutti e due i temi. */
+@utility riquadro {
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-tessera);
+  background: color-mix(in srgb, currentColor 20%, transparent);
+}
+
+/* Il totale del mese: cifre tabellari e crenatura stretta. */
+@utility cifra-grande {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- La scheda del totale: l'unica superficie satura dell'app ---- */
+.scheda-totale {
+  position: relative;
+  border-radius: var(--radius-sheet);
+  background: linear-gradient(150deg, var(--hero-1) 0%, var(--hero-2) 48%, var(--hero-3) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 44px -14px var(--alone);
+  color: var(--hero-testo);
+}
+/* L'alone si muove piano dietro il numero: la pagina non e' una stampa. */
+.scheda-totale::before {
+  content: "";
+  position: absolute;
+  inset: -45% -12% auto -12%;
+  height: 230px;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 80% at 20% 50%, var(--alone), transparent 70%),
+    radial-gradient(50% 70% at 85% 30%, rgba(33, 212, 253, 0.3), transparent 70%);
+  filter: blur(8px);
+  animation: alone 11s ease-in-out infinite alternate;
+}
+@keyframes alone {
+  from { transform: translate3d(-4%, 0, 0) scale(1); }
+  to { transform: translate3d(6%, 8px, 0) scale(1.08); }
+}
+
+/*
+  Dentro la scheda i colori si ribaltano ridefinendo le variabili: il tracciato
+  legge --inchiostro e --carta come sempre e si ridisegna in chiaro senza sapere
+  dove si trova. Un componente in meno da parametrizzare.
+*/
+.su-scheda {
+  --inchiostro: #ffffff;
+  --inchiostro-2: var(--hero-testo-2);
+  --carta: var(--hero-3);
+  --filetto: rgba(255, 255, 255, 0.18);
+  --filetto-leggero: rgba(255, 255, 255, 0.1);
+  --ghost: rgba(255, 255, 255, 0.38);
+  --cobalto: var(--grad-2);
+}
+
+/* Il totale: bianco che sfuma nel viola chiaro, come l'accento. */
+.testo-sfumato {
+  background-image: linear-gradient(96deg, #ffffff 28%, #cfc9ff 78%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }

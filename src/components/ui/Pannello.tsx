@@ -22,9 +22,9 @@ interface Props {
  */
 export function Pannello({ titolo, azione, children, className }: Props) {
   return (
-    <section className={cn('rounded-[18px] bg-foglio p-5 md:p-6 dark:ring-1 dark:ring-filetto-leggero', className)}>
-      <div className="mb-3.5 flex items-baseline justify-between gap-3">
-        <h2 className="font-display text-base font-semibold">{titolo}</h2>
+    <section className={cn('scheda p-5 md:p-6', className)}>
+      <div className="mb-4 flex items-baseline justify-between gap-3">
+        <h2 className="font-display text-base font-extrabold tracking-tight">{titolo}</h2>
         {azione}
       </div>
       {children}
