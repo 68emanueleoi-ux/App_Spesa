@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>B — Copertina — proposta per Spese</title>
+<style>
+
+@font-face { font-family: "Bricolage"; font-weight: 200 800; font-stretch: 75% 100%; font-display: block;
+  src: url(../../node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-standard-normal.woff2) format("woff2-variations"); }
+@font-face { font-family: "Bricolage Ottico"; font-weight: 200 800; font-display: block;
+  src: url(../../node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2) format("woff2-variations"); }
+@font-face { font-family: "Atkinson"; font-weight: 400; font-display: block;
+  src: url(../../node_modules/@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Atkinson"; font-weight: 500; font-display: block;
+  src: url(../../node_modules/@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-500-normal.woff2) format("woff2"); }
+@font-face { font-family: "Atkinson"; font-weight: 700; font-display: block;
+  src: url(../../node_modules/@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-700-normal.woff2) format("woff2"); }
+@font-face { font-family: "Atkinson"; font-weight: 800; font-display: block;
+  src: url(../../node_modules/@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-800-normal.woff2) format("woff2"); }
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: #8a877f; color: #111; font: 15px/1.45 "Atkinson", system-ui, sans-serif; }
+.intro { max-width: 860px; margin: 0 auto; padding: 28px 20px 8px; color: #fff; }
+.intro h1 { font: 700 26px/1.1 "Bricolage", sans-serif; margin: 0; }
+.intro p { margin: 8px 0 0; max-width: 70ch; }
+.coppia { display: flex; flex-wrap: wrap; gap: 28px; justify-content: center; padding: 20px 16px 60px; }
+.coppia figure { margin: 0; }
+.coppia figcaption { color: #fff; font-weight: 700; margin: 0 0 8px 4px; }
+.telefono { width: 393px; height: 852px; border-radius: 48px; overflow: hidden; position: relative; isolation: isolate;
+  box-shadow: 0 0 0 10px #111, 0 30px 60px rgba(0,0,0,.35); }
+.scorre { height: 100%; overflow-y: auto; scrollbar-width: none; }
+.scorre::-webkit-scrollbar { display: none; }
+.stato { height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 6px 30px 0 34px; font: 700 15px "Atkinson"; position: relative; }
+.stato .isola { position: absolute; left: 50%; top: 11px; width: 124px; height: 36px; margin-left: -62px; background: #000; border-radius: 20px; }
+.stato .segnali { display: flex; gap: 6px; align-items: center; }
+.num { font-variant-numeric: tabular-nums; }
+/* #intero: il telefono si allunga per vedere tutta la schermata in una volta */
+.intero .telefono { height: auto; } .intero .scorre { height: auto; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+.copertina.chiaro { --carta: #f4f1ea; --inchiostro: #151412; --inchiostro-2: #5c574f; --filetto: rgba(21,20,18,.16); --spot: #c4400c; --c1: #335ad7; --c2: #a76f0f; --c3: #018874; --c4: #8946ce; --c5: #c75726; --c6: #217fba; --c7: #d0437c; --c8: #6f8221; --verde: #077e55; }
+.copertina.scuro { --carta: #121211; --inchiostro: #efebe3; --inchiostro-2: #a29c91; --filetto: rgba(239,235,227,.18); --spot: #ff7d4a; --c1: #6481e8; --c2: #f6c867; --c3: #58d1b2; --c4: #ad75eb; --c5: #f0935b; --c6: #5ebbea; --c7: #ef6f9e; --c8: #add362; --verde: #62dda3; }
+.copertina { background: var(--carta); color: var(--inchiostro); font-family: "Atkinson"; }
+.copertina button { font: inherit; color: inherit; background: none; border: 0; padding: 0; }
+.copertina .scorre { padding: 0 20px; }
+.copertina .stato { margin: 0 -20px; }
+/* testata da giornale: doppio filetto, uno pieno e uno sottile */
+.copertina .testata { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--inchiostro); box-shadow: 0 3px 0 var(--carta), 0 4px 0 var(--inchiostro); padding-bottom: 4px; }
+.copertina .mese { display: flex; align-items: center; gap: 6px; min-height: 44px; font-family: "Bricolage Ottico"; font-variation-settings: "opsz" 14; font-weight: 700; font-size: 16px; }
+.copertina .tema { width: 44px; height: 44px; display: grid; place-items: center; color: var(--inchiostro-2); }
+.copertina .occhiello { margin: 22px 0 0; font-weight: 800; font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--spot); }
+.copertina .occhiello span { color: var(--inchiostro-2); font-weight: 500; letter-spacing: .04em; text-transform: none; }
+/* il titolo: la cifra occupa tutta la giustezza, da margine a margine */
+.copertina .titolone { margin: 0; font-family: "Bricolage Ottico"; font-variation-settings: "opsz" 96; font-weight: 800; line-height: .86; letter-spacing: -.045em; white-space: nowrap; font-size: 96px; padding: 6px 0 4px; }
+.copertina .titolone .eu { font-size: .3em; font-weight: 600; letter-spacing: 0; vertical-align: .95em; margin-right: .1em; color: var(--inchiostro-2); }
+.copertina .sommario { margin: 10px 0 0; font-family: "Bricolage Ottico"; font-variation-settings: "opsz" 24; font-size: 21px; line-height: 1.22; font-weight: 400; letter-spacing: -.01em; }
+.copertina .sommario b { font-weight: 700; }
+.copertina .sommario > b:first-child { color: var(--inchiostro); box-shadow: inset 0 -3px 0 var(--spot); }
+.copertina .sez { margin-top: 30px; border-top: 1px solid var(--inchiostro); padding-top: 9px; }
+.copertina h2 { display: flex; align-items: baseline; gap: 10px; margin: 0 0 12px; font-family: "Bricolage Ottico"; font-variation-settings: "opsz" 18; font-size: 16px; font-weight: 700; }
+.copertina h2 span { font-size: 12.5px; color: var(--spot); font-weight: 800; }
+.copertina h2 a { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; min-height: 44px; margin-top: -14px; margin-bottom: -14px; font-family: "Atkinson"; font-size: 14px; font-weight: 700; color: var(--inchiostro); }
+.copertina svg .base { stroke: var(--inchiostro); stroke-width: 1; }
+.copertina svg .ax { font: 11.5px "Atkinson"; fill: var(--inchiostro-2); }
+.copertina svg .ax.forte { fill: var(--spot); font-weight: 800; }
+.copertina svg .ago { fill: none; stroke: var(--inchiostro-2); stroke-width: 1.4; stroke-dasharray: 1 4; stroke-linecap: round; }
+.copertina svg .sett { fill: none; stroke: var(--inchiostro); stroke-width: 2.2; stroke-linejoin: round; }
+.copertina svg .parentesi { stroke: var(--spot); stroke-width: 1.5; }
+.copertina svg .nota { font: 800 12.5px "Atkinson"; fill: var(--spot); }
+.copertina svg .punto { fill: var(--spot); stroke: var(--carta); stroke-width: 2; }
+.copertina .didascalia { margin: 6px 0 0; font-size: 12.5px; color: var(--inchiostro-2); }
+.copertina .didascalia i { display: inline-block; width: 16px; vertical-align: 4px; }
+.copertina .l-sett { border-top: 2px solid var(--inchiostro); } .copertina .l-ago { border-top: 2px dotted var(--inchiostro-2); }
+.copertina ul { list-style: none; margin: 0; padding: 0; }
+.copertina .tess { flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 8px; background: color-mix(in srgb, currentColor 20%, var(--carta)); }
+.copertina .tabella li { display: grid; grid-template-columns: 34px 1fr 38px 66px; gap: 10px; align-items: center; min-height: 48px; border-bottom: 1px solid var(--filetto); font-size: 15px; }
+.copertina .tabella .nome { position: relative; padding-bottom: 7px; }
+.copertina .tabella .nome i { position: absolute; left: 0; bottom: 0; height: 3px; }
+.copertina .tabella .pc { text-align: right; font-size: 13px; color: var(--inchiostro-2); }
+.copertina .tabella .imp { text-align: right; font-weight: 700; }
+.copertina .tabella .altre { color: var(--inchiostro-2); }
+.copertina .registro li { display: grid; grid-template-columns: 34px 34px 1fr auto; gap: 10px; align-items: center; min-height: 54px; border-bottom: 1px solid var(--filetto); font-size: 15px; }
+.copertina .registro .data { font-family: "Bricolage Ottico"; font-variation-settings: "opsz" 14; font-size: 13px; font-weight: 700; color: var(--inchiostro-2); }
+.copertina .registro small { display: block; font-size: 12.5px; color: var(--inchiostro-2); }
+.copertina .registro .desc { line-height: 1.2; min-width: 0; }
+.copertina .registro .imp { font-weight: 700; }
+.copertina .registro .piu { color: var(--verde); }
+.copertina .fondo { height: calc(64px + 56px + 24px + 34px); }
+.copertina .tasto-piu { position: absolute; right: 18px; bottom: calc(64px + 34px + 14px); width: 58px; height: 58px; display: grid; place-items: center; background: var(--inchiostro); color: var(--carta); border-radius: 50%; }
+.copertina .schede { position: absolute; inset: auto 0 0 0; display: grid; grid-template-columns: repeat(3, 1fr); padding: 0 0 34px; background: var(--carta); border-top: 1px solid var(--inchiostro); }
+.copertina .schede a { display: grid; justify-items: center; gap: 3px; min-height: 56px; padding-top: 8px; text-decoration: none; color: var(--inchiostro-2); font-size: 11.5px; font-weight: 700; border-top: 3px solid transparent; margin-top: -2px; }
+.copertina .schede a.on { color: var(--inchiostro); border-top-color: var(--spot); }
+</style>
+</head>
+<body>
+<script>if (location.hash === '#intero') document.documentElement.classList.add('intero')</script>
+<header class="intro"><h1>B — Copertina</h1><p>Ogni mese è un numero di una rivista con un solo lettore: il Report è la copertina, il resto è impaginato a colonne e filetti. Elemento memorabile: la cifra del mese composta come un titolo, larga quanto la pagina, con il sommario scritto in parole.</p><p><a href="#intero" onclick="setTimeout(() => location.reload())" style="color:#fff">Mostra la schermata intera</a> · <a href="#" onclick="setTimeout(() => location.reload())" style="color:#fff">Altezza iPhone 15</a></p></header>
+<main class="coppia">
+  <figure><figcaption>Chiaro</figcaption><div class="telefono copertina chiaro"><div class="scorre"><div class="stato"><span>17:45</span><span class="isola"></span><span class="segnali">
+  <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+  <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="3" stroke="currentColor" stroke-opacity=".5"/><rect x="2" y="2" width="14" height="8" rx="1.6" fill="currentColor"/></svg></span></div>
+  <header class="testata">
+    <button class="mese">N° 9 · Settembre 2026 <svg class="" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+    <button class="tema" aria-label="Passa al tema scuro"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg></button>
+  </header>
+  <p class="occhiello">Speso finora <span class="num">· giorno 22 di 30</span></p>
+  <h1 class="titolone num" data-adatta><span class="eu">€</span>1.284,30</h1>
+  <p class="sommario"><b>€ 96,10 sotto il 22 agosto.</b> Ti restano <b class="num">€ 215,70</b> dei <span class="num">€ 1.500,00</span> entrati.</p>
+  <section class="sez"><h2><span class="num">01</span> Il ritmo del mese</h2><svg width="100%" viewBox="0 0 353 168" role="img" aria-label="Uscite accumulate: settembre contro agosto">
+    <line x1="0" x2="353" y1="146" y2="146" class="base"/>
+    <text x="0" y="162" text-anchor="start" class="ax num">1</text><text x="105.89999999999999" y="162" text-anchor="middle" class="ax num">10</text><text x="341.23333333333335" y="162" text-anchor="middle" class="ax num">30</text>
+    <text x="247.1" y="162" text-anchor="middle" class="ax forte num">oggi 22</text>
+    <path d="M0.0,146.0 L11.8,143.9 L23.5,142.5 L35.3,114.5 L47.1,112.1 L58.8,112.1 L70.6,104.7 L82.4,103.4 L94.1,103.4 L105.9,94.7 L117.7,93.0 L129.4,88.8 L141.2,88.8 L153.0,77.6 L164.7,75.5 L176.5,75.5 L188.3,72.3 L200.0,67.4 L211.8,65.9 L223.6,65.9 L235.3,61.3 L247.1,49.4 L258.9,46.6 L270.6,46.6 L282.4,40.6 L294.2,38.9 L305.9,35.4 L317.7,35.4 L329.5,30.5 L341.2,28.4 L353.0,25.2" class="ago"/>
+    <path d="M0.0,146.0 L11.8,144.7 L23.5,144.7 L35.3,115.9 L47.1,115.2 L58.8,106.0 L70.6,106.0 L82.4,102.9 L94.1,102.0 L105.9,102.0 L117.7,93.1 L129.4,93.1 L141.2,81.6 L153.0,81.0 L164.7,81.0 L176.5,73.1 L188.3,69.7 L200.0,65.6 L211.8,61.0 L223.6,61.0 L235.3,59.1 L247.1,56.1" class="sett"/>
+    <line x1="247.1" x2="247.1" y1="47.390627494636206" y2="58.11633069498788" class="parentesi"/>
+    <line x1="243.1" x2="251.1" y1="49.390627494636206" y2="49.390627494636206" class="parentesi"/>
+    <line x1="243.1" x2="251.1" y1="56.11633069498788" y2="56.11633069498788" class="parentesi"/>
+    <text x="255.1" y="56.75347909481204" class="nota num">−96,10</text>
+    <circle cx="247.1" cy="56.11633069498788" r="4" class="punto"/>
+    <text x="353" y="18.245283018867937" text-anchor="end" class="ax num">agosto 1.725,40</text>
+  </svg>
+    <p class="didascalia"><i class="l-sett"></i> settembre &nbsp; <i class="l-ago"></i> agosto, giorno per giorno</p></section>
+  <section class="sez"><h2><span class="num">02</span> Dove sono finiti i soldi</h2>
+    <ul class="tabella"><li>
+      <span class="tess" style="color:var(--c1)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></svg></span>
+      <span class="nome">Spesa<i style="width:100.0%;background:var(--c1)"></i></span>
+      <span class="pc num">32%</span><span class="imp num">412,00</span></li><li>
+      <span class="tess" style="color:var(--c2)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+      <span class="nome">Affitto<i style="width:97.1%;background:var(--c2)"></i></span>
+      <span class="pc num">31%</span><span class="imp num">400,00</span></li><li>
+      <span class="tess" style="color:var(--c3)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></svg></span>
+      <span class="nome">Trasporti<i style="width:43.7%;background:var(--c3)"></i></span>
+      <span class="pc num">14%</span><span class="imp num">180,00</span></li><li>
+      <span class="tess" style="color:var(--c4)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg></span>
+      <span class="nome">Svago<i style="width:36.4%;background:var(--c4)"></i></span>
+      <span class="pc num">12%</span><span class="imp num">150,00</span></li><li>
+      <span class="tess" style="color:var(--c5)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/></svg></span>
+      <span class="nome">Bollette<i style="width:14.2%;background:var(--c5)"></i></span>
+      <span class="pc num">5%</span><span class="imp num">58,50</span></li><li class="altre">
+      <span class="tess" style="color:var(--inchiostro-2)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.1 2.182a10 10 0 0 1 3.8 0"/><path d="M13.9 21.818a10 10 0 0 1-3.8 0"/><path d="M17.609 3.721a10 10 0 0 1 2.69 2.7"/><path d="M2.182 13.9a10 10 0 0 1 0-3.8"/><path d="M20.279 17.609a10 10 0 0 1-2.7 2.69"/><path d="M21.818 10.1a10 10 0 0 1 0 3.8"/><path d="M3.721 6.391a10 10 0 0 1 2.7-2.69"/><path d="M6.391 20.279a10 10 0 0 1-2.69-2.7"/></svg></span>
+      <span class="nome">Altre 2<i style="width:20.3%;background:var(--inchiostro-2)"></i></span>
+      <span class="pc num">7%</span><span class="imp num">83,80</span></li></ul></section>
+  <section class="sez"><h2><span class="num">03</span> Ultimi movimenti <a href="#">Tutti <svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></h2>
+    <ul class="registro"><li><span class="data num">22.9</span>
+      <span class="tess" style="color:var(--c1)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></svg></span>
+      <span class="desc">Conad<small>Spesa</small></span>
+      <span class="imp num ">−43,20</span></li><li><span class="data num">21.9</span>
+      <span class="tess" style="color:var(--c3)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></svg></span>
+      <span class="desc">Trenitalia<small>Trasporti</small></span>
+      <span class="imp num ">−12,90</span></li><li><span class="data num">21.9</span>
+      <span class="tess" style="color:var(--c4)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg></span>
+      <span class="desc">Netflix<small>Svago</small></span>
+      <span class="imp num ">−12,99</span></li><li><span class="data num">20.9</span>
+      <span class="tess" style="color:var(--verde)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12h.01"/><path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M22 13a18.15 18.15 0 0 1-20 0"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg></span>
+      <span class="desc">Stipendio<small>Stipendio</small></span>
+      <span class="imp num piu">+1.500,00</span></li><li><span class="data num">19.9</span>
+      <span class="tess" style="color:var(--c4)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg></span>
+      <span class="desc">Pizzeria da Michele<small>Svago</small></span>
+      <span class="imp num ">−34,00</span></li><li><span class="data num">19.9</span>
+      <span class="tess" style="color:var(--c1)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></svg></span>
+      <span class="desc">Lidl<small>Spesa</small></span>
+      <span class="imp num ">−30,00</span></li><li><span class="data num">19.9</span>
+      <span class="tess" style="color:var(--c4)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg></span>
+      <span class="desc">Bar Centrale<small>Svago</small></span>
+      <span class="imp num ">−2,40</span></li><li><span class="data num">18.9</span>
+      <span class="tess" style="color:var(--c5)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/></svg></span>
+      <span class="desc">Enel<small>Bollette</small></span>
+      <span class="imp num ">−58,50</span></li></ul></section>
+  <div class="fondo"></div>
+  </div>
+  <button class="tasto-piu" aria-label="Aggiungi movimento"><svg class="" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+  <nav class="schede"><a href="#" class="on"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16v5"/><path d="M16 14.639V21"/><path d="M20 10.656V21"/><path d="m22 3-8.646 8.646a.5.5 0 0 1-.708 0L9.354 8.354a.5.5 0 0 0-.707 0L2 15"/><path d="M4 18.463V21"/><path d="M8 14.656V21"/></svg><span>Report</span></a><a href="#" class=""><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg><span>Movimenti</span></a><a href="#" class=""><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg><span>Categorie</span></a></nav></div></figure>
+  <figure><figcaption>Scuro</figcaption><div class="telefono copertina scuro"><div class="scorre"><div class="stato"><span>17:45</span><span class="isola"></span><span class="segnali">
+  <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+  <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="3" stroke="currentColor" stroke-opacity=".5"/><rect x="2" y="2" width="14" height="8" rx="1.6" fill="currentColor"/></svg></span></div>
+  <header class="testata">
+    <button class="mese">N° 9 · Settembre 2026 <svg class="" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+    <button class="tema" aria-label="Passa al tema scuro"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg></button>
+  </header>
+  <p class="occhiello">Speso finora <span class="num">· giorno 22 di 30</span></p>
+  <h1 class="titolone num" data-adatta><span class="eu">€</span>1.284,30</h1>
+  <p class="sommario"><b>€ 96,10 sotto il 22 agosto.</b> Ti restano <b class="num">€ 215,70</b> dei <span class="num">€ 1.500,00</span> entrati.</p>
+  <section class="sez"><h2><span class="num">01</span> Il ritmo del mese</h2><svg width="100%" viewBox="0 0 353 168" role="img" aria-label="Uscite accumulate: settembre contro agosto">
+    <line x1="0" x2="353" y1="146" y2="146" class="base"/>
+    <text x="0" y="162" text-anchor="start" class="ax num">1</text><text x="105.89999999999999" y="162" text-anchor="middle" class="ax num">10</text><text x="341.23333333333335" y="162" text-anchor="middle" class="ax num">30</text>
+    <text x="247.1" y="162" text-anchor="middle" class="ax forte num">oggi 22</text>
+    <path d="M0.0,146.0 L11.8,143.9 L23.5,142.5 L35.3,114.5 L47.1,112.1 L58.8,112.1 L70.6,104.7 L82.4,103.4 L94.1,103.4 L105.9,94.7 L117.7,93.0 L129.4,88.8 L141.2,88.8 L153.0,77.6 L164.7,75.5 L176.5,75.5 L188.3,72.3 L200.0,67.4 L211.8,65.9 L223.6,65.9 L235.3,61.3 L247.1,49.4 L258.9,46.6 L270.6,46.6 L282.4,40.6 L294.2,38.9 L305.9,35.4 L317.7,35.4 L329.5,30.5 L341.2,28.4 L353.0,25.2" class="ago"/>
+    <path d="M0.0,146.0 L11.8,144.7 L23.5,144.7 L35.3,115.9 L47.1,115.2 L58.8,106.0 L70.6,106.0 L82.4,102.9 L94.1,102.0 L105.9,102.0 L117.7,93.1 L129.4,93.1 L141.2,81.6 L153.0,81.0 L164.7,81.0 L176.5,73.1 L188.3,69.7 L200.0,65.6 L211.8,61.0 L223.6,61.0 L235.3,59.1 L247.1,56.1" class="sett"/>
+    <line x1="247.1" x2="247.1" y1="47.390627494636206" y2="58.11633069498788" class="parentesi"/>
+    <line x1="243.1" x2="251.1" y1="49.390627494636206" y2="49.390627494636206" class="parentesi"/>
+    <line x1="243.1" x2="251.1" y1="56.11633069498788" y2="56.11633069498788" class="parentesi"/>
+    <text x="255.1" y="56.75347909481204" class="nota num">−96,10</text>
+    <circle cx="247.1" cy="56.11633069498788" r="4" class="punto"/>
+    <text x="353" y="18.245283018867937" text-anchor="end" class="ax num">agosto 1.725,40</text>
+  </svg>
+    <p class="didascalia"><i class="l-sett"></i> settembre &nbsp; <i class="l-ago"></i> agosto, giorno per giorno</p></section>
+  <section class="sez"><h2><span class="num">02</span> Dove sono finiti i soldi</h2>
+    <ul class="tabella"><li>
+      <span class="tess" style="color:var(--c1)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></svg></span>
+      <span class="nome">Spesa<i style="width:100.0%;background:var(--c1)"></i></span>
+      <span class="pc num">32%</span><span class="imp num">412,00</span></li><li>
+      <span class="tess" style="color:var(--c2)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+      <span class="nome">Affitto<i style="width:97.1%;background:var(--c2)"></i></span>
+      <span class="pc num">31%</span><span class="imp num">400,00</span></li><li>
+      <span class="tess" style="color:var(--c3)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></svg></span>
+      <span class="nome">Trasporti<i style="width:43.7%;background:var(--c3)"></i></span>
+      <span class="pc num">14%</span><span class="imp num">180,00</span></li><li>
+      <span class="tess" style="color:var(--c4)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg></span>
+      <span class="nome">Svago<i style="width:36.4%;background:var(--c4)"></i></span>
+      <span class="pc num">12%</span><span class="imp num">150,00</span></li><li>
+      <span class="tess" style="color:var(--c5)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/></svg></span>
+      <span class="nome">Bollette<i style="width:14.2%;background:var(--c5)"></i></span>
+      <span class="pc num">5%</span><span class="imp num">58,50</span></li><li class="altre">
+      <span class="tess" style="color:var(--inchiostro-2)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.1 2.182a10 10 0 0 1 3.8 0"/><path d="M13.9 21.818a10 10 0 0 1-3.8 0"/><path d="M17.609 3.721a10 10 0 0 1 2.69 2.7"/><path d="M2.182 13.9a10 10 0 0 1 0-3.8"/><path d="M20.279 17.609a10 10 0 0 1-2.7 2.69"/><path d="M21.818 10.1a10 10 0 0 1 0 3.8"/><path d="M3.721 6.391a10 10 0 0 1 2.7-2.69"/><path d="M6.391 20.279a10 10 0 0 1-2.69-2.7"/></svg></span>
+      <span class="nome">Altre 2<i style="width:20.3%;background:var(--inchiostro-2)"></i></span>
+      <span class="pc num">7%</span><span class="imp num">83,80</span></li></ul></section>
+  <section class="sez"><h2><span class="num">03</span> Ultimi movimenti <a href="#">Tutti <svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></h2>
+    <ul class="registro"><li><span class="data num">22.9</span>
+      <span class="tess" style="color:var(--c1)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></svg></span>
+      <span class="desc">Conad<small>Spesa</small></span>
+      <span class="imp num ">−43,20</span></li><li><span class="data num">21.9</span>
+      <span class="tess" style="color:var(--c3)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></svg></span>
+      <span class="desc">Trenitalia<small>Trasporti</small></span>
+      <span class="imp num ">−12,90</span></li><li><span class="data num">21.9</span>
+      <span class="tess" style="color:var(--c4)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg></span>
+      <span class="desc">Netflix<small>Svago</small></span>
+      <span class="imp num ">−12,99</span></li><li><span class="data num">20.9</span>
+      <span class="tess" style="color:var(--verde)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12h.01"/><path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M22 13a18.15 18.15 0 0 1-20 0"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg></span>
+      <span class="desc">Stipendio<small>Stipendio</small></span>
+      <span class="imp num piu">+1.500,00</span></li><li><span class="data num">19.9</span>
+      <span class="tess" style="color:var(--c4)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg></span>
+      <span class="desc">Pizzeria da Michele<small>Svago</small></span>
+      <span class="imp num ">−34,00</span></li><li><span class="data num">19.9</span>
+      <span class="tess" style="color:var(--c1)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></svg></span>
+      <span class="desc">Lidl<small>Spesa</small></span>
+      <span class="imp num ">−30,00</span></li><li><span class="data num">19.9</span>
+      <span class="tess" style="color:var(--c4)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg></span>
+      <span class="desc">Bar Centrale<small>Svago</small></span>
+      <span class="imp num ">−2,40</span></li><li><span class="data num">18.9</span>
+      <span class="tess" style="color:var(--c5)"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/></svg></span>
+      <span class="desc">Enel<small>Bollette</small></span>
+      <span class="imp num ">−58,50</span></li></ul></section>
+  <div class="fondo"></div>
+  </div>
+  <button class="tasto-piu" aria-label="Aggiungi movimento"><svg class="" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+  <nav class="schede"><a href="#" class="on"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16v5"/><path d="M16 14.639V21"/><path d="M20 10.656V21"/><path d="m22 3-8.646 8.646a.5.5 0 0 1-.708 0L9.354 8.354a.5.5 0 0 0-.707 0L2 15"/><path d="M4 18.463V21"/><path d="M8 14.656V21"/></svg><span>Report</span></a><a href="#" class=""><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg><span>Movimenti</span></a><a href="#" class=""><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg><span>Categorie</span></a></nav></div></figure>
+</main>
+<script>
+  document.fonts.ready.then(() => document.querySelectorAll('[data-adatta]').forEach((el) => {
+    const disp = el.parentElement.clientWidth - 40
+    el.style.fontSize = (96 * disp / el.scrollWidth).toFixed(1) + 'px'
+  }))
+  </script>
+</body>
+</html>
