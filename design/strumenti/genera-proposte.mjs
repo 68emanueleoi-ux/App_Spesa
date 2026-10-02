@@ -5,7 +5,7 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 const ROOT = path.resolve(import.meta.dirname, '../..')
-const OUT = path.join(ROOT, 'design/proposte')
+const OUT = path.join(ROOT, 'design/proposte/giro-1')
 fs.mkdirSync(OUT, { recursive: true })
 const PAL = JSON.parse(fs.readFileSync(new URL('./palette-proposte.json', import.meta.url)))
 
@@ -71,7 +71,7 @@ if (USCITE !== 128430 || DIFF !== -9610) throw new Error('dati incoerenti')
 const coloreVar = (k) => `var(--${CAT[k].c})`
 
 /* ---------- pezzi comuni ---------- */
-const F = '../../node_modules'
+const F = '../../../node_modules'
 const FONT = `
 @font-face { font-family: "Bricolage"; font-weight: 200 800; font-stretch: 75% 100%; font-display: block;
   src: url(${F}/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-standard-normal.woff2) format("woff2-variations"); }

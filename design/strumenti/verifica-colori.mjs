@@ -66,6 +66,12 @@ const DIREZIONI = {
   scontrino: { chiaro: '#fbf9f3', scuro: '#1c1b19', croma: { chiaro: 0.78, scuro: 0.62 } },
   copertina: { chiaro: '#f4f1ea', scuro: '#121211', croma: { chiaro: 0.92, scuro: 0.8 } },
   binario: { chiaro: '#ffffff', scuro: '#0c1117', croma: { chiaro: 1, scuro: 1 } },
+  // secondo giro
+  mastro: { chiaro: '#f7f6f2', scuro: '#121416', croma: { chiaro: 0.9, scuro: 0.8 } },
+  agenda: { chiaro: '#fbfaf7', scuro: '#18171b', croma: { chiaro: 0.85, scuro: 0.75 } },
+  etichetta: { chiaro: '#ffffff', scuro: '#0b0b0b', croma: { chiaro: 1, scuro: 0.9 } },
+  mosaico: { chiaro: '#f3efe8', scuro: '#1b1a1f', croma: { chiaro: 1, scuro: 0.9 } },
+  notturno: { chiaro: '#f4f5f8', scuro: '#0d1017', croma: { chiaro: 0.95, scuro: 0.9 } },
 }
 
 const out = {}
