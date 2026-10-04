@@ -54,6 +54,10 @@ export function useAggiornamentoApp(): (() => void) | null {
       // Con un service worker che si attiva da solo questo non scatta quasi mai,
       // ma se restasse in attesa (un'altra scheda aperta) l'avviso arriva lo stesso.
       onNeedRefresh: segnala,
+      // Senza questo, in modalità autoUpdate il plugin ricarica la pagina da solo
+      // appena la versione nuova si attiva: chi sta scrivendo un movimento lo perde.
+      // Così invece arriva l'avviso, e il momento di ricaricare lo sceglie l'utente.
+      onNeedReload: segnala,
       onRegisteredSW: (_url, r) => {
         registrazione = r
         if (!r) return

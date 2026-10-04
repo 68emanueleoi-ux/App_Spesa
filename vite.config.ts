@@ -15,10 +15,18 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      // 'prompt' invece di 'autoUpdate': la nuova versione non si installa alle
-      // spalle dell'utente mentre sta scrivendo un movimento, ma si annuncia con
-      // un avviso e si applica quando lui dice di sì. Vedi lib/aggiornamento.ts.
-      registerType: 'prompt',
+      /*
+        'autoUpdate': il service worker nuovo si attiva da solo e prende in
+        carico le schede aperte.
+
+        Con 'prompt' restava in attesa finché non era la pagina a dirgli di
+        attivarsi, e una pagina che esegue codice vecchio quel messaggio non lo
+        manda mai: chi aveva l'app installata restava bloccato sulla versione
+        vecchia finché non la chiudeva del tutto. Qui si attiva da sé, e a
+        decidere quando ricaricare resta comunque l'utente: l'avviso lo chiede,
+        vedi lib/aggiornamento.ts.
+      */
+      registerType: 'autoUpdate',
       injectRegister: null,
       includeAssets: ['apple-touch-icon.png', 'favicon.svg'],
       manifest: {
