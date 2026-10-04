@@ -29,8 +29,9 @@ export default defineConfig({
         display: 'standalone',
         start_url: base,
         scope: base,
-        background_color: '#F3F4F0',
-        theme_color: '#F3F4F0',
+        // la carta neutra dei mesi: all'apertura la barra prende poi il colore del mese (lib/coloreMese.ts)
+        background_color: '#F8F4EE',
+        theme_color: '#F8F4EE',
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },

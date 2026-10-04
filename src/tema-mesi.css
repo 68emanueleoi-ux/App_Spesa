@@ -1,0 +1,155 @@
+/*
+  FILE GENERATO da design/strumenti/genera-tema-mesi.mjs — non modificarlo a mano.
+
+  Il colore del mese: ogni mese ha una tinta presa dalla stagione e una vivacità che
+  segue l'anno (spenta d'inverno, piena d'estate). Ne derivano la testata (--blocco),
+  la carta, l'inchiostro e l'accento di filetti, margini, grafico e collegamenti.
+  Restano fissi i colori di categoria e il verde delle entrate.
+
+  data-mese su <html> (1-12) sceglie il mese; senza, valgono i colori di ottobre
+  (il mese della generazione), così la pagina non resta mai scolorita.
+  Tutti i contrasti sono verificati dal generatore per i 12 mesi nei due temi.
+*/
+
+/* ---- tavolozza fissa ---- */
+:root {
+  --cat-1: #3259da; --cat-2: #a56b01; --cat-3: #098673; --cat-4: #8944d1; --cat-5: #c7521c; --cat-6: #157cba; --cat-7: #ce3c79; --cat-8: #6b8017;
+  --verde: #067b52; --rosso: #b3261e;
+}
+:root.dark {
+  --cat-1: #5f7ff4; --cat-2: #fac655; --cat-3: #41d3b1; --cat-4: #b06ff5; --cat-5: #f88f4d; --cat-6: #4dbcf1; --cat-7: #f7669d; --cat-8: #abd451;
+  --verde: #4ce09f; --rosso: #ff7d6e;
+}
+
+/* ---- valori di riserva, prima che data-mese sia impostato ---- */
+:root {
+  --blocco: #b89a5a; --blocco-testo: #1e1400; --blocco-testo-2: #443205;
+  --carta: #faf6ee; --inchiostro: #1e1a11; --inchiostro-2: #625a4a; --accento: #8a6d2c;
+  --peso-cifra: 725; --peso-titoli: 678; --peso-importi: 577;
+}
+:root.dark {
+  --blocco: #503a01; --blocco-testo: #fef4df; --blocco-testo-2: #e0cfae;
+  --carta: #131009; --inchiostro: #f3eee4; --inchiostro-2: #b4ad9f; --accento: #b89a5a;
+}
+
+/* ---- i dodici mesi ---- */
+/* Gennaio: gelo */
+:root[data-mese="1"] {
+  --blocco: #aec8dc; --blocco-testo: #031826; --blocco-testo-2: #223848;
+  --carta: #f0f8fe; --inchiostro: #131c22; --inchiostro-2: #4e5d69; --accento: #547389;
+  --peso-cifra: 648; --peso-titoli: 607; --peso-importi: 525;
+}
+:root.dark[data-mese="1"] {
+  --blocco: #3d5566; --blocco-testo: #edf7fe; --blocco-testo-2: #bbd5e9;
+  --carta: #0c1115; --inchiostro: #e7f0f7; --inchiostro-2: #a3b0ba; --accento: #83a3bb;
+}
+/* Febbraio: lavanda grigia */
+:root[data-mese="2"] {
+  --blocco: #c4aecd; --blocco-testo: #1d1022; --blocco-testo-2: #3f2d47;
+  --carta: #faf4fc; --inchiostro: #1e1820; --inchiostro-2: #615665; --accento: #7d6986;
+  --peso-cifra: 663; --peso-titoli: 621; --peso-importi: 535;
+}
+:root.dark[data-mese="2"] {
+  --blocco: #56435d; --blocco-testo: #fbf1ff; --blocco-testo-2: #dec8e7;
+  --carta: #130f15; --inchiostro: #f2ecf5; --inchiostro-2: #b3aab7; --accento: #ab95b4;
+}
+/* Marzo: salvia */
+:root[data-mese="3"] {
+  --blocco: #88d0b0; --blocco-testo: #011c11; --blocco-testo-2: #09402d;
+  --carta: #f0f9f5; --inchiostro: #131d18; --inchiostro-2: #4d6057; --accento: #377e62;
+  --peso-cifra: 717; --peso-titoli: 671; --peso-importi: 572;
+}
+:root.dark[data-mese="3"] {
+  --blocco: #0b5c42; --blocco-testo: #e4fcf0; --blocco-testo-2: #b5dcc9;
+  --carta: #0b120f; --inchiostro: #e6f2ec; --inchiostro-2: #a2b2ab; --accento: #69af91;
+}
+/* Aprile: germoglio */
+:root[data-mese="4"] {
+  --blocco: #8bb766; --blocco-testo: #0f1a06; --blocco-testo-2: #293c17;
+  --carta: #f4f9f0; --inchiostro: #171c14; --inchiostro-2: #555e4f; --accento: #547d2b;
+  --peso-cifra: 772; --peso-titoli: 721; --peso-importi: 608;
+}
+:root.dark[data-mese="4"] {
+  --blocco: #2c4e00; --blocco-testo: #eefae5; --blocco-testo-2: #c6d8b8;
+  --carta: #0e120b; --inchiostro: #ebf1e7; --inchiostro-2: #a9b1a3; --accento: #82ae5d;
+}
+/* Maggio: fiore di pesco */
+:root[data-mese="5"] {
+  --blocco: #f893bc; --blocco-testo: #240e17; --blocco-testo-2: #4f2637;
+  --carta: #fef4f7; --inchiostro: #22171b; --inchiostro-2: #68555b; --accento: #aa4d75;
+  --peso-cifra: 787; --peso-titoli: 735; --peso-importi: 618;
+}
+:root.dark[data-mese="5"] {
+  --blocco: #7d244e; --blocco-testo: #fff1f6; --blocco-testo-2: #ecc5d2;
+  --carta: #160e11; --inchiostro: #f7ebef; --inchiostro-2: #baa9ae; --accento: #dd7aa2;
+}
+/* Giugno: grano */
+:root[data-mese="6"] {
+  --blocco: #d5c43c; --blocco-testo: #1a1601; --blocco-testo-2: #3c3606;
+  --carta: #f8f7ee; --inchiostro: #1c1b11; --inchiostro-2: #5e5c4a; --accento: #7c7004;
+  --peso-cifra: 818; --peso-titoli: 763; --peso-importi: 639;
+}
+:root.dark[data-mese="6"] {
+  --blocco: #5a5100; --blocco-testo: #f9f6e0; --blocco-testo-2: #d7d3af;
+  --carta: #12110a; --inchiostro: #f0efe4; --inchiostro-2: #b0afa0; --accento: #b1a103;
+}
+/* Luglio: anguria */
+:root[data-mese="7"] {
+  --blocco: #ff6b65; --blocco-testo: #250e0d; --blocco-testo-2: #522724;
+  --carta: #fff4f3; --inchiostro: #221716; --inchiostro-2: #695553; --accento: #c92f33;
+  --peso-cifra: 880; --peso-titoli: 820; --peso-importi: 680;
+}
+:root.dark[data-mese="7"] {
+  --blocco: #7c000f; --blocco-testo: #fff2f0; --blocco-testo-2: #efc6c1;
+  --carta: #160e0d; --inchiostro: #f8ebea; --inchiostro-2: #bba9a7; --accento: #ff645f;
+}
+/* Agosto: albicocca */
+:root[data-mese="8"] {
+  --blocco: #feac5c; --blocco-testo: #231102; --blocco-testo-2: #4c2d0d;
+  --carta: #fdf5ef; --inchiostro: #211912; --inchiostro-2: #66584b; --accento: #a35e04;
+  --peso-cifra: 849; --peso-titoli: 792; --peso-importi: 659;
+}
+:root.dark[data-mese="8"] {
+  --blocco: #754200; --blocco-testo: #fef3e9; --blocco-testo-2: #e8cbb1;
+  --carta: #150f0a; --inchiostro: #f6ede5; --inchiostro-2: #b8aba1; --accento: #e18508;
+}
+/* Settembre: terracotta */
+:root[data-mese="9"] {
+  --blocco: #e38658; --blocco-testo: #251006; --blocco-testo-2: #502a17;
+  --carta: #fef4f0; --inchiostro: #221814; --inchiostro-2: #68564e; --accento: #ad5526;
+  --peso-cifra: 787; --peso-titoli: 735; --peso-importi: 618;
+}
+:root.dark[data-mese="9"] {
+  --blocco: #6a2900; --blocco-testo: #fef2ed; --blocco-testo-2: #edc8b7;
+  --carta: #160f0b; --inchiostro: #f7ece7; --inchiostro-2: #baaaa3; --accento: #e08355;
+}
+/* Ottobre: ocra */
+:root[data-mese="10"] {
+  --blocco: #b89a5a; --blocco-testo: #1e1400; --blocco-testo-2: #443205;
+  --carta: #faf6ee; --inchiostro: #1e1a11; --inchiostro-2: #625a4a; --accento: #8a6d2c;
+  --peso-cifra: 725; --peso-titoli: 678; --peso-importi: 577;
+}
+:root.dark[data-mese="10"] {
+  --blocco: #503a01; --blocco-testo: #fef4df; --blocco-testo-2: #e0cfae;
+  --carta: #131009; --inchiostro: #f3eee4; --inchiostro-2: #b4ad9f; --accento: #b89a5a;
+}
+/* Novembre: nebbia */
+:root[data-mese="11"] {
+  --blocco: #93b2ad; --blocco-testo: #001b17; --blocco-testo-2: #1f3b37;
+  --carta: #f0f9f7; --inchiostro: #111d1b; --inchiostro-2: #4a605c; --accento: #4d7871;
+  --peso-cifra: 640; --peso-titoli: 600; --peso-importi: 520;
+}
+:root.dark[data-mese="11"] {
+  --blocco: #2f4b46; --blocco-testo: #e0fcf7; --blocco-testo-2: #b9d9d3;
+  --carta: #0b1211; --inchiostro: #e5f2ef; --inchiostro-2: #a0b3af; --accento: #7ca9a1;
+}
+/* Dicembre: ardesia */
+:root[data-mese="12"] {
+  --blocco: #929ebb; --blocco-testo: #0e1528; --blocco-testo-2: #2b354d;
+  --carta: #f4f7fe; --inchiostro: #171a23; --inchiostro-2: #545b6a; --accento: #65718f;
+  --peso-cifra: 655; --peso-titoli: 614; --peso-importi: 530;
+}
+:root.dark[data-mese="12"] {
+  --blocco: #343d56; --blocco-testo: #f1f5ff; --blocco-testo-2: #c4d1f0;
+  --carta: #0e1017; --inchiostro: #eaeef8; --inchiostro-2: #a8aebc; --accento: #919ebe;
+}

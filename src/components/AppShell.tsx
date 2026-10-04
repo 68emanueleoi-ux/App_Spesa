@@ -1,6 +1,8 @@
 import { ChartNoAxesCombined, Layers, List, Moon, Plus, Sun } from 'lucide-react'
 import { NavLink, Outlet } from 'react-router'
 import { cn } from '@/lib/cn'
+import { useColoreDelMese } from '@/lib/coloreMese'
+import { useMeseSelezionato } from '@/lib/mese'
 import { useTema } from '@/lib/tema'
 import { useMovimenti } from '@/features/movimenti/useMovimenti'
 
@@ -17,6 +19,9 @@ const VOCI = [
 export function AppShell() {
   const { scuro, alterna } = useTema()
   const { apriNuovo } = useMovimenti()
+  // tutta l'app prende il colore del mese che si sta guardando (o del mese corrente)
+  const { mese } = useMeseSelezionato()
+  useColoreDelMese(mese, scuro)
 
   return (
     <div className="flex min-h-dvh flex-col">

@@ -11,15 +11,18 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Spese" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F3F4F0" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#15181F" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F8F4EE" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#14110D" />
     <script>
-      // Applica il tema prima del primo render per evitare il lampo bianco/nero.
+      // Applica tema e colore del mese prima del primo render, per evitare il lampo di colori sbagliati.
       try {
         var t = localStorage.getItem('spese.tema');
         var scuro = t === 'scuro' || (t !== 'chiaro' && matchMedia('(prefers-color-scheme: dark)').matches);
         if (scuro) document.documentElement.classList.add('dark');
       } catch (e) {}
+      // Il colore del mese: il mese guardato (?mese=2026-09) o quello corrente, prima del primo render.
+      var m = /[?&]mese=\d{4}-(\d{2})/.exec(location.search);
+      document.documentElement.setAttribute('data-mese', String(m ? Number(m[1]) : new Date().getMonth() + 1));
     </script>
   </head>
   <body>
