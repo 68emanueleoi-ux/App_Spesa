@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prova alla cieca — la cifra del mese</title>
+<style>
+@font-face { font-family: "C0"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/unbounded/files/unbounded-latin-wght-normal.woff2) format("woff2"); }
+@font-face { font-family: "C1"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/syne/files/syne-latin-wght-normal.woff2) format("woff2"); }
+@font-face { font-family: "C2"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/hubot-sans/files/hubot-sans-latin-standard-normal.woff2) format("woff2"); }
+@font-face { font-family: "C3"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/anybody/files/anybody-latin-standard-normal.woff2) format("woff2"); }
+@font-face { font-family: "C4"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource/dela-gothic-one/files/dela-gothic-one-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "C5"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource/rubik-mono-one/files/rubik-mono-one-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "C6"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource/archivo-black/files/archivo-black-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "C7"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/saira/files/saira-latin-standard-normal.woff2) format("woff2"); }
+@font-face { font-family: "C8"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/doto/files/doto-latin-full-normal.woff2) format("woff2"); }
+@font-face { font-family: "C9"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/doto/files/doto-latin-full-normal.woff2) format("woff2"); }
+@font-face { font-family: "C10"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/handjet/files/handjet-latin-full-normal.woff2) format("woff2"); }
+@font-face { font-family: "C11"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/sixtyfour/files/sixtyfour-latin-full-normal.woff2) format("woff2"); }
+@font-face { font-family: "C12"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/workbench/files/workbench-latin-full-normal.woff2) format("woff2"); }
+@font-face { font-family: "C13"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/kode-mono/files/kode-mono-latin-wght-normal.woff2) format("woff2"); }
+@font-face { font-family: "C14"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/tektur/files/tektur-latin-standard-normal.woff2) format("woff2"); }
+@font-face { font-family: "C15"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/oxanium/files/oxanium-latin-wght-normal.woff2) format("woff2"); }
+@font-face { font-family: "C16"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/martian-mono/files/martian-mono-latin-standard-normal.woff2) format("woff2"); }
+@font-face { font-family: "C17"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource/fragment-mono/files/fragment-mono-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "C18"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/chivo-mono/files/chivo-mono-latin-wght-normal.woff2) format("woff2"); }
+@font-face { font-family: "C19"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource/major-mono-display/files/major-mono-display-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "C20"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-opsz-normal.woff2) format("woff2"); }
+@font-face { font-family: "C21"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/eb-garamond/files/eb-garamond-latin-wght-normal.woff2) format("woff2"); }
+@font-face { font-family: "C22"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/cormorant/files/cormorant-latin-wght-normal.woff2) format("woff2"); }
+@font-face { font-family: "C23"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2) format("woff2"); }
+@font-face { font-family: "C24"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2) format("woff2"); }
+@font-face { font-family: "C25"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/literata/files/literata-latin-opsz-normal.woff2) format("woff2"); }
+@font-face { font-family: "C26"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource/libre-caslon-text/files/libre-caslon-text-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "C27"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/piazzolla/files/piazzolla-latin-opsz-normal.woff2) format("woff2"); }
+@font-face { font-family: "C28"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/petrona/files/petrona-latin-wght-normal.woff2) format("woff2"); }
+@font-face { font-family: "C29"; font-weight: 100 1000; font-stretch: 50% 150%; font-display: block; src: url(../../../node_modules/@fontsource-variable/roboto-serif/files/roboto-serif-latin-full-normal.woff2) format("woff2"); }
+*, *::before, *::after { box-sizing: border-box; }
+:root { --blocco: #e38658; --blocco-testo: #251006; --blocco-testo-2: #502a17; }
+.scuro { --blocco: #6a2900; --blocco-testo: #fef2ed; --blocco-testo-2: #edc8b7; }
+body { margin: 0; background: #6f6d68; color: #fff; font: 15px/1.45 system-ui, sans-serif; }
+.intro { max-width: 1280px; margin: 0 auto; padding: 26px 20px 4px; }
+.intro h1 { margin: 0; font-size: 24px; } .intro p { margin: 8px 0 0; max-width: 92ch; }
+.comandi { position: sticky; top: 0; z-index: 10; display: flex; gap: 10px; justify-content: center; padding: 10px; background: #3a3936; }
+.comandi button { font: 600 15px system-ui; padding: 9px 14px; border-radius: 8px; border: 0; background: #fff; color: #111; cursor: pointer; }
+.griglia { display: grid; grid-template-columns: repeat(auto-fill, 393px); gap: 22px; justify-content: center; padding: 20px 16px 60px; }
+.tessera { margin: 0; }
+.tessera figcaption { display: flex; gap: 10px; align-items: baseline; margin: 0 0 6px 4px; }
+.tessera figcaption b { font-size: 20px; }
+.nome { display: none; opacity: .85; font-size: 13.5px; } .con-nomi .nome { display: inline; }
+.num { font-variant-numeric: tabular-nums; }
+.testata { background: var(--blocco); color: var(--blocco-testo); border-radius: 24px; padding: 16px 20px 18px; font-family: var(--f); }
+.mese { margin: 0; font-size: 19px; }
+.k { margin: 16px 0 0; font: 600 14px system-ui, sans-serif; color: var(--blocco-testo-2); }
+.cifra { margin: 2px 0 0; font-size: 60px; line-height: 1.05; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; }
+.cifra .eu { font-size: .42em; margin-left: .12em; color: var(--blocco-testo-2); }
+.riga { margin: 12px 0 0; font-size: 15px; color: var(--blocco-testo-2); }
+</style>
+</head>
+<body>
+<header class="intro"><h1>Prova alla cieca — la cifra del mese</h1>
+<p>Trenta caratteri sulla testata di settembre, senza nomi: guarda solo le forme. La cifra è a 60 px; i pochi caratteri troppo larghi per starci sono ridotti quanto basta. Segnati le lettere che ti colpiscono (anche solo tre), poi, se vuoi, premi "Mostra i nomi". Ci sono caratteri audaci, tecnici ed editoriali, con e senza grazie, alcuni con le cifre "all'antica". Tutti hanno cifre tabellari e sono self-hosted (@fontsource, licenza OFL), nessuno arriva da Google Fonts.</p></header>
+<div class="comandi">
+  <button onclick="document.documentElement.classList.toggle('scuro')">Chiaro / scuro</button>
+  <button onclick="document.documentElement.classList.toggle('con-nomi')">Mostra / nascondi i nomi</button>
+</div>
+<main class="griglia"><figure class="tessera"><figcaption><b>A</b><span class="nome">Rubik Mono One · audace</span></figcaption>
+  <div class="testata" style="--f:'C5'">
+    <p class="mese" style="font-weight:400">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:400">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>B</b><span class="nome">Petrona · editoriale</span></figcaption>
+  <div class="testata" style="--f:'C28'">
+    <p class="mese" style="font-weight:700">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:700">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>C</b><span class="nome">EB Garamond, cifre all’antica · editoriale</span></figcaption>
+  <div class="testata" style="--f:'C21'">
+    <p class="mese" style="font-weight:600;font-variant-numeric:oldstyle-nums tabular-nums">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:600;font-variant-numeric:oldstyle-nums tabular-nums">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500;font-variant-numeric:oldstyle-nums tabular-nums">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>D</b><span class="nome">Tektur · tecnica</span></figcaption>
+  <div class="testata" style="--f:'C14'">
+    <p class="mese" style="font-weight:700">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:700">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>E</b><span class="nome">Saira, largo · audace</span></figcaption>
+  <div class="testata" style="--f:'C7'">
+    <p class="mese" style="font-weight:700;font-stretch:125%">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:700;font-stretch:125%">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500;">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>F</b><span class="nome">Unbounded · audace</span></figcaption>
+  <div class="testata" style="--f:'C0'">
+    <p class="mese" style="font-weight:600">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:600">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>G</b><span class="nome">Newsreader, titolo · editoriale</span></figcaption>
+  <div class="testata" style="--f:'C23'">
+    <p class="mese" style="font-weight:500;font-variation-settings:'opsz' 72">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:500;font-variation-settings:'opsz' 72">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500;font-variation-settings:'opsz' 72">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>H</b><span class="nome">Martian Mono · tecnica</span></figcaption>
+  <div class="testata" style="--f:'C16'">
+    <p class="mese" style="font-weight:600;font-stretch:87.5%">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:600;font-stretch:87.5%">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500;">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>I</b><span class="nome">Doto, punti tondi · tecnica</span></figcaption>
+  <div class="testata" style="--f:'C9'">
+    <p class="mese" style="font-weight:900;font-variation-settings:'ROND' 100">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:900;font-variation-settings:'ROND' 100">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500;font-variation-settings:'ROND' 100">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>J</b><span class="nome">Hubot Sans, larghissimo · audace</span></figcaption>
+  <div class="testata" style="--f:'C2'">
+    <p class="mese" style="font-weight:800;font-stretch:125%">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:800;font-stretch:125%">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500;">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>K</b><span class="nome">Literata, cifre all’antica · editoriale</span></figcaption>
+  <div class="testata" style="--f:'C25'">
+    <p class="mese" style="font-weight:600;font-variation-settings:'opsz' 72;font-variant-numeric:oldstyle-nums tabular-nums">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:600;font-variation-settings:'opsz' 72;font-variant-numeric:oldstyle-nums tabular-nums">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500;font-variation-settings:'opsz' 72;font-variant-numeric:oldstyle-nums tabular-nums">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>L</b><span class="nome">Chivo Mono · tecnica</span></figcaption>
+  <div class="testata" style="--f:'C18'">
+    <p class="mese" style="font-weight:600">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:600">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>M</b><span class="nome">Sixtyfour (pixel) · tecnica</span></figcaption>
+  <div class="testata" style="--f:'C11'">
+    <p class="mese" style="font-weight:400">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:400">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>N</b><span class="nome">Dela Gothic One · audace</span></figcaption>
+  <div class="testata" style="--f:'C4'">
+    <p class="mese" style="font-weight:400">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:400">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>O</b><span class="nome">Piazzolla · editoriale</span></figcaption>
+  <div class="testata" style="--f:'C27'">
+    <p class="mese" style="font-weight:700;font-variation-settings:'opsz' 72">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:700;font-variation-settings:'opsz' 72">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500;font-variation-settings:'opsz' 72">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>P</b><span class="nome">Bodoni Moda · editoriale</span></figcaption>
+  <div class="testata" style="--f:'C20'">
+    <p class="mese" style="font-weight:600;font-variation-settings:'opsz' 96">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:600;font-variation-settings:'opsz' 96">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500;font-variation-settings:'opsz' 96">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>Q</b><span class="nome">Kode Mono · tecnica</span></figcaption>
+  <div class="testata" style="--f:'C13'">
+    <p class="mese" style="font-weight:600">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:600">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>R</b><span class="nome">Archivo Black · audace</span></figcaption>
+  <div class="testata" style="--f:'C6'">
+    <p class="mese" style="font-weight:400">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:400">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>S</b><span class="nome">Roboto Serif, stretto e ottico · editoriale</span></figcaption>
+  <div class="testata" style="--f:'C29'">
+    <p class="mese" style="font-weight:700;font-variation-settings:'opsz' 72, 'wdth' 80">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:700;font-variation-settings:'opsz' 72, 'wdth' 80">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500;font-variation-settings:'opsz' 72, 'wdth' 80">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>T</b><span class="nome">Cormorant, cifre all’antica · editoriale</span></figcaption>
+  <div class="testata" style="--f:'C22'">
+    <p class="mese" style="font-weight:600;font-variant-numeric:oldstyle-nums tabular-nums">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:600;font-variant-numeric:oldstyle-nums tabular-nums">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500;font-variant-numeric:oldstyle-nums tabular-nums">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>U</b><span class="nome">Oxanium · tecnica</span></figcaption>
+  <div class="testata" style="--f:'C15'">
+    <p class="mese" style="font-weight:700">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:700">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>V</b><span class="nome">Doto (a punti) · tecnica</span></figcaption>
+  <div class="testata" style="--f:'C8'">
+    <p class="mese" style="font-weight:800">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:800">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>W</b><span class="nome">Syne · audace</span></figcaption>
+  <div class="testata" style="--f:'C1'">
+    <p class="mese" style="font-weight:700">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:700">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>X</b><span class="nome">Newsreader, cifre all’antica · editoriale</span></figcaption>
+  <div class="testata" style="--f:'C24'">
+    <p class="mese" style="font-weight:500;font-variation-settings:'opsz' 72;font-variant-numeric:oldstyle-nums tabular-nums">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:500;font-variation-settings:'opsz' 72;font-variant-numeric:oldstyle-nums tabular-nums">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500;font-variation-settings:'opsz' 72;font-variant-numeric:oldstyle-nums tabular-nums">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>Y</b><span class="nome">Fragment Mono · tecnica</span></figcaption>
+  <div class="testata" style="--f:'C17'">
+    <p class="mese" style="font-weight:400">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:400">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>Z</b><span class="nome">Handjet · tecnica</span></figcaption>
+  <div class="testata" style="--f:'C10'">
+    <p class="mese" style="font-weight:600">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:600">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>AA</b><span class="nome">Anybody, largo · audace</span></figcaption>
+  <div class="testata" style="--f:'C3'">
+    <p class="mese" style="font-weight:800;font-stretch:140%">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:800;font-stretch:140%">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500;">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>AB</b><span class="nome">Libre Caslon Text · editoriale</span></figcaption>
+  <div class="testata" style="--f:'C26'">
+    <p class="mese" style="font-weight:400">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:400">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>AC</b><span class="nome">Major Mono Display · tecnica</span></figcaption>
+  <div class="testata" style="--f:'C19'">
+    <p class="mese" style="font-weight:400">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:400">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure><figure class="tessera"><figcaption><b>AD</b><span class="nome">Workbench (righe di scansione) · tecnica</span></figcaption>
+  <div class="testata" style="--f:'C12'">
+    <p class="mese" style="font-weight:400">Settembre 2026</p>
+    <p class="k">Speso finora</p>
+    <p class="cifra num" style="font-weight:400">1.284,30<span class="eu">€</span></p>
+    <p class="riga num" style="font-weight:500">Entrate +1.500,00 · Saldo 215,70</p>
+  </div></figure></main>
+<script>
+  // i caratteri molto larghi non stanno in 353 px a 60 px: solo loro si riducono, una volta al caricamento
+  document.fonts.ready.then(() => document.querySelectorAll('.cifra').forEach((el) => {
+    const disponibile = el.clientWidth
+    if (el.scrollWidth > disponibile) el.style.fontSize = (60 * disponibile / el.scrollWidth).toFixed(1) + 'px'
+  }))
+</script>
+</body>
+</html>
