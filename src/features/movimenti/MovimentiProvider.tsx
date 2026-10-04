@@ -3,6 +3,7 @@ import { useToast } from '@/components/useToast'
 import { conAvviso } from '@/lib/errori'
 import { MovimentiContext } from './useMovimenti'
 import { eliminaMovimento, ripristinaMovimento } from '@/db/movimenti'
+import { segnaRipristinata } from '@/lib/righeRecenti'
 import type { Movimento, TipoMovimento } from '@/db/tipi'
 import { FormMovimento } from './FormMovimento'
 
@@ -40,6 +41,7 @@ export function MovimentiProvider({ children }: { children: ReactNode }) {
       mostra(eliminato.tipo === 'uscita' ? 'Spesa eliminata' : 'Entrata eliminata', {
         etichetta: 'Annulla',
         esegui: () => {
+          segnaRipristinata(eliminato.id)
           void conAvviso(() => ripristinaMovimento(eliminato), 'ripristinare il movimento', errore)
         },
       })

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import type { MeseKey } from './date'
 
 /**
@@ -10,7 +10,8 @@ import type { MeseKey } from './date'
  * quello del sistema: con un solo valore giusto la barra sarebbe sbagliata metà delle volte.
  */
 export function useColoreDelMese(mese: MeseKey, scuro: boolean) {
-  useEffect(() => {
+  // prima del disegno: dentro una View Transition la seconda fotografia ha già i colori nuovi
+  useLayoutEffect(() => {
     const radice = document.documentElement
     radice.dataset.mese = String(Number(mese.slice(5)))
     // il colore si legge dopo che data-mese e .dark sono applicati, dal CSS e non da una tabella doppia

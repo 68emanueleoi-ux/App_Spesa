@@ -10,7 +10,8 @@ import path from 'node:path'
 const [url, uscita, larghezza = '900', altezza = '2400', attesa = '15000', titolo = ''] = process.argv.slice(2)
 const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe'
 const porta = 9300 + Math.floor(Math.random() * 500)
-const profilo = fs.mkdtempSync(path.join(os.tmpdir(), 'spese-chrome-'))
+// PROFILO=<cartella>: usa (e conserva) quel profilo di Chrome, per esempio per lasciarci i dati di prova
+const profilo = process.env.PROFILO ?? fs.mkdtempSync(path.join(os.tmpdir(), 'spese-chrome-'))
 const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--hide-scrollbars', `--remote-debugging-port=${porta}`, `--user-data-dir=${profilo}`,
   `--window-size=${larghezza},${altezza}`, '--force-device-scale-factor=1', 'about:blank'], { stdio: 'ignore' })
 
@@ -45,7 +46,17 @@ try {
   console.log('scritto', uscita)
 } finally {
   ws?.close()
+  // col profilo da conservare Chrome si chiude in modo ordinato: IndexedDB viene scritto su disco
+  if (process.env.PROFILO) {
+    try {
+      const { webSocketDebuggerUrl } = await (await fetch(`http://127.0.0.1:${porta}/json/version`)).json()
+      const b = new WebSocket(webSocketDebuggerUrl)
+      await new Promise((r) => (b.onopen = r))
+      b.send(JSON.stringify({ id: 1, method: 'Browser.close' }))
+      await pausa(3000)
+    } catch { /* se non risponde, si chiude comunque sotto */ }
+  }
   chrome.kill()
   await pausa(500)
-  fs.rmSync(profilo, { recursive: true, force: true })
+  if (!process.env.PROFILO) fs.rmSync(profilo, { recursive: true, force: true })
 }

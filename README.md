@@ -2,12 +2,12 @@
 
 Web app personale per tracciare entrate e uscite mensili. Pensata per iPhone (installata sulla home come PWA) e desktop. I dati restano **solo sul dispositivo** (IndexedDB): niente account, niente server.
 
-- **Report del mese**: quanto hai speso finora, il tratto delle uscite cumulate confrontato con il mese precedente allo stesso giorno, ripartizione per categoria, ultimi movimenti.
+- **Report del mese**, impaginato come un registro di cassa: quanto hai speso finora, il confronto con il mese precedente allo stesso giorno, entrate, uscite e saldo, l'andamento delle uscite giorno per giorno, il totale per categoria, i budget e gli ultimi movimenti con il saldo dopo ciascuno.
 - **Movimenti**: inserimento in 4 tocchi, lista per giorno con filtri e ricerca, modifica, eliminazione con Annulla.
-- **Categorie** con colore e icona; eliminazione che sposta i movimenti invece di cancellarli.
+- **Categorie** con colore, icona e un tetto mensile facoltativo (budget); eliminazione che sposta i movimenti invece di cancellarli.
 - **Importazione CSV o Excel** (Postepay, banca, fogli di calcolo) con riconoscimento delle colonne, anteprima, deduplica e regole di categorizzazione automatica.
 - **Backup e ripristino** in JSON, **esportazione CSV**.
-- Tema chiaro/scuro, offline, importi sempre in centesimi interi (mai float).
+- **Il colore del mese**: ogni mese ha una tinta presa dalla stagione, spenta d'inverno e piena d'estate, e tutta l'app la prende quando lo guardi. Tema chiaro/scuro, offline, importi sempre in centesimi interi (mai float).
 
 ## Avvio
 
@@ -60,9 +60,10 @@ src/
 
 Decisioni tecniche: importi come interi in centesimi; colore di categoria come chiave di tavolozza (valori diversi in chiaro e scuro, validati per contrasto e daltonismo); stato reattivo con `useLiveQuery` di Dexie (nessuno store parallelo); grafico in SVG puro; set fisso di icone lucide (offline e bundle leggero).
 
+Aspetto: caratteri Bitter (cifre e titoli) e Sora (testo), self-hosted da @fontsource. I colori dei dodici mesi stanno in `src/tema-mesi.css`, generato da `design/strumenti/genera-tema-mesi.mjs`, che verifica i contrasti di ogni mese nei due temi: per cambiarli si modifica `design/strumenti/colori-mesi.mjs` e si rigenera. In `design/` ci sono anche le proposte del restyling e gli strumenti di prova (`anteprima-app.html` con dati di esempio, `verifica-finale.mjs`).
+
 ## Evoluzioni possibili
 
-- **Budget per categoria** con barra di avanzamento nel report.
 - **Spese ricorrenti** (affitto, abbonamenti) create in automatico il giorno giusto.
 - **Obiettivi di risparmio** mensili.
 - **Inserimento automatico da notifiche Postepay** (Android): un'app di automazione legge la notifica di pagamento e apre l'app con `?importo=…&descrizione=…`; l'app crea il movimento applicando le regole.

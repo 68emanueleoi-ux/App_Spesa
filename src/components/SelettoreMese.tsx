@@ -5,6 +5,7 @@ import { db } from '@/db/db'
 import { cn } from '@/lib/cn'
 import { formatMese, meseCorrente, meseDi, mesePrecedente, type MeseKey } from '@/lib/date'
 import { useMeseSelezionato } from '@/lib/mese'
+import { conTransizione } from '@/lib/transizione'
 
 /** Quanti mesi indietro si possono scegliere anche senza movimenti registrati. */
 const MESI_MINIMI = 12
@@ -45,7 +46,11 @@ export function SelettoreMese({ className }: { className?: string }) {
       <span className="sr-only">Mese da mostrare</span>
       <select
         value={mese}
-        onChange={(e) => imposta(e.target.value)}
+        // il mese nuovo (e il suo colore) entra con una dissolvenza; istantaneo con "riduci movimento"
+        onChange={(e) => {
+          const scelto = e.target.value
+          conTransizione(() => imposta(scelto))
+        }}
         style={{ fontWeight: 'var(--peso-titoli)' }}
         className="h-11 cursor-pointer appearance-none rounded-ctrl border border-[color-mix(in_srgb,currentColor_40%,transparent)] bg-transparent py-0 pr-10 pl-3.5 font-display text-[18px] text-current active:bg-[color-mix(in_srgb,currentColor_10%,transparent)]"
       >

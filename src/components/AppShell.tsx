@@ -1,9 +1,10 @@
 import { ChartNoAxesCombined, Layers, List, Moon, Plus, Sun } from 'lucide-react'
-import { NavLink, Outlet } from 'react-router'
+import { NavLink, Outlet, useNavigate } from 'react-router'
 import { cn } from '@/lib/cn'
 import { useColoreDelMese } from '@/lib/coloreMese'
 import { useMeseSelezionato } from '@/lib/mese'
 import { useTema } from '@/lib/tema'
+import { conTransizione } from '@/lib/transizione'
 import { useMovimenti } from '@/features/movimenti/useMovimenti'
 
 const VOCI = [
@@ -22,6 +23,14 @@ export function AppShell() {
   // tutta l'app prende il colore del mese che si sta guardando (o del mese corrente)
   const { mese } = useMeseSelezionato()
   useColoreDelMese(mese, scuro)
+  const navigate = useNavigate()
+
+  /** Cambio di scheda con una dissolvenza (View Transition); i clic con modificatori restano al browser. */
+  const vaiA = (a: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+    e.preventDefault()
+    conTransizione(() => navigate(a))
+  }
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -35,6 +44,7 @@ export function AppShell() {
                 key={a}
                 to={a}
                 end={a === '/'}
+                onClick={vaiA(a)}
                 className={({ isActive }) =>
                   cn(
                     'pb-1 text-sm font-semibold transition-colors',
@@ -91,6 +101,7 @@ export function AppShell() {
             key={a}
             to={a}
             end={a === '/'}
+            onClick={vaiA(a)}
             className={({ isActive }) =>
               cn(
                 'group flex min-h-12 flex-col items-center gap-0.5 py-1 text-[11px] font-semibold transition-colors',

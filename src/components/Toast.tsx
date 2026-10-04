@@ -65,7 +65,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 toast.azione?.esegui()
                 chiudi()
               }}
-              className="rounded-ctrl px-2 py-1 font-bold text-carta underline-offset-2 hover:underline"
+              className="min-h-11 rounded-ctrl px-2 font-bold text-carta underline underline-offset-4"
             >
               {toast.azione.etichetta}
             </button>

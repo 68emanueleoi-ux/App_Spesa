@@ -177,6 +177,44 @@
   from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* Chiusura del pannello: scende com'era salito, il velo si dissolve. */
+@keyframes scende {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+@keyframes velo-via {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes scompare {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to { opacity: 0; transform: translate(-50%, -50%) scale(0.97); }
+}
+/* La riga appena salvata o ripristinata: entra, e per un attimo porta il colore del mese. */
+@keyframes riga-segnata {
+  from { background-color: color-mix(in srgb, var(--blocco) 55%, transparent); }
+  to { background-color: transparent; }
+}
+.riga-recente {
+  animation: riga-entra 260ms ease-out, riga-segnata 1400ms ease-out;
+}
+
+/*
+  Passaggio fra schermate e fra mesi (View Transitions, vedi lib/transizione.ts):
+  una dissolvenza breve. Con "riduci movimento" la transizione non parte nemmeno,
+  e questa regola resta come rete di sicurezza.
+*/
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 180ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
 
 /* Il pulsante d'azione e i chip scelti: la campitura del mese, tinta piena. */
 @utility accento {

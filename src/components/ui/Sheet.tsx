@@ -22,7 +22,7 @@ export function Sheet({ aperto, onChiudi, titolo, children, className, focusIniz
   return (
     <Dialog.Root open={aperto} onOpenChange={(o) => !o && onChiudi()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-[color-mix(in_srgb,var(--inchiostro)_45%,transparent)] data-[state=open]:animate-[velo_200ms_ease-out] dark:bg-[rgba(0,0,0,0.6)]" />
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-[color-mix(in_srgb,var(--inchiostro)_45%,transparent)] data-[state=open]:animate-[velo_200ms_ease-out] data-[state=closed]:animate-[velo-via_180ms_ease-in] dark:bg-[rgba(0,0,0,0.6)]" />
         <Dialog.Content
           aria-describedby={undefined}
           onOpenAutoFocus={(e) => {
@@ -40,9 +40,9 @@ export function Sheet({ aperto, onChiudi, titolo, children, className, focusIniz
           className={cn(
             'fixed z-50 flex flex-col bg-foglio text-inchiostro shadow-[0_-12px_40px_rgba(0,0,0,0.35)] outline-none',
             // smartphone: dal basso
-            'inset-x-0 bottom-0 max-h-[calc(100dvh-24px)] rounded-t-sheet border-t border-filetto pb-[max(20px,env(safe-area-inset-bottom))] data-[state=open]:animate-[sale_250ms_cubic-bezier(0.2,0.8,0.2,1)]',
+            'inset-x-0 bottom-0 max-h-[calc(100dvh-24px)] rounded-t-sheet border-t border-filetto pb-[max(20px,env(safe-area-inset-bottom))] data-[state=open]:animate-[sale_250ms_cubic-bezier(0.2,0.8,0.2,1)] data-[state=closed]:animate-[scende_200ms_cubic-bezier(0.4,0,1,1)]',
             // desktop: centrato
-            'md:inset-auto md:top-1/2 md:left-1/2 md:w-[480px] md:max-h-[calc(100dvh-48px)] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-sheet md:border md:pb-6 md:data-[state=open]:animate-[appare_200ms_ease-out]',
+            'md:inset-auto md:top-1/2 md:left-1/2 md:w-[480px] md:max-h-[calc(100dvh-48px)] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-sheet md:border md:pb-6 md:data-[state=open]:animate-[appare_200ms_ease-out] md:data-[state=closed]:animate-[scompare_150ms_ease-in]',
             className,
           )}
         >

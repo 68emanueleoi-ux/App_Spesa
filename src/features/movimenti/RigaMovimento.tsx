@@ -4,6 +4,7 @@ import { cn } from '@/lib/cn'
 import { coloreCss } from '@/lib/colori'
 import { formatDataBreve, formatDataBreveConAnno } from '@/lib/date'
 import { formatImporto, formatImportoMovimento } from '@/lib/importi'
+import { eRecente } from '@/lib/righeRecenti'
 import { useMovimenti } from './useMovimenti'
 
 interface Props {
@@ -40,6 +41,8 @@ export function RigaMovimento({ movimento: m, categoria, mostraData, conAnno, sa
       className={cn(
         'grid min-h-[52px] w-full items-stretch border-b border-filetto-leggero text-left text-[15px] last:border-b-0 active:bg-filetto-leggero',
         mostraData ? (conAnno ? 'grid-cols-[4.6rem_1fr_auto]' : 'grid-cols-[3.1rem_1fr_auto]') : 'grid-cols-[1fr_auto]',
+        // appena salvata o ripristinata: entra con un segno nel colore del mese
+        eRecente(m.id, m.creatoIl) && 'riga-recente',
         className,
       )}
     >
