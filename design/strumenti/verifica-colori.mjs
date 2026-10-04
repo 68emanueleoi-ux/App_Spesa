@@ -74,7 +74,8 @@ const DIREZIONI = {
   notturno: { chiaro: '#f4f5f8', scuro: '#0d1017', croma: { chiaro: 0.95, scuro: 0.9 } },
   // giro del colore su Mastro
   registro: { chiaro: '#ecf2e3', scuro: '#11201a', croma: { chiaro: 0.9, scuro: 0.85 } },
-  mese: { chiaro: '#faf6f0', scuro: '#17120e', croma: { chiaro: 0.95, scuro: 0.9 } },
+  // chiaro: un filo più scuro di tutte le carte velate dei dodici mesi, così la tavolozza regge in ognuno
+  mese: { chiaro: '#f3ede7', scuro: '#17120e', croma: { chiaro: 0.95, scuro: 0.9 } },
   evidenziatore: { chiaro: '#fdfcf8', scuro: '#141413', croma: { chiaro: 1, scuro: 0.95 } },
   riso: { chiaro: '#f3eee2', scuro: '#1a1630', croma: { chiaro: 1, scuro: 0.95 } },
   blu: { chiaro: '#f4f2ea', scuro: '#0e1531', croma: { chiaro: 0.85, scuro: 0.85 } },
