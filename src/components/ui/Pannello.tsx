@@ -10,24 +10,26 @@ interface Props {
 }
 
 /**
- * Un blocco di contenuto su foglio.
+ * Una sezione del registro.
  *
- * Prima il report era una pila di bande separate da filetti, tutte allo stesso
- * livello: la pagina sembrava un pannello di impostazioni. Qui i blocchi di
- * supporto stanno su una superficie staccata dalla carta e si separano con lo
- * spazio, non con una riga.
- *
- * Il totale del mese resta volutamente fuori da questi pannelli, sulla carta
- * nuda: è l'unica cosa in pagina che deve pesare di più.
+ * Niente scheda intorno: i blocchi stanno sulla carta del mese e si separano con
+ * lo spazio e col titolo, come le voci di un libro dei conti. Il titolo è in
+ * Bitter, col peso della stagione; l'azione a destra prende l'accento del mese.
  */
 export function Pannello({ titolo, azione, children, className }: Props) {
   return (
-    <section className={cn('scheda p-5 md:p-6', className)}>
-      <div className="mb-4 flex items-baseline justify-between gap-3">
-        <h2 className="font-display text-base font-extrabold tracking-tight">{titolo}</h2>
+    <section className={cn('pt-7', className)}>
+      <div className="mb-2.5 flex min-h-11 items-center justify-between gap-3">
+        <h2 className="font-display text-xl leading-tight" style={{ fontWeight: 'var(--peso-titoli)' }}>
+          {titolo}
+        </h2>
         {azione}
       </div>
       {children}
     </section>
   )
 }
+
+/** Il collegamento nell'angolo di un pannello: accento del mese, area di tocco piena. */
+export const classeAzionePannello =
+  'inline-flex min-h-11 items-center gap-1 text-sm font-bold text-accento underline-offset-4 active:underline'

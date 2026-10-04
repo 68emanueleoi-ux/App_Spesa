@@ -213,6 +213,15 @@
   font-variant-numeric: tabular-nums;
 }
 
+/*
+  La colonna degli importi del registro: oltre un doppio filetto nell'accento del
+  mese, come il margine rosso di un libro dei conti. Due righe da 1 px con la carta
+  in mezzo, disegnate con ombre interne così non spostano il testo.
+*/
+.registro-importo {
+  box-shadow: inset 1px 0 0 0 var(--accento), inset 3px 0 0 -1px var(--carta), inset 4px 0 0 -1px var(--accento);
+}
+
 /* ---- La testata del mese: la campitura piena che ha preso il posto della scheda sfumata ---- */
 .scheda-totale {
   position: relative;

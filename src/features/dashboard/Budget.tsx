@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { Pannello } from '@/components/ui/Pannello'
+import { classeAzionePannello, Pannello } from '@/components/ui/Pannello'
 import { IconaCategoria } from '@/components/IconaCategoria'
 import type { Categoria } from '@/db/tipi'
 import type { RiepilogoBudget, VoceBudget } from '@/lib/calcoli'
@@ -31,15 +31,15 @@ export function Budget({ riepilogo, perId, mese }: Props) {
     <Pannello
       titolo="Budget"
       azione={
-        <Link to="/categorie" className="font-testo text-sm font-medium text-cobalto">
+        <Link to="/categorie" className={classeAzionePannello}>
           Modifica i budget
         </Link>
       }
     >
-      <p className="num mb-3.5 text-sm text-inchiostro-2">
+      <p className="num mb-3 text-sm text-inchiostro-2">
         {residuoTotale >= 0 ? (
           <>
-            <b className="font-medium text-inchiostro">{formatImporto(residuoTotale)}</b> ancora disponibili su{' '}
+            <b className="font-display text-inchiostro" style={{ fontWeight: 'var(--peso-importi)' }}>{formatImporto(residuoTotale)}</b> ancora disponibili su{' '}
             {formatImporto(budgetTotale)}
           </>
         ) : (
@@ -53,7 +53,7 @@ export function Budget({ riepilogo, perId, mese }: Props) {
         )}
       </p>
 
-      <ul className="num grid gap-4 text-sm">
+      <ul className="num border-t border-accento">
         {voci.map((v) => (
           <li key={v.categoriaId}>
             <Riga voce={v} categoria={perId.get(v.categoriaId)} mese={mese} attesoOggi={attesoOggi} />
@@ -79,7 +79,7 @@ function Invito() {
       </p>
       <Link
         to="/categorie"
-        className="mt-3.5 inline-grid h-11 place-items-center rounded-ctrl border border-filetto px-4 text-sm font-semibold"
+        className="mt-3 inline-grid h-11 place-items-center rounded-ctrl border border-accento px-4 text-sm font-bold text-accento active:bg-filetto-leggero"
       >
         Scegli una categoria
       </Link>
@@ -107,21 +107,19 @@ function Riga({
   return (
     <Link
       to={`/movimenti?mese=${mese}&cat=${voce.categoriaId}`}
-      className="block rounded-ctrl py-0.5 active:bg-filetto-leggero"
+      className="block border-b border-filetto-leggero py-3 active:bg-filetto-leggero"
       aria-label={`${categoria?.nome ?? 'Categoria'}: ${formatImporto(voce.speso)} di ${formatImporto(voce.budget)}, ${voce.percentuale}% del budget${sforato ? ', sforato' : ''}. Vedi movimenti`}
     >
       <span className="flex items-baseline justify-between gap-3">
-        <span className="flex min-w-0 items-center gap-2">
-          <IconaCategoria
-            nome={categoria?.icona ?? 'circle-dashed'}
-            className="size-4 shrink-0"
-            style={{ color: colore }}
-          />
-          <span className="truncate font-testo">{categoria?.nome ?? 'Senza categoria'}</span>
+        <span className="flex min-w-0 items-center gap-2.5">
+          <span className="riquadro size-7 shrink-0" style={{ color: colore }} aria-hidden="true">
+            <IconaCategoria nome={categoria?.icona ?? 'circle-dashed'} className="size-[15px]" />
+          </span>
+          <span className="truncate text-[15px]">{categoria?.nome ?? 'Senza categoria'}</span>
         </span>
         <span
           className={cn(
-            'shrink-0 whitespace-nowrap',
+            'shrink-0 font-display whitespace-nowrap text-[15px]',
             sforato ? 'font-medium text-rosso' : inRitardo ? 'text-inchiostro' : 'text-inchiostro-2',
           )}
         >
@@ -130,13 +128,13 @@ function Riga({
         </span>
       </span>
 
-      <span className="relative mt-1.5 block h-2 overflow-hidden rounded-full bg-filetto-leggero" aria-hidden="true">
+      <span className="relative mt-2 block h-1 overflow-hidden rounded-full bg-filetto-leggero" aria-hidden="true">
         <span
-          className="block h-full rounded-r-full"
+          className="block h-full rounded-full"
           style={{ width: `${Math.max(2, larghezza)}%`, background: sforato ? 'var(--rosso)' : colore }}
         />
         {attesoOggi !== null && (
-          <span className="absolute top-0 h-full w-px bg-inchiostro-2 opacity-70" style={{ left: `${attesoOggi}%` }} />
+          <span className="absolute top-0 h-full w-0.5 bg-inchiostro" style={{ left: `${attesoOggi}%` }} />
         )}
       </span>
 

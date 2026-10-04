@@ -1,31 +1,61 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { formatMese } from '@/lib/date'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { ChevronDown } from 'lucide-react'
+import { useMemo } from 'react'
+import { db } from '@/db/db'
+import { cn } from '@/lib/cn'
+import { formatMese, meseCorrente, meseDi, mesePrecedente, type MeseKey } from '@/lib/date'
 import { useMeseSelezionato } from '@/lib/mese'
 
-export function SelettoreMese() {
-  const { mese, eCorrente, precedente, successivo } = useMeseSelezionato()
+/** Quanti mesi indietro si possono scegliere anche senza movimenti registrati. */
+const MESI_MINIMI = 12
+
+/** Dal mese corrente all'indietro fino al più vecchio da offrire. */
+function elencoMesi(primo: MeseKey, ultimo: MeseKey): MeseKey[] {
+  const out: MeseKey[] = []
+  for (let m = ultimo; m >= primo; m = mesePrecedente(m)) out.push(m)
+  return out
+}
+
+/**
+ * La tendina del mese: il nome del mese è il comando che apre la scelta.
+ *
+ * È un <select> nativo vestito da campo: su iPhone apre la rotella di sistema,
+ * che si usa col pollice e legge già VoiceOver; il corpo resta a 18 px, sopra i
+ * 16 sotto cui Safari ingrandisce la pagina. Prende il colore del testo che ha
+ * intorno, così sta sulla testata del mese come sulla carta.
+ *
+ * Si sceglie fra i mesi dal primo movimento registrato (o almeno gli ultimi 12)
+ * fino a quello corrente: oltre non c'è niente da vedere.
+ */
+export function SelettoreMese({ className }: { className?: string }) {
+  const { mese, imposta } = useMeseSelezionato()
+  const primoMovimento = useLiveQuery(() => db.movimenti.orderBy('data').first(), [])
+
+  const mesi = useMemo(() => {
+    const corrente = meseCorrente()
+    let primo = corrente
+    for (let i = 1; i < MESI_MINIMI; i++) primo = mesePrecedente(primo)
+    const dalPrimo = primoMovimento ? meseDi(primoMovimento.data) : primo
+    const inizio = [primo, dalPrimo, mese].sort()[0]
+    return elencoMesi(inizio, corrente)
+  }, [primoMovimento, mese])
+
   return (
-    <div className="flex items-center gap-1">
-      <button
-        type="button"
-        onClick={precedente}
-        aria-label="Mese precedente"
-        className="grid size-9 place-items-center rounded-ctrl text-inchiostro-2 transition-colors hover:bg-filetto-leggero active:bg-filetto"
+    <label className={cn('relative inline-flex items-center', className)}>
+      <span className="sr-only">Mese da mostrare</span>
+      <select
+        value={mese}
+        onChange={(e) => imposta(e.target.value)}
+        style={{ fontWeight: 'var(--peso-titoli)' }}
+        className="h-11 cursor-pointer appearance-none rounded-ctrl border border-[color-mix(in_srgb,currentColor_40%,transparent)] bg-transparent py-0 pr-10 pl-3.5 font-display text-[18px] text-current active:bg-[color-mix(in_srgb,currentColor_10%,transparent)]"
       >
-        <ChevronLeft className="size-5" />
-      </button>
-      <h1 className="min-w-[9ch] text-center font-display text-lg font-extrabold tracking-tight whitespace-nowrap">
-        {formatMese(mese)}
-      </h1>
-      <button
-        type="button"
-        onClick={successivo}
-        disabled={eCorrente}
-        aria-label="Mese successivo"
-        className="grid size-9 place-items-center rounded-ctrl text-inchiostro-2 hover:bg-filetto-leggero active:bg-filetto disabled:opacity-30 disabled:hover:bg-transparent"
-      >
-        <ChevronRight className="size-5" />
-      </button>
-    </div>
+        {mesi.map((m) => (
+          <option key={m} value={m}>
+            {formatMese(m)}
+          </option>
+        ))}
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-3 size-4" strokeWidth={2.4} aria-hidden="true" />
+    </label>
   )
 }

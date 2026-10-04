@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router'
+import { IconaCategoria } from '@/components/IconaCategoria'
 import type { Categoria } from '@/db/tipi'
 import type { QuotaCategoria } from '@/lib/calcoli'
 import { cn } from '@/lib/cn'
@@ -17,7 +18,17 @@ interface Props {
   massime?: number
 }
 
-/** Barre ordinate: nome, percentuale e importo sulla stessa riga, come nel registro. Tocco → lista filtrata. */
+/** Le colonne del registro: icona, voce, percentuale, importo oltre il doppio filetto. */
+const COLONNE = 'grid grid-cols-[2.25rem_1fr_3rem_6.5rem] items-stretch'
+
+/**
+ * Le uscite per categoria come un registro: una riga per voce, la percentuale
+ * delle uscite e l'importo in colonna, e in fondo il totale sotto la doppia riga.
+ * Tocco su una riga → i movimenti di quella categoria.
+ *
+ * Quando una voce si allontana molto dal solito degli ultimi mesi, al posto della
+ * percentuale compare lo scarto (+22%, −40%).
+ */
 export function RipartizioneCategorie({ quote, perId, mese, medie, mesiMedia = 3, massime = 5 }: Props) {
   const navigate = useNavigate()
   if (quote.length === 0) return null
@@ -26,7 +37,7 @@ export function RipartizioneCategorie({ quote, perId, mese, medie, mesiMedia = 3
   const altre = quote.slice(visibili.length)
   const altreImporto = altre.reduce((s, q) => s + q.importo, 0)
   const altrePct = altre.reduce((s, q) => s + q.percentuale, 0)
-  const massimo = quote[0].importo
+  const totale = quote.reduce((s, q) => s + q.importo, 0)
 
   const vaiA = (categoriaId?: string) => {
     const p = new URLSearchParams({ mese })
@@ -34,73 +45,79 @@ export function RipartizioneCategorie({ quote, perId, mese, medie, mesiMedia = 3
     navigate(`/movimenti?${p.toString()}`)
   }
 
-  const conMedie = medie !== undefined && visibili.some((q) => medie.get(q.categoriaId) !== undefined)
+  const conScarti = medie !== undefined && visibili.some((q) => medie.get(q.categoriaId) !== undefined)
 
   return (
     <>
-    <ul className="num grid gap-2.5 text-sm">
-      {visibili.map((q) => {
-        const c = perId.get(q.categoriaId)
-        const media = medie?.get(q.categoriaId)
-        return (
-          <li key={q.categoriaId}>
-            <Barra
-              nome={c?.nome ?? 'Senza categoria'}
-              colore={coloreCss(c?.colore ?? 'neutro')}
-              larghezza={(q.importo / massimo) * 100}
-              percentuale={q.percentuale}
-              importo={q.importo}
-              media={media}
-              mediaLarghezza={media ? (media / massimo) * 100 : undefined}
-              mesiMedia={mesiMedia}
-              onClick={() => vaiA(q.categoriaId)}
+      <div className={cn(COLONNE, 'border-b border-accento pb-1.5 text-[11.5px] font-bold tracking-[0.06em] text-inchiostro-2 uppercase')} aria-hidden="true">
+        <span className="col-span-2">Voce</span>
+        <span className="pr-2.5 text-right">%</span>
+        <span className="text-right">Importo</span>
+      </div>
+      <ul className="num">
+        {visibili.map((q) => {
+          const c = perId.get(q.categoriaId)
+          return (
+            <li key={q.categoriaId}>
+              <Riga
+                nome={c?.nome ?? 'Senza categoria'}
+                icona={c?.icona ?? 'circle-dashed'}
+                colore={coloreCss(c?.colore ?? 'neutro')}
+                percentuale={q.percentuale}
+                importo={q.importo}
+                media={medie?.get(q.categoriaId)}
+                mesiMedia={mesiMedia}
+                onClick={() => vaiA(q.categoriaId)}
+              />
+            </li>
+          )
+        })}
+        {altre.length > 0 && (
+          <li>
+            <Riga
+              nome={`Altre ${altre.length}`}
+              icona="circle-dashed"
+              colore="var(--inchiostro-2)"
+              percentuale={altrePct}
+              importo={altreImporto}
+              vuota
+              onClick={() => vaiA()}
             />
           </li>
-        )
-      })}
-      {altre.length > 0 && (
-        <li>
-          <Barra
-            nome={`Altre ${altre.length}`}
-            colore="var(--inchiostro-2)"
-            larghezza={(altreImporto / massimo) * 100}
-            percentuale={altrePct}
-            importo={altreImporto}
-            vuota
-            onClick={() => vaiA()}
-          />
-        </li>
+        )}
+      </ul>
+      <div className={cn(COLONNE, 'min-h-11 border-b-[3px] border-double border-accento font-bold')}>
+        <span className="col-span-2 self-center">Totale uscite</span>
+        <span className="num self-center pr-2.5 text-right text-[13px] text-inchiostro-2">100</span>
+        <span className="registro-importo num flex items-center justify-end font-display">{formatImporto(totale, { simbolo: false })}</span>
+      </div>
+      {conScarti && (
+        <p className="mt-2.5 text-xs text-inchiostro-2">
+          Quando una voce si allontana parecchio dal solito {mesiMedia === 1 ? 'del mese scorso' : `degli ultimi ${mesiMedia} mesi`}, al posto della
+          percentuale compare lo scarto.
+        </p>
       )}
-    </ul>
-    {conMedie && (
-      <p className="mt-2.5 text-xs text-inchiostro-2">
-        La tacca segna il solito di {mesiMedia === 1 ? 'un mese fa' : `questi ultimi ${mesiMedia} mesi`}; la
-        percentuale diventa lo scarto quando ci si allontana parecchio.
-      </p>
-    )}
     </>
   )
 }
 
-function Barra({
+function Riga({
   nome,
+  icona,
   colore,
-  larghezza,
   percentuale,
   importo,
   media,
-  mediaLarghezza,
   mesiMedia,
   vuota,
   onClick,
 }: {
   nome: string
+  icona: string
   colore: string
-  larghezza: number
   percentuale: number
   importo: number
   media?: number
-  mediaLarghezza?: number
   mesiMedia?: number
   vuota?: boolean
   onClick: () => void
@@ -120,28 +137,22 @@ function Barra({
           : '') +
         '. Vedi movimenti'
       }
-      className="grid w-full grid-cols-[10px_5.5rem_1fr_2.4rem_4.5rem] items-center gap-2 rounded-ctrl py-0.5 text-left active:bg-filetto-leggero md:grid-cols-[10px_7rem_1fr_2.6rem_5.5rem]"
+      className={cn(COLONNE, 'min-h-11 w-full border-b border-filetto-leggero text-left text-[15px] active:bg-filetto-leggero', vuota && 'text-inchiostro-2')}
     >
       <span
-        className="size-2.5 rounded-full"
-        style={vuota ? { border: `1.5px solid ${colore}` } : { background: colore }}
+        className={cn('riquadro size-7 self-center', vuota && 'border border-dashed border-filetto')}
+        style={{ color: colore, background: vuota ? 'transparent' : undefined }}
         aria-hidden="true"
-      />
-      <span className={vuota ? 'truncate text-inchiostro-2' : 'truncate'}>{nome}</span>
-      <span className="relative block h-2 overflow-hidden rounded-full bg-filetto-leggero" aria-hidden="true">
-        <span className="block h-full rounded-r-full" style={{ width: `${Math.max(2, larghezza)}%`, background: colore }} />
-        {/* Tacca del solito: stesso segno del ritmo nei budget, così si legge allo stesso modo */}
-        {mediaLarghezza !== undefined && mediaLarghezza > 0 && (
-          <span
-            className="absolute top-0 h-full w-px bg-inchiostro-2 opacity-70"
-            style={{ left: `${Math.min(100, mediaLarghezza)}%` }}
-          />
-        )}
+      >
+        <IconaCategoria nome={icona} className="size-[15px]" />
       </span>
-      <span className={cn('text-right text-xs', notevole ? 'text-inchiostro' : 'text-inchiostro-2')}>
-        {notevole ? `${scarto > 0 ? '+' : ''}${scarto}%` : `${percentuale}%`}
+      <span className="truncate self-center">{nome}</span>
+      <span className={cn('self-center pr-2.5 text-right text-[13px]', notevole ? 'font-bold text-inchiostro' : 'text-inchiostro-2')}>
+        {notevole ? `${scarto > 0 ? '+' : '−'}${Math.abs(scarto)}%` : percentuale}
       </span>
-      <span className="text-right">{formatImporto(importo, { simbolo: false })}</span>
+      <span className="registro-importo flex items-center justify-end font-display" style={{ fontWeight: 'var(--peso-importi)' }}>
+        {formatImporto(importo, { simbolo: false })}
+      </span>
     </button>
   )
 }

@@ -53,7 +53,7 @@ export function AppShell() {
           <button
             type="button"
             onClick={() => apriNuovo()}
-            className="accento flex items-center gap-1.5 rounded-ctrl px-4 py-2.5 text-sm font-bold shadow-[0_6px_18px_var(--alone)] hover:brightness-110 active:brightness-95"
+            className="accento flex items-center gap-1.5 rounded-ctrl px-4 py-2.5 text-sm font-bold shadow-[inset_0_0_0_1.5px_var(--accento)] hover:brightness-105 active:brightness-95"
           >
             <Plus className="size-4" strokeWidth={2.6} />
             Nuovo movimento
@@ -62,7 +62,12 @@ export function AppShell() {
       </header>
 
       {/* Contenuto */}
-      <main className="mx-auto w-full max-w-[1040px] flex-1 px-5 pt-[max(8px,env(safe-area-inset-top))] pb-28 md:px-8 md:pt-5 md:pb-10">
+      {/*
+        In fondo, su smartphone: barra schede + pulsante + margine + safe area.
+        Il pulsante arriva a 134 px dal bordo (78 + 56), più 16 di respiro:
+        l'ultima riga non finisce mai sotto il + o sotto le schede.
+      */}
+      <main className="mx-auto w-full max-w-[1040px] flex-1 px-5 pt-[max(8px,env(safe-area-inset-top))] pb-[calc(150px+env(safe-area-inset-bottom))] md:px-8 md:pt-5 md:pb-10">
         <Outlet context={{ scuro, alterna }} />
       </main>
 
@@ -71,7 +76,7 @@ export function AppShell() {
         type="button"
         aria-label="Aggiungi movimento"
         onClick={() => apriNuovo()}
-        className="accento fixed right-5 bottom-[calc(78px+env(safe-area-inset-bottom))] z-20 grid size-14 place-items-center rounded-[22px] shadow-[0_10px_30px_var(--alone)] transition-transform active:scale-95 md:hidden"
+        className="accento fixed right-5 bottom-[calc(78px+env(safe-area-inset-bottom))] z-20 grid size-14 place-items-center rounded-2xl shadow-[inset_0_0_0_1.5px_var(--accento)] transition-transform active:scale-95 md:hidden"
       >
         <Plus className="size-7" strokeWidth={2.6} />
       </button>
@@ -79,7 +84,7 @@ export function AppShell() {
       {/* Schede in basso su smartphone */}
       <nav
         aria-label="Sezioni"
-        className="vetro fixed inset-x-0 bottom-0 z-10 grid grid-cols-3 border-t border-filetto pt-2.5 pb-[max(12px,env(safe-area-inset-bottom))] md:hidden"
+        className="vetro fixed inset-x-0 bottom-0 z-10 grid grid-cols-3 border-t border-filetto pt-1.5 pb-[max(12px,env(safe-area-inset-bottom))] md:hidden"
       >
         {VOCI.map(({ a, testo, Icona }) => (
           <NavLink
@@ -88,14 +93,15 @@ export function AppShell() {
             end={a === '/'}
             className={({ isActive }) =>
               cn(
-                'flex flex-col items-center gap-1 py-1 text-[11px] font-semibold transition-colors',
-                isActive
-                  ? 'text-inchiostro [&>svg]:text-[color:var(--grad-1)] [&>svg]:drop-shadow-[0_0_9px_var(--alone)]'
-                  : 'text-inchiostro-2',
+                'group flex min-h-12 flex-col items-center gap-0.5 py-1 text-[11px] font-semibold transition-colors',
+                isActive ? 'text-inchiostro' : 'text-inchiostro-2',
               )
             }
           >
-            <Icona className="size-[22px]" strokeWidth={1.8} />
+            {/* La scheda attiva: una pillola nel colore della testata del mese */}
+            <span className="grid h-7 w-13 place-items-center rounded-full group-aria-[current=page]:bg-blocco group-aria-[current=page]:text-blocco-testo">
+              <Icona className="size-[21px]" strokeWidth={1.8} />
+            </span>
             {testo}
           </NavLink>
         ))}
@@ -104,13 +110,14 @@ export function AppShell() {
   )
 }
 
+/** Cambio di tema. Prende il colore del testo intorno: sta sulla testata del mese come nella barra desktop. */
 export function BottoneTema({ scuro, alterna }: { scuro: boolean; alterna: () => void }) {
   return (
     <button
       type="button"
       onClick={alterna}
       aria-label={scuro ? 'Passa al tema chiaro' : 'Passa al tema scuro'}
-      className="grid size-10 place-items-center rounded-ctrl border border-filetto bg-foglio text-inchiostro-2 transition-colors hover:text-inchiostro active:bg-filetto"
+      className="grid size-11 place-items-center rounded-ctrl text-current opacity-85 transition-opacity hover:opacity-100 active:bg-[color-mix(in_srgb,currentColor_12%,transparent)]"
     >
       {scuro ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
     </button>

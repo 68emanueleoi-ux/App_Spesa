@@ -1,8 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useMemo } from 'react'
 import { Link, useOutletContext } from 'react-router'
-import { BottoneTema } from '@/components/AppShell'
-import { SelettoreMese } from '@/components/SelettoreMese'
 import { db } from '@/db/db'
 import { movimentiDelMese, movimentiFraMesi } from '@/db/movimenti'
 import type { Movimento } from '@/db/tipi'
@@ -19,11 +17,11 @@ import { giornoDi, mesePrecedente as calcolaMesePrecedente, oggiIso } from '@/li
 import { useMeseSelezionato } from '@/lib/mese'
 import { useMovimenti } from '@/features/movimenti/useMovimenti'
 import { RigaMovimento } from '@/features/movimenti/RigaMovimento'
+import { classeAzionePannello, Pannello } from '@/components/ui/Pannello'
 import { Budget } from './Budget'
-import { SaldoDelMese } from './SaldoDelMese'
-import { SchedaTotale } from './SchedaTotale'
-import { Pannello } from '@/components/ui/Pannello'
 import { RipartizioneCategorie } from './RipartizioneCategorie'
+import { TestataMese } from './TestataMese'
+import { TracciatoMese } from './TracciatoMese'
 
 const ULTIMI = 8
 /** Su quanti mesi si calcola il "solito": tre bastano a dare un riferimento senza inseguire stagionalità lontane. */
@@ -64,78 +62,70 @@ export function ReportPage() {
     }
   }, [movimenti, precedenti, categorie, mese, mesePrec, giornoOggi])
 
+  // Il saldo del mese dopo ogni movimento, dal più recente indietro: si parte dal saldo
+  // di oggi e si toglie il movimento appena passato. Centesimi interi, nessun float.
+  const saldiDopo = useMemo(() => {
+    if (!dati || !movimenti) return []
+    const out: number[] = []
+    let saldo = dati.totali.saldo
+    for (const m of movimenti.slice(0, ULTIMI)) {
+      out.push(saldo)
+      saldo -= m.tipo === 'entrata' ? m.importo : -m.importo
+    }
+    return out
+  }, [dati, movimenti])
+
   return (
     <>
-      <div className="flex items-center justify-between py-2">
-        <SelettoreMese />
-        <span className="md:hidden">
-          <BottoneTema scuro={tema.scuro} alterna={tema.alterna} />
-        </span>
-      </div>
+      {/* La testata c'è sempre, anche a mese vuoto: dentro sta la tendina per cambiare mese. */}
+      <TestataMese
+        mese={mese}
+        mesePrecedente={mesePrec}
+        eCorrente={eCorrente}
+        giornoOggi={giornoOggi}
+        totali={dati?.totali ?? null}
+        confronto={dati?.confronto ?? null}
+        tema={tema}
+      />
 
       {!dati || !movimenti ? null : movimenti.length === 0 ? (
         <StatoVuoto onAggiungi={() => apriNuovo()} />
       ) : (
-        <>
-          {/*
-            Il totale e la curva sono un oggetto solo: il numero poggia sulla
-            superficie che si riempie giorno per giorno. È l'unica cosa forte
-            della pagina, tutto il resto sta a corpo piccolo.
-          */}
-          <SchedaTotale
-            uscite={dati.totali.uscite}
-            confronto={dati.confronto}
-            cumCorrente={dati.cumCorrente}
-            cumPrecedente={dati.cumPrecedente}
-            mese={mese}
-            mesePrecedente={mesePrec}
-            eCorrente={eCorrente}
-            giornoOggi={giornoOggi}
-          />
+        /*
+          Il registro del mese, sulla carta. Su schermo largo andamento e categorie
+          stanno affiancati, budget e movimenti sotto.
+        */
+        <div className="grid lg:grid-cols-2 lg:gap-x-10">
+          <Pannello titolo="Andamento">
+            <TracciatoMese corrente={dati.cumCorrente} precedente={dati.cumPrecedente} mese={mese} mesePrecedente={mesePrec} />
+          </Pannello>
 
-          <SaldoDelMese
-            entrate={dati.totali.entrate}
-            uscite={dati.totali.uscite}
-            saldo={dati.totali.saldo}
-          />
+          <Pannello titolo="Per categoria">
+            {dati.quote.length === 0 ? (
+              <p className="text-sm text-inchiostro-2">Nessuna uscita questo mese.</p>
+            ) : (
+              <RipartizioneCategorie quote={dati.quote} perId={perId} mese={mese} medie={medie} mesiMedia={MESI_MEDIA} />
+            )}
+          </Pannello>
 
-          {/*
-            I blocchi di supporto stanno su foglio e si separano con lo spazio.
-            Su schermo largo ripartizione e budget stanno affiancati e i movimenti
-            prendono tutta la riga: senza questo la pagina finiva a metà altezza.
-          */}
-          <div className="mt-5 grid gap-4 lg:grid-cols-2 lg:items-start">
-            <Pannello titolo="Dove sono finiti i soldi">
-              {dati.quote.length === 0 ? (
-                <p className="text-sm text-inchiostro-2">Nessuna uscita questo mese.</p>
-              ) : (
-                <RipartizioneCategorie quote={dati.quote} perId={perId} mese={mese} medie={medie} mesiMedia={MESI_MEDIA} />
-              )}
-            </Pannello>
+          {/* Budget: se nessuna categoria ha un tetto, un invito a metterlo */}
+          <Budget riepilogo={dati.budget} perId={perId} mese={mese} />
 
-            {/* Budget: c'è solo se almeno una categoria ha un tetto */}
-            <Budget riepilogo={dati.budget} perId={perId} mese={mese} />
-
-            <Pannello
-              className="lg:col-span-2"
-              titolo="Ultimi movimenti"
-              azione={
-                <Link
-                  to={eCorrente ? '/movimenti' : `/movimenti?mese=${mese}`}
-                  className="font-testo text-sm font-medium text-cobalto"
-                >
-                  Tutti i movimenti
-                </Link>
-              }
-            >
-              <div className="lg:grid lg:grid-cols-2 lg:gap-x-10">
-                {movimenti.slice(0, ULTIMI).map((m: Movimento) => (
-                  <RigaMovimento key={m.id} movimento={m} categoria={perId.get(m.categoriaId)} mostraData />
-                ))}
-              </div>
-            </Pannello>
-          </div>
-        </>
+          <Pannello
+            titolo="Ultimi movimenti"
+            azione={
+              <Link to={eCorrente ? '/movimenti' : `/movimenti?mese=${mese}`} className={classeAzionePannello}>
+                Tutti
+              </Link>
+            }
+          >
+            <div className="border-t border-accento">
+              {movimenti.slice(0, ULTIMI).map((m: Movimento, i) => (
+                <RigaMovimento key={m.id} movimento={m} categoria={perId.get(m.categoriaId)} mostraData saldoDopo={saldiDopo[i]} />
+              ))}
+            </div>
+          </Pannello>
+        </div>
       )}
     </>
   )
@@ -143,8 +133,8 @@ export function ReportPage() {
 
 function StatoVuoto({ onAggiungi }: { onAggiungi: () => void }) {
   return (
-    <div className="py-16 text-center">
-      <p className="font-display text-xl font-semibold">Nessun movimento questo mese</p>
+    <div className="py-14 text-center">
+      <p className="font-display text-xl" style={{ fontWeight: 'var(--peso-titoli)' }}>Nessun movimento questo mese</p>
       <p className="mx-auto mt-2 max-w-[32ch] text-sm text-inchiostro-2">
         Registra la prima spesa, oppure importa i movimenti da un file CSV.
       </p>
@@ -156,7 +146,7 @@ function StatoVuoto({ onAggiungi }: { onAggiungi: () => void }) {
         >
           Aggiungi spesa
         </button>
-        <Link to="/importazione" className="grid h-11 place-items-center rounded-ctrl border border-filetto px-5 text-sm font-semibold active:bg-filetto-leggero">
+        <Link to="/importazione" className="grid h-11 place-items-center rounded-ctrl border border-accento px-5 text-sm font-bold text-accento active:bg-filetto-leggero">
           Importa CSV
         </Link>
       </div>
