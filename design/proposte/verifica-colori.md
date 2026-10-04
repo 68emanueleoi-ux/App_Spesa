@@ -286,3 +286,219 @@ Protanopia: coppie a rischio c1–c4 (0.018), c2–c5 (0.037), c2–c8 (0.032), 
 Deuteranopia: coppie a rischio c1–c4 (0.054), c2–c8 (0.044), c3–c7 (0.065), c3–verde (0.049), c5–c8 (0.058)
 
 Protanopia: coppie a rischio c1–c4 (0.006), c2–c8 (0.007), c3–verde (0.050)
+
+## registro
+
+### chiaro (sfondo #ecf2e3)
+| chiave | base | smorzato | corretto | vs sfondo | icona su riquadro 20% |
+|-|-|-|-|-|-|
+| c1 | #2f57e0 | #345bd4 | #345bd4 | 5.11 | 3.87 |
+| c2 | #b8790a | #b47b28 | #a66d14 ✱ | 3.81 | 3.02 |
+| c3 | #0e9c86 | #2d9a86 | #0b8874 ✱ | 3.84 | 3.02 |
+| c4 | #8b3fd6 | #8848cc | #8848cc | 4.78 | 3.64 |
+| c5 | #d4581f | #cd5e30 | #c45627 ✱ | 3.90 | 3.05 |
+| c6 | #0d81c2 | #2781bb | #257fb9 ✱ | 3.82 | 3.01 |
+| c7 | #db3f80 | #d44a80 | #cd437a ✱ | 3.93 | 3.03 |
+| c8 | #6f8511 | #708427 | #6f8225 ✱ | 3.75 | 3.01 |
+| verde | #0f9d6b | #2d9b6e | #047d54 ✱ | 4.52 | 3.48 |
+
+Deuteranopia: coppie a rischio c1–c4 (0.035), c2–c5 (0.009), c2–c8 (0.022), c3–c7 (0.045), c3–verde (0.049), c4–c6 (0.063), c5–c8 (0.025)
+
+Protanopia: coppie a rischio c1–c4 (0.016), c2–c5 (0.038), c2–c8 (0.032), c2–verde (0.065), c3–verde (0.053), c5–c8 (0.066), c5–verde (0.057), c8–verde (0.069)
+
+### scuro (sfondo #11201a)
+| chiave | base | smorzato | corretto | vs sfondo | icona su riquadro 20% |
+|-|-|-|-|-|-|
+| c1 | #5b7cff | #6180ee | #6180ee | 4.68 | 3.60 |
+| c2 | #ffc53d | #f8c75f | #f8c75f | 10.70 | 6.67 |
+| c3 | #17d6b0 | #4ed2b1 | #4ed2b1 | 8.98 | 5.77 |
+| c4 | #b368ff | #ae72f0 | #ae72f0 | 5.19 | 3.96 |
+| c5 | #ff8a3d | #f49155 | #f49155 | 7.25 | 5.07 |
+| c6 | #38bdf8 | #56bced | #56bced | 7.88 | 5.30 |
+| c7 | #ff5c9d | #f36b9d | #f36b9d | 5.94 | 4.46 |
+| c8 | #a8d63a | #acd45a | #acd45a | 9.89 | 6.22 |
+| verde | #2be39b | #58dfa1 | #58dfa1 | 10.02 | 6.29 |
+
+Deuteranopia: coppie a rischio c1–c4 (0.052), c2–c8 (0.043), c3–c7 (0.066), c3–verde (0.048), c5–c8 (0.061)
+
+Protanopia: coppie a rischio c1–c4 (0.005), c2–c8 (0.007), c3–verde (0.048)
+
+## mese
+
+### chiaro (sfondo #faf6f0)
+| chiave | base | smorzato | corretto | vs sfondo | icona su riquadro 20% |
+|-|-|-|-|-|-|
+| c1 | #2f57e0 | #3259da | #3259da | 5.45 | 4.10 |
+| c2 | #b8790a | #b67a1c | #ac7109 ✱ | 3.81 | 3.01 |
+| c3 | #0e9c86 | #219b86 | #038b77 ✱ | 3.93 | 3.07 |
+| c4 | #8b3fd6 | #8944d1 | #8944d1 | 5.12 | 3.85 |
+| c5 | #d4581f | #d15b28 | #ce5824 ✱ | 3.87 | 3.01 |
+| c6 | #0d81c2 | #1d81bf | #1d81bf | 3.94 | 3.10 |
+| c7 | #db3f80 | #d74580 | #d5437f ✱ | 3.95 | 3.04 |
+| c8 | #6f8511 | #6f851e | #6f851e | 3.86 | 3.06 |
+| verde | #0f9d6b | #229c6c | #008257 ✱ | 4.50 | 3.45 |
+
+Deuteranopia: coppie a rischio c1–c4 (0.033), c2–c5 (0.012), c2–c8 (0.028), c3–c7 (0.051), c3–verde (0.046), c4–c6 (0.068), c5–c8 (0.036)
+
+Protanopia: coppie a rischio c1–c4 (0.018), c2–c5 (0.037), c2–c8 (0.026), c2–verde (0.066), c3–verde (0.049), c5–c8 (0.062), c5–verde (0.062)
+
+### scuro (sfondo #17120e)
+| chiave | base | smorzato | corretto | vs sfondo | icona su riquadro 20% |
+|-|-|-|-|-|-|
+| c1 | #5b7cff | #5f7ff4 | #5f7ff4 | 5.16 | 4.03 |
+| c2 | #ffc53d | #fac655 | #fac655 | 11.75 | 7.41 |
+| c3 | #17d6b0 | #41d3b1 | #41d3b1 | 9.90 | 6.64 |
+| c4 | #b368ff | #b06ff5 | #b06ff5 | 5.70 | 4.33 |
+| c5 | #ff8a3d | #f88f4d | #f88f4d | 7.99 | 5.62 |
+| c6 | #38bdf8 | #4dbcf1 | #4dbcf1 | 8.66 | 6.03 |
+| c7 | #ff5c9d | #f7669d | #f7669d | 6.50 | 4.83 |
+| c8 | #a8d63a | #abd451 | #abd451 | 10.86 | 7.00 |
+| verde | #2be39b | #4ce09f | #4ce09f | 11.04 | 7.21 |
+
+Deuteranopia: coppie a rischio c1–c4 (0.054), c2–c8 (0.044), c3–c7 (0.065), c3–verde (0.049), c5–c8 (0.058)
+
+Protanopia: coppie a rischio c1–c4 (0.006), c2–c8 (0.007), c3–verde (0.050)
+
+## evidenziatore
+
+### chiaro (sfondo #fdfcf8)
+| chiave | base | smorzato | corretto | vs sfondo | icona su riquadro 20% |
+|-|-|-|-|-|-|
+| c1 | #2f57e0 | #2f57e0 | #2f57e0 | 5.75 | 4.28 |
+| c2 | #b8790a | #b8790a | #b17300 ✱ | 3.84 | 3.05 |
+| c3 | #0e9c86 | #0e9c86 | #0a907c ✱ | 3.86 | 3.01 |
+| c4 | #8b3fd6 | #8b3fd6 | #8b3fd6 | 5.41 | 4.04 |
+| c5 | #d4581f | #d4581f | #d4581f | 3.92 | 3.05 |
+| c6 | #0d81c2 | #0d81c2 | #0d81c2 | 4.14 | 3.20 |
+| c7 | #db3f80 | #db3f80 | #db3f80 | 4.06 | 3.10 |
+| c8 | #6f8511 | #6f8511 | #6f8511 | 4.06 | 3.21 |
+| verde | #0f9d6b | #0f9d6b | #06855a ✱ | 4.54 | 3.47 |
+
+Deuteranopia: coppie a rischio c1–c4 (0.034), c2–c5 (0.011), c2–c8 (0.036), c3–c7 (0.044), c3–verde (0.051), c4–c6 (0.066), c5–c8 (0.045)
+
+Protanopia: coppie a rischio c1–c4 (0.021), c2–c5 (0.038), c2–c8 (0.018), c2–verde (0.068), c3–verde (0.054), c5–c8 (0.056), c5–verde (0.070)
+
+### scuro (sfondo #141413)
+| chiave | base | smorzato | corretto | vs sfondo | icona su riquadro 20% |
+|-|-|-|-|-|-|
+| c1 | #5b7cff | #5d7df9 | #5d7df9 | 5.06 | 3.94 |
+| c2 | #ffc53d | #fdc64a | #fdc64a | 11.72 | 7.32 |
+| c3 | #17d6b0 | #31d5b0 | #31d5b0 | 9.90 | 6.57 |
+| c4 | #b368ff | #b16bfa | #b16bfa | 5.58 | 4.29 |
+| c5 | #ff8a3d | #fb8c46 | #fb8c46 | 7.85 | 5.55 |
+| c6 | #38bdf8 | #44bdf4 | #44bdf4 | 8.63 | 5.93 |
+| c7 | #ff5c9d | #fb619d | #fb619d | 6.41 | 4.82 |
+| c8 | #a8d63a | #a9d546 | #a9d546 | 10.79 | 6.91 |
+| verde | #2be39b | #3ee29d | #3ee29d | 11.03 | 7.15 |
+
+Deuteranopia: coppie a rischio c1–c4 (0.055), c2–c8 (0.047), c3–c7 (0.066), c3–verde (0.050), c5–c8 (0.059)
+
+Protanopia: coppie a rischio c1–c4 (0.008), c2–c8 (0.008), c3–verde (0.051)
+
+## riso
+
+### chiaro (sfondo #f3eee2)
+| chiave | base | smorzato | corretto | vs sfondo | icona su riquadro 20% |
+|-|-|-|-|-|-|
+| c1 | #2f57e0 | #2f57e0 | #2f57e0 | 5.09 | 3.84 |
+| c2 | #b8790a | #b8790a | #a56c06 ✱ | 3.82 | 3.02 |
+| c3 | #0e9c86 | #0e9c86 | #018673 ✱ | 3.89 | 3.03 |
+| c4 | #8b3fd6 | #8b3fd6 | #8b3fd6 | 4.80 | 3.63 |
+| c5 | #d4581f | #d4581f | #ca4e10 ✱ | 3.94 | 3.05 |
+| c6 | #0d81c2 | #0d81c2 | #077cbc ✱ | 3.93 | 3.05 |
+| c7 | #db3f80 | #db3f80 | #d23679 ✱ | 3.99 | 3.04 |
+| c8 | #6f8511 | #6f8511 | #6b8006 ✱ | 3.85 | 3.06 |
+| verde | #0f9d6b | #0f9d6b | #037b53 ✱ | 4.58 | 3.49 |
+
+Deuteranopia: coppie a rischio c1–c4 (0.034), c2–c5 (0.011), c2–c8 (0.021), c3–c7 (0.049), c3–verde (0.049), c4–c6 (0.061), c5–c8 (0.032)
+
+Protanopia: coppie a rischio c1–c4 (0.021), c2–c5 (0.041), c2–c8 (0.028), c2–verde (0.065), c3–verde (0.053), c5–c8 (0.069)
+
+### scuro (sfondo #1a1630)
+| chiave | base | smorzato | corretto | vs sfondo | icona su riquadro 20% |
+|-|-|-|-|-|-|
+| c1 | #5b7cff | #5d7df9 | #5d7df9 | 4.80 | 3.67 |
+| c2 | #ffc53d | #fdc64a | #fdc64a | 11.11 | 7.01 |
+| c3 | #17d6b0 | #31d5b0 | #31d5b0 | 9.39 | 6.25 |
+| c4 | #b368ff | #b16bfa | #b16bfa | 5.29 | 3.97 |
+| c5 | #ff8a3d | #fb8c46 | #fb8c46 | 7.44 | 5.23 |
+| c6 | #38bdf8 | #44bdf4 | #44bdf4 | 8.18 | 5.61 |
+| c7 | #ff5c9d | #fb619d | #fb619d | 6.08 | 4.50 |
+| c8 | #a8d63a | #a9d546 | #a9d546 | 10.23 | 6.61 |
+| verde | #2be39b | #3ee29d | #3ee29d | 10.46 | 6.74 |
+
+Deuteranopia: coppie a rischio c1–c4 (0.055), c2–c8 (0.047), c3–c7 (0.066), c3–verde (0.050), c5–c8 (0.059)
+
+Protanopia: coppie a rischio c1–c4 (0.008), c2–c8 (0.008), c3–verde (0.051)
+
+## blu
+
+### chiaro (sfondo #f4f2ea)
+| chiave | base | smorzato | corretto | vs sfondo | icona su riquadro 20% |
+|-|-|-|-|-|-|
+| c1 | #2f57e0 | #375dce | #375dce | 5.18 | 3.91 |
+| c2 | #b8790a | #b17c31 | #a47022 ✱ | 3.81 | 3.03 |
+| c3 | #0e9c86 | #379986 | #218876 ✱ | 3.86 | 3.05 |
+| c4 | #8b3fd6 | #874bc7 | #874bc7 | 4.85 | 3.71 |
+| c5 | #d4581f | #ca6137 | #c35b31 ✱ | 3.85 | 3.03 |
+| c6 | #0d81c2 | #2f81b7 | #2d7fb5 ✱ | 3.89 | 3.07 |
+| c7 | #db3f80 | #d04f81 | #cb4a7d ✱ | 3.89 | 3.02 |
+| c8 | #6f8511 | #70842e | #6f822c ✱ | 3.82 | 3.05 |
+| verde | #0f9d6b | #379a6f | #0d7e55 ✱ | 4.53 | 3.49 |
+
+Deuteranopia: coppie a rischio c1–c4 (0.037), c2–c5 (0.011), c2–c8 (0.023), c3–c7 (0.046), c3–verde (0.050), c4–c6 (0.060), c5–c8 (0.029)
+
+Protanopia: coppie a rischio c1–c4 (0.015), c2–c5 (0.035), c2–c8 (0.025), c2–verde (0.059), c3–verde (0.053), c5–c8 (0.057), c5–verde (0.046), c8–verde (0.063)
+
+### scuro (sfondo #0e1531)
+| chiave | base | smorzato | corretto | vs sfondo | icona su riquadro 20% |
+|-|-|-|-|-|-|
+| c1 | #5b7cff | #6180ee | #6180ee | 4.98 | 3.82 |
+| c2 | #ffc53d | #f8c75f | #f8c75f | 11.39 | 7.22 |
+| c3 | #17d6b0 | #4ed2b1 | #4ed2b1 | 9.55 | 6.30 |
+| c4 | #b368ff | #ae72f0 | #ae72f0 | 5.52 | 4.15 |
+| c5 | #ff8a3d | #f49155 | #f49155 | 7.71 | 5.50 |
+| c6 | #38bdf8 | #56bced | #56bced | 8.38 | 5.72 |
+| c7 | #ff5c9d | #f36b9d | #f36b9d | 6.32 | 4.74 |
+| c8 | #a8d63a | #acd45a | #acd45a | 10.53 | 6.84 |
+| verde | #2be39b | #58dfa1 | #58dfa1 | 10.67 | 6.89 |
+
+Deuteranopia: coppie a rischio c1–c4 (0.052), c2–c8 (0.043), c3–c7 (0.066), c3–verde (0.048), c5–c8 (0.061)
+
+Protanopia: coppie a rischio c1–c4 (0.005), c2–c8 (0.007), c3–verde (0.048)
+
+## prugna
+
+### chiaro (sfondo #f8efe8)
+| chiave | base | smorzato | corretto | vs sfondo | icona su riquadro 20% |
+|-|-|-|-|-|-|
+| c1 | #2f57e0 | #3259da | #3259da | 5.17 | 3.90 |
+| c2 | #b8790a | #b67a1c | #a76d04 ✱ | 3.83 | 3.03 |
+| c3 | #0e9c86 | #219b86 | #038874 ✱ | 3.87 | 3.01 |
+| c4 | #8b3fd6 | #8944d1 | #8944d1 | 4.85 | 3.69 |
+| c5 | #d4581f | #d15b28 | #c8531e ✱ | 3.93 | 3.06 |
+| c6 | #0d81c2 | #1d81bf | #1b7fbd ✱ | 3.84 | 3.02 |
+| c7 | #db3f80 | #d74580 | #d03e7a ✱ | 3.98 | 3.07 |
+| c8 | #6f8511 | #6f851e | #6c821a ✱ | 3.82 | 3.04 |
+| verde | #0f9d6b | #229c6c | #037d53 ✱ | 4.55 | 3.47 |
+
+Deuteranopia: coppie a rischio c1–c4 (0.033), c2–c5 (0.009), c2–c8 (0.024), c3–c7 (0.047), c3–verde (0.050), c4–c6 (0.065), c5–c8 (0.030)
+
+Protanopia: coppie a rischio c1–c4 (0.018), c2–c5 (0.038), c2–c8 (0.030), c2–verde (0.063), c3–verde (0.053), c5–c8 (0.068), c5–verde (0.063)
+
+### scuro (sfondo #1e1221)
+| chiave | base | smorzato | corretto | vs sfondo | icona su riquadro 20% |
+|-|-|-|-|-|-|
+| c1 | #5b7cff | #5f7ff4 | #5f7ff4 | 5.01 | 3.87 |
+| c2 | #ffc53d | #fac655 | #fac655 | 11.41 | 7.16 |
+| c3 | #17d6b0 | #41d3b1 | #41d3b1 | 9.61 | 6.45 |
+| c4 | #b368ff | #b06ff5 | #b06ff5 | 5.53 | 4.15 |
+| c5 | #ff8a3d | #f88f4d | #f88f4d | 7.76 | 5.41 |
+| c6 | #38bdf8 | #4dbcf1 | #4dbcf1 | 8.40 | 5.82 |
+| c7 | #ff5c9d | #f7669d | #f7669d | 6.31 | 4.63 |
+| c8 | #a8d63a | #abd451 | #abd451 | 10.54 | 6.82 |
+| verde | #2be39b | #4ce09f | #4ce09f | 10.72 | 7.03 |
+
+Deuteranopia: coppie a rischio c1–c4 (0.054), c2–c8 (0.044), c3–c7 (0.065), c3–verde (0.049), c5–c8 (0.058)
+
+Protanopia: coppie a rischio c1–c4 (0.006), c2–c8 (0.007), c3–verde (0.050)
