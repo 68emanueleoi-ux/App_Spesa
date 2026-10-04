@@ -80,7 +80,7 @@ export function PannelloDati({ aperto, onChiudi, filtrati, perId, descrizioneFil
             <b className="num font-medium">{daRipristinare.categorie.length}</b> categorie.
           </p>
           <p className="mt-2 text-sm text-rosso">Il ripristino sostituisce tutti i dati attuali. Non si può annullare.</p>
-          <button type="button" onClick={confermaRipristino} className="mt-4 h-12 w-full rounded-ctrl bg-rosso text-base font-bold text-white active:brightness-95">
+          <button type="button" onClick={confermaRipristino} className="mt-4 h-12 w-full rounded-ctrl bg-rosso text-base font-bold text-carta active:brightness-95">
             Sostituisci i dati con il backup
           </button>
           <button type="button" onClick={() => setDaRipristinare(null)} className="mt-2 h-11 w-full rounded-ctrl text-sm font-semibold text-inchiostro-2 active:bg-filetto-leggero">
@@ -165,7 +165,7 @@ function Voce({
         disabled={disabilitato}
         className="flex w-full items-center gap-3 rounded-ctrl py-3 text-left transition-colors active:bg-filetto-leggero disabled:opacity-50"
       >
-        <span className="grid size-10 shrink-0 place-items-center rounded-tessera bg-[color:var(--campo)] text-inchiostro-2">
+        <span className="grid size-10 shrink-0 place-items-center rounded-tessera bg-campo text-accento">
           <Icona className="size-[18px]" aria-hidden="true" />
         </span>
         <span className="min-w-0">

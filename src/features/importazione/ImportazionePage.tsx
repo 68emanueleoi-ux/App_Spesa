@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { FileUp } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { TestataPagina } from '@/components/TestataPagina'
 import { useToast } from '@/components/useToast'
 import { senzaCategoria } from '@/db/categorie'
 import { db } from '@/db/db'
@@ -134,10 +135,14 @@ export function ImportazionePage() {
 
   return (
     <>
-      <h1 className="py-3 font-display text-xl font-semibold">Importa CSV</h1>
-      <Passi corrente={passo.n} />
+      <TestataPagina>
+        <h1 className="flex min-h-11 items-center font-display text-[26px] leading-tight" style={{ fontWeight: 'var(--peso-titoli)' }}>
+          Importa CSV
+        </h1>
+        <Passi corrente={passo.n} />
+      </TestataPagina>
 
-      <div className="rounded-scheda bg-foglio p-5 md:p-6 dark:ring-1 dark:ring-filetto-leggero">
+      <div className="pt-5">
       {passo.n === 1 && <PassoFile onFile={caricaFile} errore={errore} />}
 
       {passo.n === 2 && (
@@ -169,19 +174,20 @@ export function ImportazionePage() {
 function Passi({ corrente }: { corrente: 1 | 2 | 3 }) {
   const nomi = ['File', 'Colonne', 'Anteprima']
   return (
-    <ol className="mb-3.5 flex gap-4 text-xs" aria-label="Passaggi">
+    <ol className="mt-2 flex gap-4 text-xs" aria-label="Passaggi">
       {nomi.map((n, i) => (
         <li
           key={n}
           className={cn(
             'flex items-center gap-1.5',
-            i + 1 === corrente ? 'font-bold text-inchiostro' : 'text-inchiostro-2',
+            i + 1 === corrente ? 'font-bold text-blocco-testo' : 'text-blocco-testo-2',
           )}
         >
+          {/* sulla testata: il passo fatto o in corso è pieno nel colore del testo, gli altri vuoti */}
           <span
             className={cn(
-              'grid size-5 place-items-center rounded-full border text-[11px]',
-              i + 1 <= corrente ? 'bottone-forte border-transparent' : 'border-filetto',
+              'grid size-5 place-items-center rounded-full border border-current text-[11px]',
+              i + 1 <= corrente && 'bg-blocco-testo text-blocco',
             )}
             aria-hidden="true"
           >
@@ -213,8 +219,9 @@ function PassoFile({ onFile, errore }: { onFile: (f: File) => void; errore: stri
           if (f) onFile(f)
         }}
         className={cn(
-          'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-tessera bg-carta px-4 py-14 text-center',
-          trascinando && 'ring-2 ring-cobalto ring-inset',
+          // l'area dove si sceglie o si trascina il file: bordo tratteggiato nell'accento del mese
+          'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-scheda border-2 border-dashed border-accento bg-campo px-4 py-14 text-center active:bg-filetto-leggero',
+          trascinando && 'ring-2 ring-accento ring-inset',
         )}
       >
         <FileUp className="size-7 text-inchiostro-2" aria-hidden="true" />
@@ -552,7 +559,7 @@ function PassoAnteprima({
                     onChange={(e) => aggiorna(r.indice, { categoriaId: e.target.value, creaRegola: !!r.descrizione })}
                     aria-label="Categoria"
                     className={cn(
-                      'ml-auto h-9 max-w-[11rem] truncate rounded-ctrl border border-filetto bg-foglio px-2 text-base',
+                      'ml-auto h-11 max-w-[11rem] truncate rounded-ctrl border border-filetto bg-carta px-2 text-base',
                       perId.get(r.categoriaId)?.diSistema ? 'text-inchiostro-2' : 'text-inchiostro',
                     )}
                   >
@@ -582,11 +589,11 @@ function PassoAnteprima({
         ))}
       </ul>
 
-      <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] -mx-5 mt-4 flex gap-2 bg-foglio px-5 py-3 md:-mx-6 md:bottom-0 md:px-6">
+      <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] -mx-5 mt-4 flex gap-2 border-t border-accento bg-carta px-5 py-3 md:mx-0 md:bottom-0 md:px-0">
         <button
           type="button"
           onClick={onIndietro}
-          className="h-11 rounded-ctrl border border-filetto px-4 text-sm font-medium"
+          className="h-11 rounded-ctrl border border-accento px-4 text-sm font-bold text-accento active:bg-filetto-leggero"
         >
           Indietro
         </button>

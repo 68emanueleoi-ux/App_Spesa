@@ -22,7 +22,7 @@ export function Sheet({ aperto, onChiudi, titolo, children, className, focusIniz
   return (
     <Dialog.Root open={aperto} onOpenChange={(o) => !o && onChiudi()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-[rgba(27,33,48,0.45)] data-[state=open]:animate-[velo_200ms_ease-out] dark:bg-[rgba(0,0,0,0.55)]" />
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-[color-mix(in_srgb,var(--inchiostro)_45%,transparent)] data-[state=open]:animate-[velo_200ms_ease-out] dark:bg-[rgba(0,0,0,0.6)]" />
         <Dialog.Content
           aria-describedby={undefined}
           onOpenAutoFocus={(e) => {
@@ -46,7 +46,8 @@ export function Sheet({ aperto, onChiudi, titolo, children, className, focusIniz
             className,
           )}
         >
-          <div className="mx-auto mt-3 mb-3 h-1 w-10 rounded-full bg-filetto md:hidden" aria-hidden="true" />
+          {/* la maniglia, nell'accento del mese */}
+          <div className="mx-auto mt-3 mb-3 h-1 w-10 rounded-full bg-accento opacity-60 md:hidden" aria-hidden="true" />
           <Dialog.Title className="sr-only">{titolo}</Dialog.Title>
           <div className="overflow-y-auto px-5 md:px-6 md:pt-6">{children}</div>
         </Dialog.Content>

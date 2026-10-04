@@ -1,6 +1,7 @@
 import { ArrowDown, ArrowUp } from 'lucide-react'
 import { BottoneTema } from '@/components/AppShell'
 import { SelettoreMese } from '@/components/SelettoreMese'
+import { TestataPagina } from '@/components/TestataPagina'
 import type { Confronto, Totali } from '@/lib/calcoli'
 import { useConteggio } from '@/lib/conteggio'
 import { nomeMese } from '@/lib/date'
@@ -32,7 +33,7 @@ export function TestataMese({ mese, mesePrecedente, eCorrente, giornoOggi, total
   const cifra = formatImporto(contato, { simbolo: false })
 
   return (
-    <header className="-mx-5 -mt-[max(8px,env(safe-area-inset-top))] bg-blocco px-5 pt-[max(8px,env(safe-area-inset-top))] pb-5 text-blocco-testo md:mx-0 md:mt-0 md:rounded-scheda md:px-6 md:pt-5">
+    <TestataPagina className="pb-5">
       <div className="flex items-center justify-between gap-3">
         <SelettoreMese />
         <span className="md:hidden">
@@ -72,7 +73,7 @@ export function TestataMese({ mese, mesePrecedente, eCorrente, giornoOggi, total
           </dl>
         </>
       )}
-    </header>
+    </TestataPagina>
   )
 }
 

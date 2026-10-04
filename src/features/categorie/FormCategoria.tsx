@@ -175,12 +175,14 @@ function Corpo({
             aria-checked={colore === c}
             aria-label={`Colore ${c}`}
             onClick={() => setColore(c)}
+            // area di tocco da 44 px, il pallino dentro; quello scelto ha l'anello nell'accento
             className={cn(
-              'size-8 rounded-full',
-              colore === c && 'ring-2 ring-cobalto ring-offset-2 ring-offset-foglio',
+              'grid size-11 place-items-center rounded-full',
+              colore === c && 'ring-2 ring-accento ring-inset',
             )}
-            style={{ background: coloreCss(c) }}
-          />
+          >
+            <span className="size-8 rounded-full" style={{ background: coloreCss(c) }} aria-hidden="true" />
+          </button>
         ))}
       </div>
 
@@ -204,7 +206,7 @@ function Corpo({
             className={cn(
               'grid aspect-square place-items-center rounded-ctrl border transition-colors active:bg-filetto-leggero',
               icona === n
-                ? 'border-cobalto bg-cobalto/10 text-inchiostro ring-1 ring-cobalto ring-inset'
+                ? 'border-accento bg-[color-mix(in_srgb,var(--blocco)_35%,var(--carta))] text-inchiostro ring-1 ring-accento ring-inset'
                 : 'border-filetto text-inchiostro-2',
             )}
           >

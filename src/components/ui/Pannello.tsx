@@ -32,4 +32,4 @@ export function Pannello({ titolo, azione, children, className }: Props) {
 
 /** Il collegamento nell'angolo di un pannello: accento del mese, area di tocco piena. */
 export const classeAzionePannello =
-  'inline-flex min-h-11 items-center gap-1 text-sm font-bold text-accento underline-offset-4 active:underline'
+  'inline-flex min-h-11 shrink-0 items-center gap-1 text-sm font-bold whitespace-nowrap text-accento underline-offset-4 active:underline'

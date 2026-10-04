@@ -77,7 +77,7 @@ function Corpo({ categoria, categorie, onChiudi }: { categoria: Categoria; categ
                 onClick={() => setDestinazione(c.id)}
                 className={cn(
                   'flex min-h-11 items-center gap-2.5 rounded-ctrl border px-3 text-left text-sm font-medium',
-                  destinazione === c.id ? 'border-cobalto ring-1 ring-cobalto ring-inset' : 'border-filetto',
+                  destinazione === c.id ? 'border-accento ring-1 ring-accento ring-inset' : 'border-filetto',
                   c.diSistema && 'text-inchiostro-2',
                 )}
               >
@@ -93,7 +93,7 @@ function Corpo({ categoria, categorie, onChiudi }: { categoria: Categoria; categ
         type="button"
         onClick={conferma}
         disabled={conteggio === undefined}
-        className="mt-5 h-12 w-full rounded-ctrl bg-rosso text-base font-bold text-white active:brightness-95 disabled:opacity-60"
+        className="mt-5 h-12 w-full rounded-ctrl bg-rosso text-base font-bold text-carta active:brightness-95 disabled:opacity-60"
       >
         {conteggio ? 'Sposta i movimenti ed elimina' : 'Elimina categoria'}
       </button>

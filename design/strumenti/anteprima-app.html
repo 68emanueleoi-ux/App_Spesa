@@ -88,6 +88,12 @@
   await new Promise((r) => setTimeout(r, 600))
   chiaro.contentDocument.documentElement.classList.remove('dark')
   scuro.contentDocument.documentElement.classList.add('dark')
+  // ?clic=<selettore CSS>: preme un elemento in tutti e due i riquadri (es. il pulsante +)
+  const clic = q.get('clic')
+  if (clic) {
+    for (const f of [chiaro, scuro]) f.contentDocument.querySelector(clic)?.click()
+    await new Promise((r) => setTimeout(r, 900))
+  }
   stato.textContent = `Dati di prova caricati: ${mese}, pagina "${pagina || 'report'}".`
   document.title = 'pronto'
 </script>

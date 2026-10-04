@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { ArrowDownUp, Database, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { SelettoreMese } from '@/components/SelettoreMese'
+import { bordoSuTestata, TestataPagina } from '@/components/TestataPagina'
 import { useGruppoRadio } from '@/components/ui/useGruppoRadio'
 import { db } from '@/db/db'
 import { cercaMovimenti, movimentiDelMese } from '@/db/movimenti'
@@ -68,33 +69,39 @@ export function MovimentiPage() {
 
   return (
     <>
-      <div className="flex items-center justify-between py-2">
-        <SelettoreMese />
-        <button
-          type="button"
-          onClick={() => setDatiAperto(true)}
-          aria-label="Dati: importa, esporta, backup"
-          className="grid size-9 place-items-center rounded-ctrl text-inchiostro-2 hover:bg-filetto-leggero active:bg-filetto"
+      {/* La testata del mese: tendina, dati e ricerca. */}
+      <TestataPagina>
+        <div className="flex items-center justify-between gap-3">
+          <SelettoreMese />
+          <button
+            type="button"
+            onClick={() => setDatiAperto(true)}
+            aria-label="Dati: importa, esporta, backup"
+            className="grid size-11 place-items-center rounded-ctrl opacity-85 hover:opacity-100 active:bg-[color-mix(in_srgb,currentColor_12%,transparent)]"
+          >
+            <Database className="size-[19px]" />
+          </button>
+        </div>
+        <label
+          className={cn(
+            'mt-3 flex h-11 items-center gap-2 rounded-ctrl px-3 focus-within:outline-2 focus-within:outline-current',
+            bordoSuTestata,
+          )}
         >
-          <Database className="size-[18px]" />
-        </button>
-      </div>
+          <Search className="size-4 shrink-0 text-blocco-testo-2" aria-hidden="true" />
+          <input
+            type="search"
+            value={ricerca}
+            onChange={(e) => setRicerca(e.target.value)}
+            placeholder="Cerca in tutti i mesi"
+            aria-label="Cerca in tutti i mesi"
+            className="w-full min-w-0 bg-transparent text-base outline-none placeholder:text-blocco-testo-2"
+          />
+        </label>
+      </TestataPagina>
 
-      {/* Ricerca e filtri sono un cluster solo: prima galleggiavano sciolti sulla carta */}
-      <div className="mt-1 rounded-scheda bg-foglio p-3 md:p-3.5 dark:ring-1 dark:ring-filetto-leggero">
-      <label className="flex h-11 items-center gap-2 rounded-ctrl bg-carta px-3 text-sm focus-within:ring-1 focus-within:ring-cobalto">
-        <Search className="size-4 shrink-0 text-inchiostro-2" aria-hidden="true" />
-        <input
-          type="search"
-          value={ricerca}
-          onChange={(e) => setRicerca(e.target.value)}
-          placeholder="Cerca in tutti i mesi"
-          aria-label="Cerca in tutti i mesi"
-          className="w-full min-w-0 bg-transparent outline-none placeholder:text-inchiostro-2"
-        />
-      </label>
-
-      <div className="-mx-3 mt-2.5 flex gap-2 overflow-x-auto px-3 pb-0.5 [scrollbar-width:none]">
+      {/* I filtri, sulla carta: scorrono in orizzontale se non ci stanno */}
+      <div className="-mx-5 mt-3 flex gap-2 overflow-x-auto px-5 pb-0.5 [scrollbar-width:none] md:mx-0 md:px-0">
         <div {...gruppoTipo.propsGruppo} role="radiogroup" aria-label="Tipo" className="flex gap-2">
           {TIPI.map((t, i) => (
             <Chip
@@ -115,8 +122,8 @@ export function MovimentiPage() {
           aria-label="Categoria"
           className={cn(
             // 16px: sotto i 16 iPhone ingrandisce la pagina al tocco e ci resta
-            'h-9 shrink-0 appearance-none rounded-full border bg-foglio px-3.5 text-base',
-            categoriaId ? 'border-cobalto font-semibold text-cobalto' : 'border-filetto text-inchiostro-2',
+            'h-11 shrink-0 appearance-none rounded-ctrl border bg-carta px-3.5 text-base',
+            categoriaId ? 'border-accento font-bold text-accento' : 'border-filetto text-inchiostro-2',
           )}
         >
           <option value="">Tutte le categorie</option>
@@ -145,12 +152,11 @@ export function MovimentiPage() {
           {ordine === 'data' ? 'Per data' : 'Per importo'}
         </Chip>
       </div>
-      </div>
 
       {ricercaGlobale && filtrati.length > 0 && (
-        <p className="num mt-3.5 text-xs text-inchiostro-2">
+        <p className="num mt-3 text-xs text-inchiostro-2">
           {filtrati.length === 1 ? 'Un risultato' : `${filtrati.length} risultati`} in tutti i mesi ·{' '}
-          <button type="button" onClick={() => setRicerca('')} className="font-medium text-cobalto">
+          <button type="button" onClick={() => setRicerca('')} className="min-h-11 font-bold text-accento">
             torna a {formatMese(mese)}
           </button>
         </p>
@@ -169,7 +175,7 @@ export function MovimentiPage() {
       ) : movimenti.length === 0 ? (
         <Vuoto>
           Nessun movimento questo mese.{' '}
-          <button type="button" onClick={() => apriNuovo()} className="font-medium text-cobalto">
+          <button type="button" onClick={() => apriNuovo()} className="min-h-11 font-bold text-accento">
             Aggiungi il primo
           </button>
         </Vuoto>
@@ -219,11 +225,14 @@ function ListaPerGiorno({ movimenti, perId }: { movimenti: Movimento[]; perId: M
       {giorni.map(([data, lista], i) => {
         const t = totali(lista)
         return (
-          <section key={data} className={i > 0 ? 'mt-5' : undefined}>
-            <h2 className="num flex items-baseline justify-between gap-3 pb-1.5 text-xs text-inchiostro-2">
-              <span>{formatDataLunga(data)}</span>
-              <span className={cn('font-medium', t.saldo > 0 && 'text-verde')}>
-                {formatImporto(t.saldo, { segno: 'sempre' })}
+          <section key={data} className={i > 0 ? 'mt-6' : undefined}>
+            {/* L'intestazione del giorno: data in Bitter, e il saldo del giorno sopra la colonna degli importi */}
+            <h2 className="num flex items-baseline justify-between gap-3 border-b border-accento pb-1.5">
+              <span className="font-display text-[17px]" style={{ fontWeight: 'var(--peso-titoli)' }}>
+                {formatDataLunga(data)}
+              </span>
+              <span className={cn('font-display text-sm', t.saldo > 0 ? 'text-verde' : 'text-inchiostro-2')} style={{ fontWeight: 'var(--peso-importi)' }}>
+                {formatImporto(t.saldo, { simbolo: false, segno: 'sempre' })}
               </span>
             </h2>
             {lista.map((m) => (
@@ -236,21 +245,13 @@ function ListaPerGiorno({ movimenti, perId }: { movimenti: Movimento[]; perId: M
   )
 }
 
-/** Il registro sta su foglio, come i blocchi del report. */
+/** Il registro sta sulla carta, come nel report: niente scheda intorno. */
 function Lista({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mt-4 rounded-scheda bg-foglio px-5 py-4 md:px-6 md:py-5 dark:ring-1 dark:ring-filetto-leggero">
-      {children}
-    </div>
-  )
+  return <div className="mt-5">{children}</div>
 }
 
 function Vuoto({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="mt-4 rounded-scheda bg-foglio px-5 py-16 text-center text-sm text-inchiostro-2 dark:ring-1 dark:ring-filetto-leggero">
-      {children}
-    </p>
-  )
+  return <p className="mt-5 border-t border-accento px-2 py-14 text-center text-sm text-inchiostro-2">{children}</p>
 }
 
 function Chip({
@@ -276,10 +277,11 @@ function Chip({
       tabIndex={tabIndex}
       onClick={onClick}
       className={cn(
-        'flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-sm whitespace-nowrap transition-colors',
+        'flex h-11 shrink-0 items-center gap-1.5 rounded-ctrl border px-3.5 text-sm whitespace-nowrap transition-colors',
+        // il filtro scelto prende la campitura del mese, come la scheda attiva in basso
         attivo
-          ? 'accento border-transparent font-bold shadow-[0_6px_16px_var(--alone)]'
-          : 'border-filetto bg-foglio text-inchiostro-2',
+          ? 'accento border-accento font-bold'
+          : 'border-filetto bg-carta text-inchiostro-2 active:bg-filetto-leggero',
       )}
     >
       {children}

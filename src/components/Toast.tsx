@@ -51,7 +51,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         <div
           className={cn(
             'fixed inset-x-4 bottom-[calc(84px+env(safe-area-inset-bottom))] z-30 mx-auto flex max-w-[420px] items-center gap-3 rounded-ctrl px-4 py-3.5 text-sm font-semibold shadow-[0_14px_36px_rgba(0,0,0,0.45)] animate-[toast-entra_200ms_ease-out] md:bottom-6',
-            toast.tono === 'errore' ? 'bg-rosso text-white' : 'bg-inchiostro text-carta',
+            toast.tono === 'errore' ? 'bg-rosso text-carta' : 'bg-inchiostro text-carta',
           )}
         >
           {/* Il testo e gia stato annunciato dalla live region qui sopra: non ripeterlo. */}
@@ -75,7 +75,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               type="button"
               onClick={chiudi}
               aria-label="Chiudi avviso"
-              className="rounded-ctrl px-2 py-1 font-bold text-white underline-offset-2 hover:underline"
+              className="min-h-11 rounded-ctrl px-2 font-bold text-carta underline-offset-2 hover:underline"
             >
               Ok
             </button>

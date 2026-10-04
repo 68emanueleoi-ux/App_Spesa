@@ -2,7 +2,8 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { IconaCategoria } from '@/components/IconaCategoria'
-import { Pannello } from '@/components/ui/Pannello'
+import { TestataPagina } from '@/components/TestataPagina'
+import { classeAzionePannello, Pannello } from '@/components/ui/Pannello'
 import { spostaCategoria } from '@/db/categorie'
 import { db } from '@/db/db'
 import type { Categoria, RegolaCategoria, TipoMovimento } from '@/db/tipi'
@@ -34,7 +35,12 @@ export function CategoriePage() {
 
   return (
     <>
-      <h1 className="py-3 font-display text-xl font-semibold">Categorie</h1>
+      <TestataPagina>
+        <h1 className="flex min-h-11 items-center font-display text-[26px] leading-tight" style={{ fontWeight: 'var(--peso-titoli)' }}>
+          Categorie
+        </h1>
+        <p className="mt-1 text-sm text-blocco-testo-2">Colore, icona e tetto mensile di ogni voce, e le regole che le assegnano da sole.</p>
+      </TestataPagina>
 
       {/*
         grid-cols-1 non è decorativo: senza, su telefono la colonna è implicita e
@@ -45,7 +51,7 @@ export function CategoriePage() {
         grid-cols-1 (come lg:grid-cols-2) è minmax(0, 1fr): il minimo è zero, così la
         colonna non supera mai lo schermo e a stringersi sono i testi, che già troncano.
       */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 lg:items-start lg:gap-x-10">
       <Gruppo
         titolo="Uscite"
         tipo="uscita"
@@ -73,21 +79,21 @@ export function CategoriePage() {
           <button
             type="button"
             onClick={() => setFormRegola({ aperto: true })}
-            className="flex items-center gap-1 text-sm font-medium text-cobalto"
+            className={classeAzionePannello}
           >
             <Plus className="size-4" aria-hidden="true" />
             Nuova regola
           </button>
         }
       >
-        <p className="-mt-2 mb-2.5 text-xs text-inchiostro-2">
+        <p className="mb-2.5 text-xs text-inchiostro-2">
           Assegnano la categoria da sole in base alla descrizione, sia nell'importazione CSV sia nei movimenti inseriti
           a mano.
         </p>
         {regole.length === 0 ? (
           <p className="py-4 text-sm text-inchiostro-2">Nessuna regola. Esempio: "conad" → Spesa.</p>
         ) : (
-          <ul className="md:grid md:grid-cols-2 md:gap-x-10">
+          <ul className="border-t border-accento md:grid md:grid-cols-2 md:gap-x-10">
             {regole.map((r) => {
               const c = perId.get(r.categoriaId)
               return (
@@ -95,14 +101,16 @@ export function CategoriePage() {
                   <button
                     type="button"
                     onClick={() => setFormRegola({ aperto: true, regola: r })}
-                    className="flex w-full items-center gap-3 border-b border-filetto-leggero py-2.5 text-left text-sm active:bg-filetto-leggero"
+                    className="flex min-h-12 w-full items-center gap-3 border-b border-filetto-leggero py-2 text-left text-[15px] active:bg-filetto-leggero"
                   >
                     <span className="min-w-0 flex-1 truncate">
-                      contiene <b className="font-medium">"{r.contiene}"</b>
+                      contiene <b className="font-bold">"{r.contiene}"</b>
                     </span>
-                    <span className="flex shrink-0 items-center gap-1.5 text-inchiostro-2">
+                    <span className="flex shrink-0 items-center gap-2 text-sm text-inchiostro-2">
                       {c && (
-                        <IconaCategoria nome={c.icona} className="size-3.5" style={{ color: coloreCss(c.colore) }} />
+                        <span className="riquadro size-7" style={{ color: coloreCss(c.colore) }} aria-hidden="true">
+                          <IconaCategoria nome={c.icona} className="size-[15px]" />
+                        </span>
                       )}
                       {c?.nome ?? '?'}
                     </span>
@@ -154,31 +162,31 @@ function Gruppo({
     <Pannello
       titolo={titolo}
       azione={
-        <button type="button" onClick={onNuova} className="flex items-center gap-1 text-sm font-medium text-cobalto">
+        <button type="button" onClick={onNuova} className={classeAzionePannello}>
           <Plus className="size-4" aria-hidden="true" />
           Nuova categoria
         </button>
       }
     >
-      <ul className="-mt-1">
+      <ul className="border-t border-accento">
         {categorie
           .filter((c) => c.tipo === tipo)
           .map((c, i) => (
-            <li key={c.id} className="flex items-center border-b border-filetto-leggero last:border-b-0">
+            <li key={c.id} className="flex items-center border-b border-filetto-leggero">
               <button
                 type="button"
                 onClick={() => !c.diSistema && onModifica(c)}
                 disabled={!!c.diSistema}
                 aria-label={c.diSistema ? c.nome : `${c.nome}. Modifica`}
-                className="flex min-w-0 flex-1 items-center gap-3 py-2.5 text-left text-sm active:bg-filetto-leggero disabled:cursor-default"
+                className="flex min-h-12 min-w-0 flex-1 items-center gap-3 py-1.5 text-left text-[15px] active:bg-filetto-leggero disabled:cursor-default"
               >
-                <span className="riquadro size-10 shrink-0" style={{ color: coloreCss(c.colore) }} aria-hidden="true">
-                  <IconaCategoria nome={c.icona} className="size-[18px]" />
+                <span className="riquadro size-9 shrink-0" style={{ color: coloreCss(c.colore) }} aria-hidden="true">
+                  <IconaCategoria nome={c.icona} className="size-[17px]" />
                 </span>
                 <span className={c.diSistema ? 'truncate text-inchiostro-2' : 'truncate font-semibold'}>{c.nome}</span>
                 {c.budget !== undefined && (
-                  <span className="num ml-auto shrink-0 pr-2 text-xs whitespace-nowrap text-inchiostro-2">
-                    {formatImporto(c.budget)}/mese
+                  <span className="num ml-auto shrink-0 pr-1 font-display text-xs whitespace-nowrap text-inchiostro-2">
+                    {formatImporto(c.budget, { simbolo: false })}/mese
                   </span>
                 )}
                 {c.diSistema && (
@@ -192,7 +200,7 @@ function Gruppo({
                     onClick={() => onSposta(c.id, 'su')}
                     disabled={i === 0}
                     aria-label={`Sposta ${c.nome} più in alto`}
-                    className="grid size-8 shrink-0 place-items-center rounded-ctrl text-inchiostro-2 hover:bg-filetto-leggero disabled:opacity-25"
+                    className="grid size-11 shrink-0 place-items-center rounded-ctrl text-inchiostro-2 hover:bg-filetto-leggero active:bg-filetto-leggero disabled:opacity-25"
                   >
                     <ChevronUp className="size-4" />
                   </button>
@@ -201,7 +209,7 @@ function Gruppo({
                     onClick={() => onSposta(c.id, 'giu')}
                     disabled={i === ordinabili.length - 1}
                     aria-label={`Sposta ${c.nome} più in basso`}
-                    className="grid size-8 shrink-0 place-items-center rounded-ctrl text-inchiostro-2 hover:bg-filetto-leggero disabled:opacity-25"
+                    className="grid size-11 shrink-0 place-items-center rounded-ctrl text-inchiostro-2 hover:bg-filetto-leggero active:bg-filetto-leggero disabled:opacity-25"
                   >
                     <ChevronDown className="size-4" />
                   </button>
@@ -209,7 +217,7 @@ function Gruppo({
                     type="button"
                     onClick={() => onElimina(c)}
                     aria-label={`Elimina ${c.nome}`}
-                    className="grid size-9 shrink-0 place-items-center rounded-ctrl text-inchiostro-2 hover:text-rosso active:bg-filetto-leggero"
+                    className="grid size-11 shrink-0 place-items-center rounded-ctrl text-inchiostro-2 hover:text-rosso active:bg-filetto-leggero"
                   >
                     <Trash2 className="size-4" />
                   </button>
