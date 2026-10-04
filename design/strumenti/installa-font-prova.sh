@@ -17,4 +17,6 @@ npm install --no-save --no-audit --no-fund \
   $V/rethink-sans $V/wix-madefor-display $V/tilt-warp $V/afacad-flux $V/radio-canada-big $V/gantari $S/ibm-plex-serif $V/spline-sans \
   $V/playfair-display $V/libre-bodoni $V/chivo-mono $V/tektur $V/oxanium $V/saira $S/dela-gothic-one $S/rubik-mono-one \
   $S/major-mono-display $S/abril-fatface $S/rozha-one $S/chakra-petch $S/bowlby-one $S/archivo-black $V/big-shoulders-display \
-  $V/climate-crisis $S/ultra
+  $V/climate-crisis $S/ultra \
+  $V/brygada-1918 $V/besley $V/crimson-pro $V/alegreya $V/bitter $V/faustina $V/grenze $V/texturina $V/stix-two-text $V/noto-serif-display $V/hahmlet $V/imbue $V/lexend-zetta $V/lexend-exa $V/league-spartan $V/exo-2 $V/victor-mono $V/overpass-mono $V/pixelify-sans $V/stick-no-bills $V/orbitron $V/readex-pro $V/sora $V/bitcount-prop-single $V/bitcount-grid-double \
+  $S/spectral $S/alegreya-sans $S/zilla-slab $S/inknut-antiqua $S/castoro $S/cardo $S/old-standard-tt $S/bona-nova $S/fanwood-text $S/sorts-mill-goudy $S/krona-one $S/michroma $S/bungee $S/lilita-one $S/titan-one $S/rammetto-one $S/chango $S/gasoek-one $S/bagel-fat-one $S/righteous $S/b612 $S/b612-mono $S/courier-prime $S/cutive-mono $S/share-tech-mono $S/vt323 $S/silkscreen $S/jersey-10 $S/tiny5 $S/allerta-stencil $S/saira-stencil-one $S/wallpoet $S/quantico $S/electrolize $S/turret-road $S/aldrich $S/nova-mono $S/anonymous-pro $S/bai-jamjuree $S/gothic-a1 $S/jacquard-24 $S/micro-5 $S/sedan
